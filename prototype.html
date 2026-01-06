@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camron Soltani - Product Manager | Spotify Podcast Creator Tools</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --spotify-green: #1DB954;
+            --spotify-dark: #121212;
+            --spotify-dark-secondary: #212121;
+            --spotify-text: #FFFFFF;
+            --spotify-text-muted: #B3B3B3;
+            --spotify-neutral: #535353;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--spotify-dark);
+            color: var(--spotify-text);
+            line-height: 1.6;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: var(--spotify-dark-secondary);
+            border-bottom: 1px solid var(--spotify-neutral);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--spotify-text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--spotify-text);
+        }
+        
+        .nav-logo {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--spotify-text);
+            text-decoration: none;
+        }
+        
+        .nav-logo:hover {
+            color: var(--spotify-green);
+        }
+        
+        /* Page Sections */
+        .page-section {
+            display: none;
+            min-height: 100vh;
+        }
+        
+        .page-section.active {
+            display: block;
+        }
+        
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        /* Typography */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* Cards */
+        .card {
+            background-color: var(--spotify-dark-secondary);
+            border: 1px solid var(--spotify-neutral);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--spotify-green);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1aa34a;
+        }
+        
+        .btn-outline {
+            border: 2px solid var(--spotify-green);
+            color: var(--spotify-green);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--spotify-green);
+            color: white;
+        }
+        
+        /* Grid */
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+        
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+        
+        /* Analytics Dashboard */
+        .tab-nav {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--spotify-neutral);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--spotify-text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab-btn.active {
+            color: var(--spotify-green);
+            border-bottom-color: var(--spotify-green);
+        }
+        
+        .tab-btn:hover {
+            color: var(--spotify-text);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .kpi-card {
+            background-color: var(--spotify-dark-secondary);
+            border: 1px solid var(--spotify-neutral);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+        
+        .kpi-label {
+            font-size: 0.875rem;
+            color: var(--spotify-text-muted);
+            margin-bottom: 0.25rem;
+        }
+        
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--spotify-text);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 1rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--spotify-neutral);
+        }
+        
+        th {
+            color: var(--spotify-text-muted);
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--spotify-dark-secondary);
+            border-top: 1px solid var(--spotify-neutral);
+            margin-top: 4rem;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        footer a {
+            color: var(--spotify-green);
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+        
+        .text-muted {
+            color: var(--spotify-text-muted);
+        }
+        
+        .text-green {
+            color: var(--spotify-green);
+        }
+        
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-8 { margin-top: 2rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .space-y-6 > * + * { margin-top: 1.5rem; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="nav-logo" onclick="showPage('home'); return false;">Camron Soltani – Product Manager</a>
+            <div class="nav-links">
+                <a href="#" onclick="showPage('home'); return false;">Home</a>
+                <a href="#" onclick="showPage('strategy'); return false;">Spotify Strategy</a>
+                <a href="#" onclick="showPage('analytics'); return false;">Analytics Dashboard</a>
+                <a href="#" onclick="showPage('case-study'); return false;">Case Study</a>
+                <a href="#" onclick="showPage('about'); return false;">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <section id="home" class="page-section active">
+        <div class="container">
+            <!-- Hero Section -->
+            <section style="padding: 4rem 0;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; align-items: center;">
+                    <div>
+                        <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 1.5rem;">
+                            Help Creators Plan, Book, Target, and Measure Effective Promotional Campaigns
+                        </h1>
+                        <p style="font-size: 1.25rem; color: var(--spotify-text-muted); margin-bottom: 1.5rem;">
+                            A strategic approach to simplifying podcast creator promotional workflows with AI-powered analytics and data-driven insights.
+                        </p>
+                        <div style="margin-bottom: 2rem;">
+                            <p class="text-muted" style="margin-bottom: 1rem;">
+                                Podcast creators have the content. What they need is intelligence—intelligence on who and where their audience is, what drives engagement, where to invest promotional spend, and how to optimize for growth. Right now, that intelligence lives in basic analytics and promotional tools that lack the depth needed to make confident decisions.
+                            </p>
+                            <p class="text-muted">
+                                I've designed a comprehensive product strategy and AI-enhanced analytics dashboard that gives creators the tools, data insights, and confidence to plan and execute effective promotional campaigns—driving measurable audience expansion and competitive positioning in their niche.
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <a href="#" class="btn btn-primary" onclick="showPage('strategy'); return false;">View Full Strategy</a>
+                            <a href="#" class="btn btn-outline" onclick="showPage('analytics'); return false;">Explore Interactive Analytics Dashboard</a>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card">
+                            <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Podcast Creator Promotional Engine</h2>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="margin-bottom: 0.75rem; display: flex; align-items: start;">
+                                    <span style="color: var(--spotify-green); margin-right: 0.5rem;">•</span>
+                                    <span class="text-muted">AI-assisted campaign planning, targeting, and optimization</span>
+                                </li>
+                                <li style="margin-bottom: 0.75rem; display: flex; align-items: start;">
+                                    <span style="color: var(--spotify-green); margin-right: 0.5rem;">•</span>
+                                    <span class="text-muted">Interactive analytics dashboard that turns data into actionable insights</span>
+                                </li>
+                                <li style="margin-bottom: 0.75rem; display: flex; align-items: start;">
+                                    <span style="color: var(--spotify-green); margin-right: 0.5rem;">•</span>
+                                    <span class="text-muted">Phase-based creator experience tailored to growth stage</span>
+                                </li>
+                                <li style="display: flex; align-items: start;">
+                                    <span style="color: var(--spotify-green); margin-right: 0.5rem;">•</span>
+                                    <span class="text-muted">Seamless integration of discovery, promotion, and measurement</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- The Opportunity Section -->
+            <section style="background-color: var(--spotify-dark-secondary); padding: 4rem 0; margin: 2rem 0; border-radius: 0.5rem;">
+                <div class="container">
+                    <h2 style="text-align: center; margin-bottom: 2rem;">The Opportunity: Spotify's Creator Promotional Edge</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; align-items: center;">
+                        <div class="text-muted">
+                            <p style="margin-bottom: 1.5rem;">
+                                Today, podcast creators have incredible content but face limitations in how they promote and measure impact: analytics are somewhat basic, promotional tools lack depth in audience and content targeting, and there is limited integrated guidance on audience expansion strategy. Meanwhile, YouTube has native promotional capabilities, sophisticated analytics, and short-form discovery tightly integrated into the platform.
+                            </p>
+                            <p>
+                                This isn't a problem. It's a strategic opportunity. Spotify has 678M logged-in users, strong creator relationships through Spotify for Creators, and first-party data that competitors can't match. What's missing? Invigorated promotional tools with advanced audience and market targeting, enhanced analytics that provide true intelligence on listener behavior, and AI guidance on content optimization and audience expansion.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem;">What Creators Need</h3>
+                    <ul style="list-style: none; padding: 0;" class="text-muted">
+                        <li style="margin-bottom: 0.75rem; display: flex; align-items: start;">
+                            <span style="color: var(--spotify-green); margin-right: 0.5rem;">•</span>
+                            <span>Intelligence on who and where their audience is (not just metrics)</span>
+                        </li>
+                        <li style="margin-bottom: 0.75rem; display: flex; align-items: start;">
+                            <span style="color: var(--spotify-green); margin-right: 0.5rem;">•</span>
+                            <span>Actionable guidance on content optimization and audience expansion (not data overload)</span>
+                        </li>
+                        <li style="margin-bottom: 0.75rem; display: flex; align-items: start;">
+                            <span style="color: var(--spotify-green); margin-right: 0.5rem;">•</span>
+                            <span>Confidence in promotional spend ROI through advanced audience targeting (not guesswork)</span>
+                        </li>
+                        <li style="display: flex; align-items: start;">
+                            <span style="color: var(--spotify-green); margin-right: 0.5rem;">•</span>
+                            <span>AI assistance in campaign ideation, content optimization, and growth strategy (not manual labor)</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- The Solution Overview -->
+            <section style="padding: 4rem 0;">
+                <div class="container">
+                    <h2 style="text-align: center; margin-bottom: 3rem;">The Solution: Creator Promotional Engine</h2>
+                    
+                    <div class="grid grid-3">
+                        <div class="card">
+                            <h3>Discovery & Promotional Tools</h3>
+                            <h4 class="text-green" style="margin-bottom: 0.75rem;">Multi-Stage Discovery and Promotion Levers</h4>
+                            <div class="text-muted" style="font-size: 0.875rem;">
+                                <p style="margin-bottom: 0.75rem;"><strong style="color: var(--spotify-text);">Phase 1 (0–100 downloads):</strong> AI-powered clip generation turns long-form episodes into short-form "Shorts" auto-optimized for discovery. Shorts appear natively in a new "Hype Points" discovery reel—Spotify's answer to YouTube Shorts—driving organic discoverability and algorithmic lift.</p>
+                                <p style="margin-bottom: 0.75rem;"><strong style="color: var(--spotify-text);">Phase 2 (100–1K downloads):</strong> "Episode Boost" campaigns—self-serve paid promotion within Spotify with advanced audience targeting (demographics, interests, listening patterns, geography) and content targeting (genre, topic affinity). Spotify-subsidized promotional credits for creators at lower to lower-mid scales help boost creator endurance and reduce the near 30% dropoff rate of new creators, lowering financial risk for early promotional investment.</p>
+                                <p style="margin-bottom: 0.75rem;"><strong style="color: var(--spotify-text);">Phase 3 (1K–10K downloads):</strong> Cross-promotion marketplace connects creators with complementary shows for mutual audience expansion. AI identifies which podcasts have overlapping audiences and suggests partnership opportunities with projected listener growth.</p>
+                                <p style="margin-bottom: 0.75rem;"><strong style="color: var(--spotify-text);">Phase 4 (10K+ downloads):</strong> Advanced targeting and portfolio tools for multi-show creators. Predictive campaign modeling shows revenue under different promotional strategies.</p>
+                                <p style="font-weight: 600; color: var(--spotify-text); margin-top: 1rem;">Expected impact: Creators gain controllable, measurable discovery levers instead of relying solely on algorithms. Short-form integration (Hype Points with Shorts) becomes a primary discovery surface, similar to how Shorts drive discovery on YouTube.</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>AI-Powered Analytics & Insights</h3>
+                            <h4 class="text-green" style="margin-bottom: 0.75rem;">Analytics That Guide Action</h4>
+                            <div class="text-muted" style="font-size: 0.875rem;">
+                                <p style="margin-bottom: 0.75rem;">A podcast-native analytics dashboard (inspired by YouTube Studio's best practices) that provides true intelligence on listener behavior and content performance.</p>
+                                <p style="margin-bottom: 0.75rem;"><strong style="color: var(--spotify-text);">Core analytics:</strong></p>
+                                <ul style="list-style: disc; padding-left: 1.5rem; margin-bottom: 0.75rem;">
+                                    <li><strong>Reach & Discovery:</strong> Impressions, CTR, traffic sources (Browse, Search, External), new vs. returning listener analysis, SEO keyword ranking.</li>
+                                    <li><strong>Engagement & Retention:</strong> Average Percentage Viewed (APV), second-by-second retention curves, Streams vs. Starts ratio, engagement velocity.</li>
+                                    <li><strong>Audience Intelligence:</strong> What else your audience watches/listens to, active listening hours (time-of-day heatmap), loyalty index and cohorts.</li>
+                                    <li><strong>Monetization:</strong> RPM tracking, ad insertion opportunities, subscriber conversion funnel, estimated revenue lost.</li>
+                                </ul>
+                                <p style="font-weight: 600; color: var(--spotify-text); margin-top: 1rem;">Expected impact: Creators understand their data and trust their optimization decisions. Reduced churn from confusion; increased confidence in promotional spend.</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>Campaign Planning & Measurement</h3>
+                            <h4 class="text-green" style="margin-bottom: 0.75rem;">Plan, Target, Measure, Optimize</h4>
+                            <div class="text-muted" style="font-size: 0.875rem;">
+                                <p style="margin-bottom: 0.75rem;">Integrated campaign module guides creators through promotional planning:</p>
+                                <ul style="list-style: disc; padding-left: 1.5rem; margin-bottom: 0.75rem;">
+                                    <li>Which episode to promote (AI recommends based on performance).</li>
+                                    <li>Who to target (AI suggests audience cohorts from analytics).</li>
+                                    <li>What to spend (AI models ROI based on historical data and cohort size).</li>
+                                    <li>When to run (AI optimizes publish timing based on listening patterns).</li>
+                                </ul>
+                                <p style="margin-bottom: 0.75rem;"><strong style="color: var(--spotify-text);">Measurement is built-in:</strong> Real-time campaign dashboards track spend, listeners acquired, cost-per-listener, and lifetime value. A/B testing framework for creative, targeting, and spend optimization. Win-back and stale-content campaigns automated.</p>
+                                <p style="font-weight: 600; color: var(--spotify-text); margin-top: 1rem;">Expected impact: Creators move from guesswork to data-backed campaign decisions. Promotional spend becomes an investment, not an expense.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why This Works -->
+            <section style="background-color: var(--spotify-dark-secondary); padding: 4rem 0; margin: 2rem 0; border-radius: 0.5rem;">
+                <div class="container">
+                    <h2 style="text-align: center; margin-bottom: 2rem;">Why This Works: Spotify's Structural Advantage</h2>
+                    <div class="grid grid-2">
+                        <div class="card">
+                            <h3 class="text-green" style="font-size: 1.125rem;">First-party data at scale</h3>
+                            <p class="text-muted">678M logged-in users provide unmatched audience intelligence.</p>
+                        </div>
+                        <div class="card">
+                            <h3 class="text-green" style="font-size: 1.125rem;">Native integration</h3>
+                            <p class="text-muted">Creators plan, promote, and measure without leaving Spotify.</p>
+                        </div>
+                        <div class="card">
+                            <h3 class="text-green" style="font-size: 1.125rem;">AI as simplifier</h3>
+                            <p class="text-muted">Automation reduces cognitive load and routine optimization work.</p>
+                        </div>
+                        <div class="card">
+                            <h3 class="text-green" style="font-size: 1.125rem;">Creator-platform alignment</h3>
+                            <p class="text-muted">Creator growth maps directly to Spotify's business metrics.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why I Built This -->
+            <section style="background-color: var(--spotify-dark-secondary); padding: 4rem 0; margin: 2rem 0; border-radius: 0.5rem;">
+                <div class="container">
+                    <h2 style="margin-bottom: 1.5rem;">Why I Built This Case Study</h2>
+                    <div class="text-muted" style="margin-bottom: 1.5rem;">
+                        <p style="margin-bottom: 1rem;">
+                            I'm a PM with 8+ years at Fyxt, where I've built products that creators and users love—driving adoption up to 86% on major features. I combine a founder's instinct with disciplined execution and a deep passion for simplifying complex problems.
+                        </p>
+                        <p style="margin-bottom: 1rem;">
+                            This case study demonstrates how to take an ambiguous, high-impact opportunity ('help creators expand their reach and execute better promotional campaigns') and translate it into a concrete, phased product strategy with clear roadmap, prototype UX, and measurable business outcomes.
+                        </p>
+                        <p>
+                            If you're at Spotify exploring how to build the creator promotional engine, this is the approach I'd bring to the role.
+                        </p>
+                    </div>
+                    <a href="#" class="text-green" onclick="showPage('about'); return false;" style="text-decoration: none; font-weight: 600;">Learn more about my approach →</a>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <!-- Strategy Page -->
+    <section id="strategy" class="page-section">
+        <div class="container">
+            <h1>Spotify Podcast Creator Promotional Strategy</h1>
+            <div class="card" style="border-left: 4px solid var(--spotify-green);">
+                <p class="text-muted">
+                    This strategy is the result of deep research into Spotify's creator ecosystem, YouTube Studio's analytics best practices, and direct insights from podcast creator pain points. It's written as if I were brought in as a strategic PM to design Spotify's next-generation creator promotional platform.
+                </p>
+            </div>
+
+            <section class="mb-8">
+                <h2>North Star</h2>
+                <p style="font-size: 1.25rem; color: var(--spotify-text-muted); margin-bottom: 1.5rem;">
+                    Build an innovative, data-driven creator promotional engine that simplifies campaign planning, targeting, and measurement—enabling creators to reach new audiences, build sustainable careers, and drive measurable growth on Spotify.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 style="margin-bottom: 1.5rem;">Strategic Pillars</h2>
+                <div class="space-y-6">
+                    <div class="card">
+                        <h3 class="text-green">1. Promotional Tools & Discovery Integration</h3>
+                        <p class="text-muted">
+                            Phase-based promotional tools (Shorts/Hype Points clips, Episode Boost campaigns, cross-promo marketplace). Native short-form discovery (Hype Points reel) as primary discovery surface alongside algorithmic feeds. AI-assisted campaign planning (what to promote, who to target, when to run, how much to spend).
+                        </p>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-green">2. AI-Enhanced Analytics & Insights</h3>
+                        <p class="text-muted">
+                            Podcast-native analytics dashboard with retention curves, traffic analysis, audience intelligence. AI pattern recognition, retention diagnostics, and audience expansion recommendations. Automated campaign suggestions with predicted ROI. Help Wizard for beginners; advanced dashboards for power users.
+                        </p>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-green">3. Seamless Campaign Execution & Measurement</h3>
+                        <p class="text-muted">
+                            Integrated campaign module (planning → execution → measurement → optimization). Real-time campaign dashboards and cost-per-listener metrics. A/B testing framework for creative and targeting optimization. Win-back and stale-content automation.
+                        </p>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-green">4. Creator-Platform Alignment</h3>
+                        <p class="text-muted">
+                            Transparent monetization paths (Partner Program, sponsorships, multi-stream revenue). Clear ROI on promotional spend. Creator success metrics align with Spotify's business metrics (listening hours, retention, engagement).
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2 style="margin-bottom: 1.5rem;">Phase-by-Phase Roadmap</h2>
+                <div class="space-y-8">
+                    <div class="card">
+                        <h3 class="text-green" style="font-size: 1.5rem;">Phase 0: Analytics Foundation (Months 1-3)</h3>
+                        <p class="text-muted mb-4">Build the data infrastructure and analytics dashboard MVP—everything downstream depends on this.</p>
+                        <ul style="list-style: disc; padding-left: 1.5rem;" class="text-muted">
+                            <li>Real-time performance tracking (impressions, listeners, LTR, traffic sources)</li>
+                            <li>Audience segmentation & behavioral analysis</li>
+                            <li>Traffic source breakdown</li>
+                            <li>Cross-podcast listener overlap analysis</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-green" style="font-size: 1.5rem;">Phase 1: Creator Enablement & Discovery (Months 4-9)</h3>
+                        <p class="text-muted mb-4">Target: 0-100 downloads | Key Challenge: Finding traction, overcoming editing burden, gaining validation.</p>
+                        <ul style="list-style: disc; padding-left: 1.5rem;" class="text-muted">
+                            <li>AI Clip Generation & Auto-Posting (Shorts)</li>
+                            <li>Hype Points Native Reel (short-form discovery)</li>
+                            <li>Content Benchmarking & Comparison</li>
+                            <li>Retention Curve Analysis with Beginner Guidance</li>
+                            <li>Onboarding Playbooks</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-green" style="font-size: 1.5rem;">Phase 2: Growth & Monetization (Months 10-15)</h3>
+                        <p class="text-muted mb-4">Target: 100-1K downloads | Key Challenge: Breaking past personal network, finding early monetization path.</p>
+                        <ul style="list-style: disc; padding-left: 1.5rem;" class="text-muted">
+                            <li>Episode Boost Campaigns (self-serve paid promotion)</li>
+                            <li>Spotify-Subsidized Promotional Credits</li>
+                            <li>Cross-Promotion Marketplace</li>
+                            <li>Stale Content Resurrection & Win-Back Campaigns</li>
+                            <li>Partner Program Progress Transparency</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-green" style="font-size: 1.5rem;">Phase 3: Scaling & Optimization (Months 16-21)</h3>
+                        <p class="text-muted mb-4">Target: 1K-10K downloads | Key Challenge: Niche saturation, audience expansion, advanced optimization.</p>
+                        <ul style="list-style: disc; padding-left: 1.5rem;" class="text-muted">
+                            <li>1-Degree Audience Expansion (AI-Powered Discovery)</li>
+                            <li>Predictive Campaign & Content Recommendations</li>
+                            <li>Advanced Retention & Engagement Analysis</li>
+                            <li>Automated Optimization Loops & A/B Testing</li>
+                            <li>Revenue Mix Optimization & Sponsorship Insights</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-green" style="font-size: 1.5rem;">Phase 4: Enterprise Scaling (Months 22-24)</h3>
+                        <p class="text-muted mb-4">Target: 10K+ downloads | Key Challenge: Operational scaling, multi-show portfolios, strategic positioning.</p>
+                        <ul style="list-style: disc; padding-left: 1.5rem;" class="text-muted">
+                            <li>Portfolio & Multi-Show Analytics</li>
+                            <li>Advanced Audience Intelligence & Predictive Modeling</li>
+                            <li>Sponsorship Marketplace & Dynamic Revenue Optimization</li>
+                            <li>International Expansion & Localization Toolkit</li>
+                            <li>Production Quality & Technical Optimization Analysis</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#" class="btn btn-primary" onclick="showPage('analytics'); return false;">Explore Interactive Analytics Dashboard →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Dashboard Page -->
+    <section id="analytics" class="page-section">
+        <div class="container">
+            <h1>Analytics Dashboard</h1>
+            <p style="font-size: 1.25rem; color: var(--spotify-text-muted); margin-bottom: 2rem;">
+                Interactive prototype of Spotify's podcast creator analytics dashboard
+            </p>
+
+            <!-- Tab Navigation -->
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+                <button class="tab-btn" onclick="switchTab('reach')">Reach & Discovery</button>
+                <button class="tab-btn" onclick="switchTab('engagement')">Engagement & Retention</button>
+                <button class="tab-btn" onclick="switchTab('audience')">Audience Intelligence</button>
+                <button class="tab-btn" onclick="switchTab('insights')">AI Insights & Actions</button>
+                <button class="tab-btn" onclick="switchTab('monetization')">Monetization</button>
+            </div>
+
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="grid grid-4" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 2rem;">
+                    <div class="kpi-card">
+                        <p class="kpi-label">Total Listeners (28-day)</p>
+                        <p class="kpi-value">12,400</p>
+                        <p style="font-size: 0.75rem; color: var(--spotify-green); margin-top: 0.25rem;">△ +2.1% vs avg</p>
+                    </div>
+                    <div class="kpi-card">
+                        <p class="kpi-label">Watch Time (hours)</p>
+                        <p class="kpi-value">3,420</p>
+                        <p style="font-size: 0.75rem; color: var(--spotify-green); margin-top: 0.25rem;">△ +8% vs avg</p>
+                    </div>
+                    <div class="kpi-card">
+                        <p class="kpi-label">CTR</p>
+                        <p class="kpi-value">5.2%</p>
+                        <p style="font-size: 0.75rem; color: var(--spotify-text-muted); margin-top: 0.25rem;">△ -0.3% vs avg</p>
+                    </div>
+                    <div class="kpi-card">
+                        <p class="kpi-label">Avg Listen Duration</p>
+                        <p class="kpi-value">4m 22s</p>
+                        <p style="font-size: 0.75rem; color: var(--spotify-green); margin-top: 0.25rem;">△ +18s vs avg</p>
+                    </div>
+                    <div class="kpi-card">
+                        <p class="kpi-label">Subscribers</p>
+                        <p class="kpi-value">890</p>
+                        <p style="font-size: 0.75rem; color: var(--spotify-green); margin-top: 0.25rem;">△ +12% vs avg</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Listener Trend (28 days)</h3>
+                    <div class="chart-container">
+                        <canvas id="listenerTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Top Episodes (30d)</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Episode</th>
+                                <th style="text-align: right;">Listens</th>
+                                <th style="text-align: right;">Avg Duration</th>
+                                <th style="text-align: right;">Completion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Viral Moment ep124</td>
+                                <td style="text-align: right;">2,340</td>
+                                <td style="text-align: right;">4:45</td>
+                                <td style="text-align: right; color: var(--spotify-green);">72%</td>
+                            </tr>
+                            <tr>
+                                <td>Interview ep123</td>
+                                <td style="text-align: right;">1,890</td>
+                                <td style="text-align: right;">4:20</td>
+                                <td style="text-align: right; color: var(--spotify-green);">68%</td>
+                            </tr>
+                            <tr>
+                                <td>Trending Topic ep122</td>
+                                <td style="text-align: right;">1,650</td>
+                                <td style="text-align: right;">3:50</td>
+                                <td style="text-align: right; color: var(--spotify-green);">65%</td>
+                            </tr>
+                            <tr>
+                                <td>Series Finale ep121</td>
+                                <td style="text-align: right;">1,420</td>
+                                <td style="text-align: right;">4:10</td>
+                                <td style="text-align: right; color: var(--spotify-green);">62%</td>
+                            </tr>
+                            <tr>
+                                <td>Deep Dive ep120</td>
+                                <td style="text-align: right;">1,280</td>
+                                <td style="text-align: right;">3:30</td>
+                                <td style="text-align: right; color: var(--spotify-green);">58%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Reach & Discovery Tab -->
+            <div id="reach" class="tab-content">
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Impressions vs. CTR (Click-Through Rate)</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                        <div class="kpi-card">
+                            <p class="kpi-label">Impressions</p>
+                            <p class="kpi-value">238,000</p>
+                            <p style="font-size: 0.75rem; color: var(--spotify-text-muted);">Artwork rendered on screen</p>
+                        </div>
+                        <div class="kpi-card">
+                            <p class="kpi-label">Clicks</p>
+                            <p class="kpi-value">12,400</p>
+                            <p style="font-size: 0.75rem; color: var(--spotify-green);">CTR: 5.21%</p>
+                        </div>
+                        <div class="kpi-card">
+                            <p class="kpi-label">Plays</p>
+                            <p class="kpi-value">8,920</p>
+                            <p style="font-size: 0.75rem; color: var(--spotify-green);">Play Rate: 71.94%</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="impressionsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Traffic Source Attribution</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div class="chart-container">
+                            <canvas id="trafficSourceChart"></canvas>
+                        </div>
+                        <div>
+                            <div class="card" style="margin-bottom: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="font-weight: 600;">Spotify Home (Browse)</span>
+                                    <span class="text-green">35%</span>
+                                </div>
+                                <p class="text-muted" style="font-size: 0.875rem;">4,340 listeners</p>
+                            </div>
+                            <div class="card" style="margin-bottom: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="font-weight: 600;">Spotify Search</span>
+                                    <span class="text-green">28%</span>
+                                </div>
+                                <p class="text-muted" style="font-size: 0.875rem;">3,472 listeners</p>
+                            </div>
+                            <div class="card" style="margin-bottom: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="font-weight: 600;">Library (Subscribers)</span>
+                                    <span class="text-green">18%</span>
+                                </div>
+                                <p class="text-muted" style="font-size: 0.875rem;">2,232 listeners</p>
+                            </div>
+                            <div class="card" style="margin-bottom: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="font-weight: 600;">External</span>
+                                    <span class="text-green">12%</span>
+                                </div>
+                                <p class="text-muted" style="font-size: 0.875rem;">1,488 listeners</p>
+                            </div>
+                            <div class="card">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="font-weight: 600;">Algorithmic Suggested</span>
+                                    <span class="text-green">7%</span>
+                                </div>
+                                <p class="text-muted" style="font-size: 0.875rem;">868 listeners</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">SEO Keyword Ranking</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Keyword</th>
+                                <th style="text-align: right;">Search Volume</th>
+                                <th style="text-align: right;">Your Rank</th>
+                                <th style="text-align: right;">Traffic Generated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 600;">true crime</td>
+                                <td style="text-align: right;">12,400</td>
+                                <td style="text-align: right; color: var(--spotify-green);">#3</td>
+                                <td style="text-align: right; color: var(--spotify-green);">892 listeners</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">podcast</td>
+                                <td style="text-align: right;">8,900</td>
+                                <td style="text-align: right; color: var(--spotify-green);">#5</td>
+                                <td style="text-align: right; color: var(--spotify-green);">445 listeners</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">mystery</td>
+                                <td style="text-align: right;">5,600</td>
+                                <td style="text-align: right; color: #fbbf24;">#8</td>
+                                <td style="text-align: right; color: var(--spotify-green);">280 listeners</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">investigation</td>
+                                <td style="text-align: right;">3,400</td>
+                                <td style="text-align: right; color: var(--spotify-text-muted);">#12</td>
+                                <td style="text-align: right; color: var(--spotify-green);">170 listeners</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">unsolved</td>
+                                <td style="text-align: right;">2,800</td>
+                                <td style="text-align: right; color: var(--spotify-text-muted);">#15</td>
+                                <td style="text-align: right; color: var(--spotify-green);">140 listeners</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Engagement & Retention Tab -->
+            <div id="engagement" class="tab-content">
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Average Percentage Viewed (APV)</h3>
+                    <div style="text-align: center;">
+                        <p style="font-size: 4rem; font-weight: bold; color: var(--spotify-green); margin-bottom: 0.5rem;">67%</p>
+                        <p class="text-muted">+5% vs. previous 10 episodes</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">True Retention Curve</h3>
+                    <div class="chart-container">
+                        <canvas id="retentionChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Streams vs. Starts Ratio</h3>
+                    <div class="chart-container">
+                        <canvas id="streamsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audience Intelligence Tab -->
+            <div id="audience" class="tab-content">
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">What Else Your Audience Watches/Listens To</h3>
+                    <div class="grid grid-3">
+                        <div class="card">
+                            <h4 style="margin-bottom: 0.5rem;">Crime Junkie</h4>
+                            <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.5rem;">Overlap: <strong style="color: var(--spotify-text);">45%</strong></p>
+                            <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.5rem;">Total Listeners: 120,000</p>
+                            <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.5rem;">Untapped: <strong class="text-green">66,000</strong></p>
+                        </div>
+                        <div class="card">
+                            <h4 style="margin-bottom: 0.5rem;">Dateline</h4>
+                            <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.5rem;">Overlap: <strong style="color: var(--spotify-text);">38%</strong></p>
+                            <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.5rem;">Total Listeners: 95,000</p>
+                            <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.5rem;">Untapped: <strong class="text-green">58,900</strong></p>
+                        </div>
+                        <div class="card">
+                            <h4 style="margin-bottom: 0.5rem;">My Favorite Murder</h4>
+                            <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.5rem;">Overlap: <strong style="color: var(--spotify-text);">32%</strong></p>
+                            <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.5rem;">Total Listeners: 180,000</p>
+                            <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.5rem;">Untapped: <strong class="text-green">122,400</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Insights Tab -->
+            <div id="insights" class="tab-content">
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Pattern Recognition Engine</h3>
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <h4 style="margin-bottom: 0.5rem;">Episodes with 'Guest Name' in title</h4>
+                        <p class="text-muted">Performs <strong class="text-green">+30%</strong> better on <strong>CTR</strong></p>
+                        <p class="text-muted" style="font-size: 0.875rem; margin-top: 0.5rem;">Ep 123, Ep 118, Ep 115</p>
+                    </div>
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <h4 style="margin-bottom: 0.5rem;">Tuesday 8 AM publish time</h4>
+                        <p class="text-muted">Performs <strong class="text-green">+40%</strong> better on <strong>First-week listeners</strong></p>
+                        <p class="text-muted" style="font-size: 0.875rem; margin-top: 0.5rem;">Ep 124, Ep 121, Ep 118</p>
+                    </div>
+                    <div class="card">
+                        <h4 style="margin-bottom: 0.5rem;">Interview format</h4>
+                        <p class="text-muted">Performs <strong class="text-green">+35%</strong> better on <strong>LTR</strong></p>
+                        <p class="text-muted" style="font-size: 0.875rem; margin-top: 0.5rem;">Ep 123, Ep 120, Ep 117</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monetization Tab -->
+            <div id="monetization" class="tab-content">
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">RPM (Revenue Per Mille)</h3>
+                    <div class="chart-container">
+                        <canvas id="rpmChart"></canvas>
+                    </div>
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <p style="font-size: 2rem; font-weight: bold; color: var(--spotify-green);">$3.10 RPM</p>
+                        <p class="text-muted">vs. Genre Benchmark: $2.80</p>
+                        <p style="color: var(--spotify-green);">✅ +11% above benchmark</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Estimated Revenue Lost</h3>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="card" style="margin-top: 1rem; border-color: #fbbf24;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <div>
+                                <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.25rem;">Current Revenue (Earned)</p>
+                                <p style="font-size: 2rem; font-weight: bold;">$3,290/month</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.25rem;">Potential Revenue (Lost)</p>
+                                <p style="font-size: 2rem; font-weight: bold; color: #ef4444;">-$2,000/month</p>
+                            </div>
+                        </div>
+                        <p class="text-muted" style="font-size: 0.875rem;">
+                            <strong style="color: var(--spotify-text);">Total Opportunity:</strong> $5,290/month if all ad slots filled and mid-rolls optimized.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Study Page -->
+    <section id="case-study" class="page-section">
+        <div class="container">
+            <h1>Case Study: Building Spotify's Creator Promotional Engine</h1>
+            <p style="font-size: 1.25rem; color: var(--spotify-text-muted); margin-bottom: 2rem;">
+                A strategic exploration of how to simplify podcast creator promotional workflows through integrated discovery, analytics, and campaign tools.
+            </p>
+
+            <section class="mb-8">
+                <h2>The Opportunity</h2>
+                <div class="text-muted">
+                    <p style="margin-bottom: 1rem;">
+                        This case study is a strategic exploration for a Spotify PM role in podcast promotions or creator tools. I approached it like a real PM problem: deeply understand creator needs, research competitive landscape, design a coherent strategy, prototype the core UX, and model measurable outcomes.
+                    </p>
+                    <p>
+                        Rather than proposing isolated features, I've built a phase-based, cohesive strategy that aligns creator success with Spotify's business metrics—focusing on the core mission: help creators plan, book, target, and measure effective promotional campaigns.
+                    </p>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2>My Approach & Background</h2>
+                <div class="text-muted">
+                    <p style="margin-bottom: 1rem;">
+                        I'm a PM with 8+ years at Fyxt, a B2B SaaS company serving commercial real estate. Throughout my career, I've led strategic product initiatives from discovery to launch—launching features that achieved up to 86% user adoption, conducting market research and customer discovery to validate assumptions, orchestrating cross-functional execution, and optimizing product via metrics-driven iteration.
+                    </p>
+                    <p style="margin-bottom: 1rem;">
+                        I also have hands-on experience integrating AI and LLMs into product workflows—certified in AI Agents for Product Leaders—which informed how I designed the analytics and automation components of this strategy.
+                    </p>
+                    <p>
+                        My core PM philosophy: Start with user empathy, ground decisions in data, design for clarity, and measure relentlessly. This case study reflects that approach.
+                    </p>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2>Solution Design: The Three Pillars</h2>
+                <div class="text-muted">
+                    <p style="margin-bottom: 0.75rem;">
+                        <strong style="color: var(--spotify-text);">Discovery & Promotion:</strong> Creators gain multiple levers (Hype Points clips, Episode Boost campaigns, cross-promo marketplace) to expand reach.
+                    </p>
+                    <p style="margin-bottom: 0.75rem;">
+                        <strong style="color: var(--spotify-text);">AI-Powered Analytics:</strong> Creators understand their data and trust their optimization decisions.
+                    </p>
+                    <p style="margin-bottom: 0.75rem;">
+                        <strong style="color: var(--spotify-text);">Campaign Planning & Measurement:</strong> Creators invest promotional spend strategically and measure ROI clearly.
+                    </p>
+                    <p>
+                        These pillars aren't separate tools; they're integrated. A creator uses analytics to identify their best episode, gets an AI recommendation to run an Episode Boost campaign, launches the campaign via the integrated module, and measures results in real-time. Frictionless.
+                    </p>
+                </div>
+            </section>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#" class="btn btn-primary" onclick="showPage('strategy'); return false;" style="margin-right: 1rem;">View Full Strategy →</a>
+                <a href="#" class="btn btn-outline" onclick="showPage('analytics'); return false;">Explore Dashboard →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Page -->
+    <section id="about" class="page-section">
+        <div class="container">
+            <h1>About Camron</h1>
+            <p style="font-size: 1.25rem; color: var(--spotify-text-muted); margin-bottom: 2rem;">
+                Product Manager | Creator Tools Enthusiast | Founder Mentality
+            </p>
+
+            <section class="mb-8">
+                <p class="text-muted" style="margin-bottom: 1.5rem;">
+                    I'm a Senior Product Manager with 8+ years at Fyxt, a commercial real estate software company, where I've driven strategic product initiatives from conception to scale. I combine founder's instinct, disciplined execution, and deep passion for solving complex problems that matter to real people.
+                </p>
+                <p class="text-muted">
+                    This belief—that great products solve real problems for real users—shapes everything I do.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 style="margin-bottom: 1.5rem;">My Product Journey</h2>
+                <div class="card">
+                    <h3 class="text-green" style="margin-bottom: 0.75rem;">Fyxt: 8+ Years of Strategic Product Innovation (2017–Present)</h3>
+                    <p class="text-muted" style="margin-bottom: 1rem;">
+                        I joined Fyxt as a QA Analyst (March 2018) when the company was early stage. Over the next 8 years, I evolved into Co-Founder & Product Manager (January 2020–present), wearing multiple hats and driving strategic initiatives end-to-end.
+                    </p>
+                    <ul style="list-style: disc; padding-left: 1.5rem;" class="text-muted">
+                        <li>Launched 15+ features achieving up to 86% user adoption in the first year</li>
+                        <li>Led cross-functional product execution (engineering, design, QA) through full lifecycle</li>
+                        <li>Conducted 100+ customer discovery interviews to uncover unmet needs</li>
+                        <li>Built metrics-driven culture: continuous KPI monitoring, A/B testing, user feedback incorporation</li>
+                        <li>Orchestrated go-to-market execution, aligning sales, marketing, and customer success teams</li>
+                    </ul>
+                    <p class="text-muted" style="margin-top: 1rem;">
+                        Fyxt taught me that product success isn't magic—it's disciplined user empathy, clear prioritization, and relentless execution.
+                    </p>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2 style="margin-bottom: 1.5rem;">What I Bring to a PM Role</h2>
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3 class="text-green" style="font-size: 1.125rem; margin-bottom: 0.5rem;">Data-Driven Decision Making</h3>
+                        <p class="text-muted">Every major decision backed by metrics, user research, and competitive analysis.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-green" style="font-size: 1.125rem; margin-bottom: 0.5rem;">Cross-Functional Leadership</h3>
+                        <p class="text-muted">Excel at translating business goals into technical requirements and user needs into product specs.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-green" style="font-size: 1.125rem; margin-bottom: 0.5rem;">Product Roadmap & Prioritization</h3>
+                        <p class="text-muted">Use frameworks (RICE) to prioritize ruthlessly without losing sight of vision.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-green" style="font-size: 1.125rem; margin-bottom: 0.5rem;">User Advocacy & Empathy</h3>
+                        <p class="text-muted">100+ customer interviews; dig deeper than surface-level problems to understand context and constraints.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-green" style="font-size: 1.125rem; margin-bottom: 0.5rem;">AI & Generative AI Proficiency</h3>
+                        <p class="text-muted">Certified in AI Agents for Product Leaders; see AI as a multiplier of human productivity.</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-green" style="font-size: 1.125rem; margin-bottom: 0.5rem;">Go-to-Market Strategy</h3>
+                        <p class="text-muted">Led product launches from concept to scale, measuring post-launch success rigorously.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2 style="margin-bottom: 1rem;">Why This Role Excites Me</h2>
+                <div class="text-muted">
+                    <p style="margin-bottom: 1rem;">
+                        I've been drawn to the creator economy for the past 3–4 years. I listen to 15+ podcasts per week, and I've noticed a clear pattern: the most innovative, best-quality creators are often the most frustrated with discovery, monetization, and analytics tools available to them.
+                    </p>
+                    <p style="margin-bottom: 1rem;">
+                        Spotify is uniquely positioned. It has 678M logged-in users, a proven ads business, and genuine relationships with creators through Spotify for Creators. But the tools for podcast discovery, promotion, and creator growth still lag behind music—and significantly lag YouTube.
+                    </p>
+                    <p style="margin-bottom: 1rem;">
+                        That gap is where I want to focus my energy. If I can help Spotify build a creator-first podcast growth engine that simplifies promotional planning, measurement, and optimization, it's not just about retention and revenue; it's about democratizing podcast creation and helping the next generation of storytellers build sustainable careers in audio.
+                    </p>
+                    <p>
+                        At the intersection of product strategy, creator empathy, data-driven optimization, and AI integration—this is where I want to spend the next few years.
+                    </p>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2 style="margin-bottom: 1rem;">Outside of Work</h2>
+                <div class="grid grid-3">
+                    <div class="card">
+                        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Rockhounding & Geology</h3>
+                        <p class="text-muted">I'm an avid rockhound with a collection of opals, agates, and rare specimens. I spend weekends exploring tide pools and rock formations in Palos Verdes, near my home in Redondo Beach, CA. There's something meditative about analyzing mineral structures and understanding geological patterns—not unlike diagnosing product problems.</p>
+                    </div>
+                    <div class="card">
+                        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Cooking & Food</h3>
+                        <p class="text-muted">I love experimenting with recipes and specialty ingredients. Cooking is iterative—testing hypotheses, measuring results, and refining based on feedback. It's also a great way to unwind and be creative outside of work.</p>
+                    </div>
+                    <div class="card">
+                        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Star Trek</h3>
+                        <p class="text-muted">I'm a lifelong Star Trek enthusiast. It's not just sci-fi; it's a thought experiment about how technology serves humanity. The show's core value—using innovation to solve problems and improve lives—aligns with how I think about product.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card" style="text-align: center;">
+                <h2 style="margin-bottom: 1rem;">Let's Connect</h2>
+                <div class="text-muted" style="margin-bottom: 1.5rem;">
+                    <p>Email: <a href="mailto:camronsoltani@gmail.com" class="text-green" style="text-decoration: none;">camronsoltani@gmail.com</a></p>
+                    <p>Phone: (301) 648-8023</p>
+                    <p>Location: Redondo Beach, CA 90277</p>
+                </div>
+                <p class="text-muted">
+                    If you're exploring how to build next-generation creator tools at Spotify or beyond, I'd love to chat. I'm energized by hard problems, collaborative teams, and the belief that great products can improve people's lives.
+                </p>
+            </section>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p style="font-size: 0.875rem; color: var(--spotify-text-muted); margin-bottom: 0.5rem;">
+                © 2026 Camron Soltani. Not affiliated with Spotify. This is a case study for a PM role.
+            </p>
+            <p style="font-size: 0.875rem; color: var(--spotify-text-muted);">
+                Contact: <a href="mailto:camronsoltani@gmail.com">camronsoltani@gmail.com</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Tab Navigation
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            
+            // Initialize charts for the active tab
+            if (tabId === 'overview') {
+                initListenerTrendChart();
+            } else if (tabId === 'reach') {
+                initImpressionsChart();
+                initTrafficSourceChart();
+            } else if (tabId === 'engagement') {
+                initRetentionChart();
+                initStreamsChart();
+            } else if (tabId === 'monetization') {
+                initRPMChart();
+                initRevenueChart();
+            }
+        }
+
+        // Chart Initialization
+        let charts = {};
+
+        function initListenerTrendChart() {
+            const ctx = document.getElementById('listenerTrendChart');
+            if (!ctx || charts.listenerTrend) return;
+            
+            charts.listenerTrend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Nov 4', 'Nov 11', 'Nov 18', 'Nov 25', 'Dec 2', 'Dec 9'],
+                    datasets: [{
+                        label: 'Listeners',
+                        data: [10200, 10800, 11200, 11800, 12200, 12400],
+                        borderColor: '#1DB954',
+                        backgroundColor: 'rgba(29, 185, 84, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#212121',
+                            borderColor: '#535353',
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#FFFFFF'
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#B3B3B3' }, grid: { color: '#535353' } },
+                        y: { ticks: { color: '#B3B3B3' }, grid: { color: '#535353' } }
+                    }
+                }
+            });
+        }
+
+        function initImpressionsChart() {
+            const ctx = document.getElementById('impressionsChart');
+            if (!ctx || charts.impressions) return;
+            
+            charts.impressions = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Impressions', 'Clicks', 'Plays'],
+                    datasets: [{
+                        label: 'Value',
+                        data: [238000, 12400, 8920],
+                        backgroundColor: ['#1DB954', '#8B5CF6', '#B3B3B3']
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#212121',
+                            borderColor: '#535353',
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#FFFFFF',
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    label += context.parsed.x.toLocaleString();
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#B3B3B3' }, grid: { color: '#535353' } },
+                        y: { ticks: { color: '#B3B3B3' }, grid: { color: '#535353' } }
+                    }
+                }
+            });
+        }
+
+        function initTrafficSourceChart() {
+            const ctx = document.getElementById('trafficSourceChart');
+            if (!ctx || charts.trafficSource) return;
+            
+            charts.trafficSource = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Spotify Home', 'Spotify Search', 'Library', 'External', 'Algorithmic'],
+                    datasets: [{
+                        data: [35, 28, 18, 12, 7],
+                        backgroundColor: ['#1DB954', '#B3B3B3', '#535353', '#212121', '#8B5CF6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#212121',
+                            borderColor: '#535353',
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#FFFFFF',
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initRetentionChart() {
+            const ctx = document.getElementById('retentionChart');
+            if (!ctx || charts.retention) return;
+            
+            charts.retention = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['0:00', '0:15', '0:30', '1:00', '2:00', '4:00', '6:00', '8:00', '10:00', '15:00', '20:00', '28:00'],
+                    datasets: [{
+                        label: 'Retention %',
+                        data: [100, 98, 95, 91, 85, 78, 72, 68, 65, 58, 52, 45],
+                        borderColor: '#1DB954',
+                        backgroundColor: 'rgba(29, 185, 84, 0.3)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#212121',
+                            borderColor: '#535353',
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#FFFFFF',
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + '% retention';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#B3B3B3' }, grid: { color: '#535353' } },
+                        y: { 
+                            ticks: { color: '#B3B3B3' }, 
+                            grid: { color: '#535353' },
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        function initStreamsChart() {
+            const ctx = document.getElementById('streamsChart');
+            if (!ctx || charts.streams) return;
+            
+            charts.streams = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Ep 124', 'Ep 123', 'Ep 122', 'Ep 121', 'Ep 120'],
+                    datasets: [
+                        {
+                            label: 'Starts',
+                            data: [2340, 1890, 1650, 1420, 1280],
+                            backgroundColor: '#535353'
+                        },
+                        {
+                            label: 'Streams (>60s)',
+                            data: [1890, 1650, 1420, 1180, 1050],
+                            backgroundColor: '#1DB954'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#B3B3B3' }
+                        },
+                        tooltip: {
+                            backgroundColor: '#212121',
+                            borderColor: '#535353',
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#FFFFFF'
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#B3B3B3' }, grid: { color: '#535353' } },
+                        y: { ticks: { color: '#B3B3B3' }, grid: { color: '#535353' } }
+                    }
+                }
+            });
+        }
+
+        function initRPMChart() {
+            const ctx = document.getElementById('rpmChart');
+            if (!ctx || charts.rpm) return;
+            
+            charts.rpm = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [
+                        {
+                            label: 'Your RPM',
+                            data: [2.4, 2.6, 2.8, 3.1],
+                            backgroundColor: '#1DB954'
+                        },
+                        {
+                            label: 'Genre Benchmark',
+                            data: [2.8, 2.8, 2.8, 2.8],
+                            type: 'line',
+                            borderColor: '#B3B3B3',
+                            borderDash: [5, 5],
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#B3B3B3' }
+                        },
+                        tooltip: {
+                            backgroundColor: '#212121',
+                            borderColor: '#535353',
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#FFFFFF',
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#B3B3B3' }, grid: { color: '#535353' } },
+                        y: { ticks: { color: '#B3B3B3' }, grid: { color: '#535353' } }
+                    }
+                }
+            });
+        }
+
+        function initRevenueChart() {
+            const ctx = document.getElementById('revenueChart');
+            if (!ctx || charts.revenue) return;
+            
+            charts.revenue = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Ads Earned', 'Subscriptions', 'Unfilled Ad Slots', 'Skipped Mid-rolls'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [2400, 890, -1200, -800],
+                        backgroundColor: ['#1DB954', '#1DB954', '#EF4444', '#EF4444']
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#212121',
+                            borderColor: '#535353',
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#FFFFFF',
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + Math.abs(context.parsed.x).toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#B3B3B3' }, grid: { color: '#535353' } },
+                        y: { ticks: { color: '#B3B3B3' }, grid: { color: '#535353' } }
+                    }
+                }
+            });
+        }
+
+        // Initialize charts on page load
+        window.addEventListener('load', function() {
+            initListenerTrendChart();
+        });
+    </script>
+</body>
+</html>
+
