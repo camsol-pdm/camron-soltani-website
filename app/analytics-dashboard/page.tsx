@@ -18,9 +18,6 @@ import {
   AreaChart,
   Area,
   ComposedChart,
-  FunnelChart,
-  Funnel,
-  LabelList,
 } from 'recharts';
 
 const COLORS = ['#1DB954', '#B3B3B3', '#535353', '#212121', '#FFFFFF', '#8B5CF6'];
@@ -988,7 +985,11 @@ export default function AnalyticsDashboard() {
                     contentStyle={{ backgroundColor: '#212121', border: '1px solid #535353', borderRadius: '8px' }}
                     formatter={(value: number) => [`$${Math.abs(value).toLocaleString()}`, 'Revenue']}
                   />
-                  <Bar dataKey="value" fill={(entry: any) => entry.value > 0 ? '#1DB954' : '#EF4444'} />
+                  <Bar dataKey="value">
+                    {revenueData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.value > 0 ? '#1DB954' : '#EF4444'} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
               <div className="mt-4 p-4 bg-spotify-dark border border-yellow-500 rounded-lg">
@@ -1015,3 +1016,4 @@ export default function AnalyticsDashboard() {
     </div>
   );
 }
+

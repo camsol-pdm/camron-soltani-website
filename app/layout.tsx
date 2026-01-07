@@ -1,26 +1,30 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+'use client';
 
-export const metadata: Metadata = {
-  title: "Camron Soltani – Product Manager | Spotify Podcast Creator Tools Case Study",
-  description: "A strategic product case study for Spotify's podcast creator ecosystem, focusing on helping creators plan, book, target, and measure effective promotional campaigns.",
-};
+import React, { useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/next';
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  useEffect(() => {
+    // Disable Next.js scroll restoration - we handle it manually
+    if (typeof window !== 'undefined' && 'scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+  }, []);
+
   return (
     <html lang="en">
-      <body className="antialiased bg-spotify-dark text-spotify-text">
-        <Navigation />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Camron Soltani - Product Manager | Spotify Podcast Creator Tools</title>
+      </head>
+      <body>
+        {children}
+        <Analytics />
       </body>
     </html>
   );
