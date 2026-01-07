@@ -10,14 +10,23 @@ interface HTMLRendererProps {
 
 export default function HTMLRenderer({ bodyContent, headScripts, bodyScripts }: HTMLRendererProps) {
   const scriptsExecuted = useRef(false);
+  const headScriptsRef = useRef(headScripts);
+  const bodyScriptsRef = useRef(bodyScripts);
+  
+  // Update refs when props change (but don't trigger re-execution)
+  headScriptsRef.current = headScripts;
+  bodyScriptsRef.current = bodyScripts;
   
   useEffect(() => {
-    // Prevent scripts from running multiple times
-    if (scriptsExecuted.current) return;
+    // Prevent scripts from running multiple times - use global flag
+    if (scriptsExecuted.current || (window as any).__scriptsExecuted) {
+      return;
+    }
     scriptsExecuted.current = true;
+    (window as any).__scriptsExecuted = true;
     
     // Execute head scripts first
-    headScripts.forEach((script) => {
+    headScriptsRef.current.forEach((script) => {
       const srcMatch = script.attrs.match(/src=["']([^"']+)["']/i);
       if (srcMatch) {
         const scriptEl = document.createElement('script');
@@ -33,7 +42,7 @@ export default function HTMLRenderer({ bodyContent, headScripts, bodyScripts }: 
     
     // Execute body scripts after a short delay to ensure DOM is ready
     setTimeout(() => {
-      bodyScripts.forEach((script) => {
+      bodyScriptsRef.current.forEach((script) => {
         const srcMatch = script.attrs.match(/src=["']([^"']+)["']/i);
         if (srcMatch) {
           const scriptEl = document.createElement('script');
@@ -51,7 +60,7 @@ export default function HTMLRenderer({ bodyContent, headScripts, bodyScripts }: 
         }
       });
     }, 100);
-  }, [headScripts, bodyScripts]);
+  }, []); // Empty dependency array - only run once on mount
   
   return <div dangerouslySetInnerHTML={{ __html: bodyContent }} />;
 }

@@ -869,10 +869,15 @@
             box-shadow: 0 0 0 4px rgba(29, 185, 84, 0.2);
         }
         
-        /* Smooth Page Transitions - removed to prevent conflicts with programmatic scrolling */
-        /* html {
-            scroll-behavior: smooth;
-        } */
+        /* Smooth Page Transitions - DISABLED to prevent conflicts with programmatic scrolling */
+        html {
+            scroll-behavior: auto !important;
+        }
+        
+        /* Prevent browser's automatic anchor scrolling */
+        :target {
+            scroll-margin-top: 45px;
+        }
         
         /* Enhanced Mobile Experience */
         @media (max-width: 768px) {
@@ -2670,22 +2675,21 @@
             }
             
             function handleAnchorClick(e) {
-                // Prevent if already scrolling
-                if (scrollInProgress) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.stopImmediatePropagation();
-                    return;
-                }
-                
                 const link = e.target.closest('a[href^="#"]');
                 if (!link) return;
                 
+                // CRITICAL: Prevent default IMMEDIATELY - before any other logic
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                // Prevent if already scrolling
+                if (scrollInProgress) {
+                    return;
+                }
+                
                 const href = link.getAttribute('href');
                 if (!href || href === '#') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.stopImmediatePropagation();
                     if (href === '#home' || href === '#') {
                         scrollInProgress = true;
                         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2699,26 +2703,16 @@
                 const targetId = href.slice(1);
                 if (!targetId) return;
                 
-                // Prevent all default behaviors immediately - do this FIRST
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                e.stopImmediatePropagation(); // Call twice to be sure
-                
-                // Prevent browser's automatic hash scroll
-                preventAutoScroll();
-                
-                // Update URL without triggering scroll
+                // Update URL FIRST (before any scrolling) to prevent browser auto-scroll
                 if (history.pushState) {
                     history.pushState(null, '', href);
                 }
                 
-                // Small delay to ensure browser doesn't auto-scroll
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        scrollToTarget(targetId);
-                    });
-                });
+                // Prevent browser's automatic hash scroll
+                preventAutoScroll();
+                
+                // Use immediate scroll to target (no delay)
+                scrollToTarget(targetId);
             }
             
             // Prevent browser's default hash navigation
