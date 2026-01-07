@@ -2747,6 +2747,15 @@
         // Chart Initialization Functions
         function initListenerTrendChart() {
             const ctx = document.getElementById('listenerTrendChart');
+            
+            // Debug Mode
+            console.log('=== listenerTrendChart Debug ===');
+            console.log('Canvas element:', ctx);
+            console.log('Canvas width:', ctx?.offsetWidth);
+            console.log('Canvas height:', ctx?.offsetHeight);
+            console.log('Parent visible:', ctx?.offsetParent !== null);
+            console.log('Parent dimensions:', ctx?.parentElement?.offsetWidth, 'x', ctx?.parentElement?.offsetHeight);
+            
             if (!ctx) {
                 console.warn('listenerTrendChart canvas not found');
                 return;
