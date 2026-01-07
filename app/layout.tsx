@@ -1,10 +1,4 @@
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Camron Soltani - Product Manager | Spotify Podcast Creator Tools',
-  description: 'Product strategy case study for Spotify PM role focused on podcast creator promotional tools and analytics',
-};
-
+// Minimal layout - middleware handles root path
 export default function RootLayout({
   children,
 }: {
