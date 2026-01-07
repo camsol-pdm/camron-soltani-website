@@ -1473,6 +1473,23 @@
             min-height: 200px !important;
             min-width: 300px !important;
         }
+        
+        /* Navigation scroll behavior */
+        nav {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        
+        nav.nav-hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        nav.nav-visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -3473,6 +3490,65 @@
             }
         }
         
+        // Navigation scroll behavior
+        let lastScrollTop = 0;
+        let scrollTimeout = null;
+        const nav = document.querySelector('nav');
+        
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Clear any existing timeout
+            if (scrollTimeout) {
+                clearTimeout(scrollTimeout);
+            }
+            
+            // At the top of the page, always show nav
+            if (scrollTop <= 10) {
+                nav.classList.remove('nav-hidden');
+                nav.classList.add('nav-visible');
+                lastScrollTop = scrollTop;
+                return;
+            }
+            
+            // Scrolling up - show nav immediately
+            if (scrollTop < lastScrollTop) {
+                nav.classList.remove('nav-hidden');
+                nav.classList.add('nav-visible');
+            }
+            // Scrolling down - hide nav after a short delay
+            else if (scrollTop > lastScrollTop) {
+                scrollTimeout = setTimeout(() => {
+                    nav.classList.remove('nav-visible');
+                    nav.classList.add('nav-hidden');
+                }, 150); // Small delay before hiding
+            }
+            
+            lastScrollTop = scrollTop;
+        }
+        
+        // Throttle scroll events for better performance
+        let ticking = false;
+        function onScroll() {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    handleScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+        
+        // Initialize navigation scroll behavior
+        function initializeNavScroll() {
+            if (nav) {
+                // Initially visible
+                nav.classList.add('nav-visible');
+                // Add scroll listener
+                window.addEventListener('scroll', onScroll, { passive: true });
+            }
+        }
+        
         // Initialize on page load
         function initializePage() {
             // Use requestAnimationFrame to ensure CSS is applied
@@ -3480,6 +3556,9 @@
                 requestAnimationFrame(() => {
                     checkImages();
                     loadCamronPhoto();
+                    
+                    // Initialize navigation scroll behavior
+                    initializeNavScroll();
                     
                     // Initialize overview tab as default landing tab
                     initializeOverviewTab();
