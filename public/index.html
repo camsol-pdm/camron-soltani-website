@@ -1479,11 +1479,34 @@
             min-width: 300px !important;
         }
         
+        /* Auto-hiding Navigation Bar
+         * The header hides on scroll down and reappears on scroll up after the first screen.
+         * Adjust threshold (viewport height multiplier) and transition duration below.
+         */
+        #main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            transition: transform 0.2s ease-out;
+            transform: translateY(0);
+        }
+        
+        #main-nav.nav-hidden {
+            transform: translateY(-100%);
+        }
+        
+        /* Account for fixed nav height to prevent content jump */
+        body {
+            padding-top: 45px;
+        }
+        
     </style>
 </head>
 <body class="antialiased">
     <!-- Navigation -->
-    <nav class="bg-spotify-dark-secondary border-b border-spotify-neutral sticky top-0 z-50" style="height: 45px;">
+    <nav id="main-nav" class="bg-spotify-dark-secondary border-b border-spotify-neutral" style="height: 45px;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
             <div class="flex justify-between items-center h-full">
                 <a href="#home" class="text-lg font-semibold text-spotify-text hover:text-spotify-green transition-colors">
