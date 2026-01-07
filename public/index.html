@@ -371,8 +371,6 @@
         
         /* Modern Tab Content Styles */
         .tab-content {
-            display: block !important;
-            visibility: visible !important;
             animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 1;
         }
@@ -389,6 +387,7 @@
         #dashboard-content .tab-content:not(.hidden) {
             display: block !important;
             visibility: visible !important;
+            opacity: 1;
         }
         
         /* Modern Gradient Backgrounds with Advanced Effects */
@@ -521,28 +520,10 @@
             overflow: hidden;
         }
         
-        .bg-spotify-dark-secondary[class*="p-6"]::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, rgba(29, 185, 84, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            transform: translate(30%, -30%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        
         .bg-spotify-dark-secondary[class*="p-6"]:hover {
             border-color: var(--spotify-border-glow);
             box-shadow: var(--shadow-xl), var(--shadow-glow);
             transform: translateY(-6px) scale(1.02);
-        }
-        
-        .bg-spotify-dark-secondary[class*="p-6"]:hover::after {
-            opacity: 1;
         }
         
         /* Badge/Status Indicators */
@@ -639,6 +620,25 @@
         /* Ensure proper spacing for tab content */
         #dashboard-content {
             min-height: 400px;
+        }
+        
+        /* Genre bar hover effect */
+        .genre-bar-group {
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+        
+        .genre-bar-group:hover {
+            opacity: 0.85;
+        }
+        
+        /* Modal styling */
+        #genreModal, #collabModal {
+            backdrop-filter: blur(4px);
+        }
+        
+        #genreModal .bg-spotify-dark-secondary, #collabModal .bg-spotify-dark-secondary {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
         }
         
         /* Fix for potential Tailwind conflicts */
@@ -869,14 +869,9 @@
             box-shadow: 0 0 0 4px rgba(29, 185, 84, 0.2);
         }
         
-        /* Smooth Page Transitions - DISABLED to prevent conflicts with programmatic scrolling */
+        /* Smooth Page Transitions */
         html {
-            scroll-behavior: auto !important;
-        }
-        
-        /* Prevent browser's automatic anchor scrolling */
-        :target {
-            scroll-margin-top: 45px;
+            scroll-behavior: smooth;
         }
         
         /* Enhanced Mobile Experience */
@@ -925,23 +920,6 @@
             position: relative;
         }
         
-        .bg-spotify-dark-secondary[class*="rounded-lg"]::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            padding: 1px;
-            background: linear-gradient(135deg, transparent, rgba(29, 185, 84, 0.1), transparent);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        
-        .bg-spotify-dark-secondary[class*="rounded-lg"]:hover::after {
-            opacity: 1;
-        }
         
         /* Enhanced Typography Hierarchy */
         .text-3xl:not(h2):not(h1),
@@ -1472,41 +1450,11 @@
             max-width: 100%;
             max-height: 100%;
         }
-        
-        /* Force canvas dimensions for Listener Trend chart */
-        #listenerTrendChart {
-            min-height: 200px !important;
-            min-width: 300px !important;
-        }
-        
-        /* Auto-hiding Navigation Bar
-         * The header hides on scroll down and reappears on scroll up after the first screen.
-         * Adjust threshold (viewport height multiplier) and transition duration below.
-         */
-        #main-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 50;
-            transition: transform 0.2s ease-out;
-            transform: translateY(0);
-        }
-        
-        #main-nav.nav-hidden {
-            transform: translateY(-100%);
-        }
-        
-        /* Account for fixed nav height to prevent content jump */
-        body.antialiased {
-            padding-top: 45px;
-        }
-        
     </style>
 </head>
 <body class="antialiased">
     <!-- Navigation -->
-    <nav id="main-nav" class="bg-spotify-dark-secondary border-b border-spotify-neutral" style="height: 45px;">
+    <nav class="bg-spotify-dark-secondary border-b border-spotify-neutral sticky top-0 z-50" style="height: 45px;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
             <div class="flex justify-between items-center h-full">
                 <a href="#home" class="text-lg font-semibold text-spotify-text hover:text-spotify-green transition-colors">
@@ -1557,7 +1505,7 @@
                         <div class="relative mb-6">
                             <div class="bg-gradient-to-br from-spotify-dark via-spotify-dark-secondary to-spotify-dark rounded-lg p-2 border border-spotify-neutral shadow-lg overflow-hidden">
                                 <div class="relative aspect-video rounded-lg overflow-hidden">
-                                    <img src="/images/Gemini_Generated_Image_ti9ydwti9ydwti9y.png" alt="Podcast creator at desk reviewing analytics dashboard with holographic UI elements showing charts, Shorts tiles, and audience segments" class="w-full h-full object-cover" />
+                                    <img src="public/images/Gemini_Generated_Image_ti9ydwti9ydwti9y.png" alt="Podcast creator at desk reviewing analytics dashboard with holographic UI elements showing charts, Shorts tiles, and audience segments" class="w-full h-full object-cover" />
                                 </div>
                             </div>
                         </div>
@@ -1597,7 +1545,7 @@
                         <p class="text-sm text-spotify-green text-center font-semibold uppercase tracking-wide mb-2">Realizing Limitless Promotional Reach</p>
                         <div class="w-full rounded-lg flex justify-center items-center" style="overflow: hidden;">
                             <div style="width: 60%; max-width: 100%;">
-                                <img src="/images/Gemini_Generated_Image_77ud1q77ud1q77ud.png" alt="Cross-genre audience consumption patterns and cross-promotion marketplace visualization" class="w-full h-auto object-contain rounded-lg" style="display: block;" />
+                                <img src="public/images/Gemini_Generated_Image_77ud1q77ud1q77ud.png" alt="Cross-genre audience consumption patterns and cross-promotion marketplace visualization" class="w-full h-auto object-contain rounded-lg" style="display: block;" />
                             </div>
                         </div>
                     </div>
@@ -1611,7 +1559,7 @@
                             This isn't a problem. It's a strategic opportunity. Spotify has 678M logged-in users, strong creator relationships through Spotify for Creators, and first-party data that competitors can't match. What's missing? Invigorated promotional tools with advanced audience and market targeting, enhanced analytics that provide true intelligence on listener behavior, and AI guidance on content optimization and audience expansion.
                         </p>
                         <p>
-                            One opportune area of expansion lies in identifying the cross-pollination of genres that viewers consume. Spotify's first-party data reveals powerful insights: when a listener engages with true crime podcasts, they may also follow tech podcasts, productivity shows, and business content. This cross-genre consumption pattern opens the door to a <strong class="text-spotify-text">Cross-Promotion Marketplace</strong>—a native platform where creators can promote their content on other shows that their viewers already engage with, where this promotion comes in the form of an ad or shout-out. Spotify's data can identify high-potential partnerships, suggest collaboration opportunities, and enable seamless cross-promotion campaigns that drive measurable listener growth for both creators involved.
+                            One opportune area of expansion lies in identifying the cross-pollination of genres that viewers consume. Spotify's first-party data reveals powerful insights: when a listener engages with true crime podcasts, they may also follow tech podcasts, productivity shows, and business content. This cross-genre consumption pattern opens the door to a <strong class="text-spotify-text">Cross-Promotion Marketplace</strong>—a native platform where creators can promote their content on other shows that their viewers already engage with, where this promotion comes in the form of an add or shout-out. Spotify's data can identify high-potential partnerships, suggest collaboration opportunities, and enable seamless cross-promotion campaigns that drive measurable listener growth for both creators involved.
                         </p>
                     </div>
                     
@@ -1753,9 +1701,9 @@
                     </div>
                 </div>
 
-                <div class="mt-12 bg-spotify-green text-white p-8 rounded-lg">
-                    <h2 class="text-2xl font-bold mb-4 text-center">24-Month Success Metrics</h2>
-                    <div class="grid md:grid-cols-2 gap-6 text-left" style="padding-left: 150px; padding-right: 60px;">
+                <div class="mt-12 bg-spotify-green text-white p-8 rounded-lg text-center">
+                    <h2 class="text-2xl font-bold mb-4">24-Month Success Metrics</h2>
+                    <div class="grid md:grid-cols-2 gap-6 text-left">
                         <div>
                             <h3 class="font-semibold mb-2">Creator Metrics</h3>
                             <ul class="text-green-50 text-sm space-y-1">
@@ -1803,13 +1751,27 @@
                 <div id="dashboard-content">
                     <!-- OVERVIEW TAB -->
                     <div id="tab-overview" class="tab-content">
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
                     <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
                         <p class="text-sm text-spotify-text-muted mb-1">Total Listeners (28-day)</p>
                         <p class="text-3xl font-bold text-spotify-text">12,400</p>
                         <p class="text-xs text-spotify-green mt-1">△ +2.1% vs avg</p>
                         <span class="text-green-500">✅</span>
                         <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Growth is steady but accelerating. Your recent Tuesday 8 AM publish time strategy is driving 40% more first-week listeners, contributing to this upward trend.</p>
+                    </div>
+                    <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                        <p class="text-sm text-spotify-text-muted mb-1">Listener Growth Rate</p>
+                        <p class="text-3xl font-bold text-spotify-text">2.1%</p>
+                        <p class="text-xs text-spotify-green mt-1">△ +0.4% vs prior month</p>
+                        <span class="text-green-500">✅</span>
+                        <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Your listener growth is 2.1%, which is above the median (1.8%) for podcasts in your category. This steady growth suggests your audience is expanding at a healthy rate. To accelerate, focus on optimizing your release timing and improving completion rates on existing episodes.</p>
+                    </div>
+                    <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                        <p class="text-sm text-spotify-text-muted mb-1">Completion Rate</p>
+                        <p class="text-3xl font-bold text-spotify-text">68%</p>
+                        <p class="text-xs text-spotify-text-muted mt-1">△ -12% vs industry avg</p>
+                        <span class="text-yellow-500">⚠️</span>
+                        <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Only 68% complete your episodes vs 80% industry average. Drop-off is steepest at the 12-15 minute mark (18% exit rate), indicating listener fatigue or content pacing issues. To improve: shorten intro segments and add re-engagement hooks at the midpoint.</p>
                     </div>
                     <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
                         <p class="text-sm text-spotify-text-muted mb-1">Watch Time (hours)</p>
@@ -1819,11 +1781,12 @@
                         <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Watch time growth outpaces listener growth (+8% vs +2.1%), indicating improved engagement depth. Your interview format episodes (35% higher LTR) are keeping listeners engaged longer.</p>
                     </div>
                     <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
-                        <p class="text-sm text-spotify-text-muted mb-1">CTR</p>
-                        <p class="text-3xl font-bold text-spotify-text">5.2%</p>
+                        <p class="text-sm text-spotify-text-muted mb-1">Impressions & CTR</p>
+                        <p class="text-2xl font-bold text-spotify-text">94,500</p>
+                        <p class="text-sm text-spotify-text-muted mt-1">CTR: 5.2%</p>
                         <p class="text-xs text-spotify-text-muted mt-1">△ -0.3% vs avg</p>
                         <span class="text-yellow-500">ℹ️</span>
-                        <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: CTR is slightly below average but stable. Episodes with guest names in titles perform 30% better on CTR—consider adding guest names to more episode titles to boost this metric.</p>
+                        <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Your CTR is 5.2% (slightly below 5.5% median). Your title/thumbnail strategy is consistent but has room for optimization. Creators with 8%+ CTR gain 25% more listeners—consider A/B testing thumbnail designs with key text in mobile-safe zones.</p>
                     </div>
                     <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
                         <p class="text-sm text-spotify-text-muted mb-1">Avg Listen Duration</p>
@@ -1833,16 +1796,37 @@
                         <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Listen duration is improving, likely due to shorter intros (testing 60-sec vs 2:30). Your retention curve shows 91% reach 30s, indicating strong hooks are working.</p>
                     </div>
                     <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                        <p class="text-sm text-spotify-text-muted mb-1">Series Completion Rate</p>
+                        <p class="text-3xl font-bold text-spotify-text">58%</p>
+                        <p class="text-xs text-spotify-green mt-1">△ +3% vs prior month</p>
+                        <span class="text-green-500">✅</span>
+                        <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: 58% of your listeners complete full series, which is above the 45% industry average. This indicates strong audience loyalty and content stickiness. Listeners who complete series have 71% probability of continuing to your next series. Focus: continue with multi-episode arcs and season-based content.</p>
+                    </div>
+                    <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                        <p class="text-sm text-spotify-text-muted mb-1">Subscriber Conversion Rate</p>
+                        <p class="text-3xl font-bold text-spotify-text">7.2%</p>
+                        <p class="text-xs text-spotify-green mt-1">△ +2.2% vs avg</p>
+                        <span class="text-green-500">✅</span>
+                        <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: You converted 7.2% of listeners to subscribers (vs 5.0% average). Subscribers return +45% more often and have higher lifetime value. To improve further: add call-to-action placement by episode midpoint (around 4:00) to capture engaged listeners.</p>
+                    </div>
+                    <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
                         <p class="text-sm text-spotify-text-muted mb-1">Subscribers</p>
                         <p class="text-3xl font-bold text-spotify-text">890</p>
                         <p class="text-xs text-spotify-green mt-1">△ +12% vs avg</p>
                         <span class="text-green-500">✅</span>
                         <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Subscriber growth (+12%) significantly outpaces listener growth (+2.1%), showing strong conversion. Your 7.2% listener-to-subscriber conversion rate is above the 5% industry average.</p>
-                            </div>
+                    </div>
+                    <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                        <p class="text-sm text-spotify-text-muted mb-1">Revenue</p>
+                        <p class="text-3xl font-bold text-spotify-text">$3,290</p>
+                        <p class="text-xs text-spotify-text-muted mt-1">Monthly</p>
+                        <span class="text-green-500">✅</span>
+                        <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Monthly revenue of $3,290 comes from ads ($2,400) and subscriptions ($890). Your RPM of $3.10 is above the $2.80 genre benchmark. Opportunity: add ad markers at high-retention timestamps (2:00, 5:00, 12:00) to capture an additional $180-240/month.</p>
+                    </div>
                         </div>
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
                             <h3 class="text-xl font-semibold text-spotify-text mb-4">Listener Trend (28 days)</h3>
-                            <canvas id="listenerTrendChart" height="80" style="min-height: 200px;"></canvas>
+                            <canvas id="listenerTrendChart" height="80"></canvas>
                         </div>
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
                             <h3 class="text-xl font-semibold text-spotify-text mb-4">Top Episodes (30d)</h3>
@@ -1895,48 +1879,65 @@
 
                     <!-- REACH & DISCOVERY TAB -->
                     <div id="tab-reach" class="tab-content hidden">
-                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Impressions vs. CTR (Click-Through Rate)</h3>
-                            <div class="grid grid-cols-3 gap-4 mb-4">
-                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <p class="text-sm text-spotify-text-muted mb-1">Impressions</p>
-                                    <p class="text-2xl font-bold text-spotify-text">238,000</p>
-                                    <p class="text-xs text-spotify-text-muted mt-1">Artwork rendered on screen</p>
-                                    <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: High impression volume indicates strong algorithmic distribution. 35% come from Spotify Home browse—your content is being surfaced effectively in discovery feeds.</p>
-                                </div>
-                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <p class="text-sm text-spotify-text-muted mb-1">Clicks</p>
-                                    <p class="text-2xl font-bold text-spotify-text">12,400</p>
-                                    <p class="text-xs text-spotify-green mt-1">CTR: 5.21%</p>
-                                    <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: 5.21% CTR converts 238K impressions to 12.4K clicks. This is above the 4.8% niche average, driven by episodes with guest names in titles (30% CTR boost).</p>
-                                </div>
-                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <p class="text-sm text-spotify-text-muted mb-1">Plays</p>
-                                    <p class="text-2xl font-bold text-spotify-text">8,920</p>
-                                    <p class="text-xs text-spotify-green mt-1">Play Rate: 71.94%</p>
-                                    <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: 71.94% play rate means most clicks convert to plays. The 28% drop-off suggests some listeners are checking metadata before committing—optimize episode descriptions to reduce this gap.</p>
-                                </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">Organic Listeners</p>
+                                <p class="text-3xl font-bold text-spotify-text">7,700</p>
+                                <p class="text-xs text-spotify-text-muted mt-1">62% of total</p>
+                                <span class="text-green-500">✅</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: 62% of your listeners come from organic sources (search + browse), which is above the YouTube average of 45%. This indicates strong SEO performance and healthy algorithmic distribution. Your content is being discovered effectively through search and browse surfaces.</p>
                             </div>
-                            <canvas id="impressionsFunnelChart" height="100"></canvas>
-                        </div>
-                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-xl font-semibold text-spotify-text">Traffic Source Attribution</h3>
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="checkbox" id="excludeExternal" onchange="updateTrafficChart()" class="mr-2 w-4 h-4">
-                                    <span class="text-sm text-spotify-text-muted">Exclude External</span>
-                                </label>
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">Unique New Listeners</p>
+                                <p class="text-3xl font-bold text-spotify-text">2,400</p>
+                                <p class="text-xs text-spotify-text-muted mt-1">43% new this period</p>
+                                <span class="text-green-500">✅</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: You acquired 2,400 new listeners this period. At 43% return rate, approximately 1,032 will listen to a second episode. To improve retention: create series formats, add "Listen to next episode" CTAs, and send follow-up notifications 3 days after first listen.</p>
                             </div>
-                            <div class="grid md:grid-cols-2 gap-6">
-                                <canvas id="trafficSourceChart"></canvas>
-                                <div id="trafficSourceList" class="space-y-3"></div>
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">New Listener Conversion Rate</p>
+                                <p class="text-3xl font-bold text-spotify-text">18%</p>
+                                <p class="text-xs text-spotify-text-muted mt-1">First to repeat listener</p>
+                                <span class="text-green-500">✅</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: 18% of new listeners return for a second episode within 30 days, which is above the 15% industry average. Your interview format episodes drive 25% higher conversion. To improve further: create series formats, add "Listen to next episode" CTAs, and send follow-up notifications 3 days after first listen.</p>
+                            </div>
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">Suggested Episode Performance</p>
+                                <p class="text-3xl font-bold text-spotify-text">4,100</p>
+                                <p class="text-xs text-spotify-text-muted mt-1">Avg Duration: 4m 15s</p>
+                                <p class="text-xs text-spotify-text-muted">Completion: 71%</p>
+                                <span class="text-green-500">✅</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Suggested listeners complete 71% vs 75% for search traffic. They prefer shorter episodes (4:15 avg) and trending topics. Create more trending topic episodes with 4:00-4:30 length to boost algorithmic amplification—these episodes get 2.3x more suggested exposure.</p>
+                            </div>
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">External Traffic</p>
+                                <p class="text-3xl font-bold text-spotify-text">1,200</p>
+                                <p class="text-xs text-spotify-text-muted mt-1">From blogs, email, social</p>
+                                <span class="text-green-500">✅</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: External traffic drives 12% of listeners but 18% of listen-hours, indicating high-quality engagement. Email newsletter has best ROI (45% of external traffic, 78% completion). Next campaign: double down on email promotion, reduce spend on low-performing social sources.</p>
+                            </div>
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">Notification Performance</p>
+                                <p class="text-3xl font-bold text-spotify-text">34%</p>
+                                <p class="text-xs text-spotify-text-muted mt-1">Click rate | 28% listened</p>
+                                <span class="text-yellow-500">ℹ️</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Subscriber notification click rate is 34% (leaders achieve 45%+). Current send time may not align with listener activity. Recommendation: send notifications Tuesday 6 PM (peak listening window) and A/B test benefit-focused vs. curiosity-driven notification copy.</p>
                             </div>
                         </div>
+                        
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">New vs. Returning Listeners</h3>
-                            <canvas id="newVsReturningChart" height="100"></canvas>
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Traffic Source Waterfall (28 days)</h3>
+                            <canvas id="trafficSourceWaterfallChart" height="100"></canvas>
+                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: Search traffic peaked week of Dec 2 due to keyword spike from trending topic episode (ep124). Replicate this success by focusing on trending topics with high search volume and optimizing titles with trending keywords for sustained search traffic.</p>
                         </div>
-                    <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                        
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">New vs Returning Listeners (28 days)</h3>
+                            <canvas id="newVsReturningAreaChart" height="100"></canvas>
+                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: New listener share is 43%, slightly above the optimal 35-40% range. This indicates good growth but potential retention gap. To improve: focus on retention strategy through series formats, "binge" playlists, and improving completion rates to boost return rates.</p>
+                        </div>
+                        
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
                             <h3 class="text-xl font-semibold text-spotify-text mb-4">SEO Keyword Ranking</h3>
                             <div class="mb-4 p-4 bg-spotify-dark rounded-lg border border-spotify-neutral">
                                 <p class="text-sm text-spotify-text-muted mb-2">Word Cloud Visualization</p>
@@ -1997,346 +1998,427 @@
 
                     <!-- ENGAGEMENT & RETENTION TAB -->
                     <div id="tab-engagement" class="tab-content hidden">
-                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Average Percentage Viewed (APV)</h3>
-                            <div class="text-center mb-4">
-                                <p class="text-6xl font-bold text-spotify-green mb-2">67%</p>
-                                <div class="flex items-center justify-center gap-4">
-                                    <span class="text-green-500 text-2xl">▲</span>
-                                    <p class="text-spotify-text-muted">+5% vs. previous 10 episodes</p>
-                                </div>
-                                <div class="mt-4 grid grid-cols-2 gap-4 max-w-md mx-auto">
-                                    <div class="bg-spotify-dark border border-spotify-green rounded-lg p-3">
-                                        <p class="text-xs text-spotify-text-muted mb-1">Benchmark</p>
-                                        <p class="text-lg font-semibold text-spotify-text">&gt;70% = High</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">Average Listener Drop-off Time</p>
+                                <p class="text-3xl font-bold text-spotify-text">12m 34s</p>
+                                <p class="text-xs text-red-500 mt-1">△ -45s vs prior month</p>
+                                <span class="text-yellow-500">⚠️</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Your listeners drop off at 12m 34s on average, which is 2 minutes earlier than last month. This suggests pacing fatigue or a content lull around that mark. Analyze your episodes: what happens at 12-13 min? Common fixes: add a re-engagement hook, tighten segment pacing, introduce new speaker/perspective, or shift to more dynamic content. Test on next 2 episodes and measure if drop-off time extends.</p>
+                            </div>
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">Average Completion Rate</p>
+                                <p class="text-3xl font-bold text-spotify-text">68%</p>
+                                <div class="mt-3 space-y-2">
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-spotify-text-muted">To 25%:</span>
+                                        <span class="text-spotify-green font-semibold">92%</span>
                                     </div>
-                                    <div class="bg-spotify-dark border border-yellow-500 rounded-lg p-3">
-                                        <p class="text-xs text-spotify-text-muted mb-1">Your Status</p>
-                                        <p class="text-lg font-semibold text-spotify-text">67% = Good</p>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-spotify-text-muted">To 50%:</span>
+                                        <span class="text-spotify-green font-semibold">85%</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-spotify-text-muted">To 75%:</span>
+                                        <span class="text-yellow-500 font-semibold">75%</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-spotify-text-muted">To 100%:</span>
+                                        <span class="text-red-500 font-semibold">68%</span>
                                     </div>
                                 </div>
-                                <p class="text-xs text-spotify-text-muted mt-4 italic max-w-2xl mx-auto">💡 Insight: APV improved +5% over last 10 episodes, driven by interview format adoption (35% higher LTR). You're 3 percentage points from "High" benchmark—shortening intros to 60 seconds could close this gap.</p>
+                                <span class="text-yellow-500">⚠️</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Your average completion is 68% vs category 80%. Drop-off at 25% (92%), 50% (85%), 75% (75%), 100% (68%). The steepest drop-off occurs at the 12-15 minute mark (18% exit rate). Industry fix: shorten intro (currently 3:00, target 1:15), add hook at 10:00, restructure content at 12:00-15:00 mark.</p>
+                            </div>
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">Average Listen Duration</p>
+                                <p class="text-3xl font-bold text-spotify-text">4m 22s</p>
+                                <p class="text-xs text-spotify-text-muted mt-1">73% of episode length</p>
+                                <p class="text-xs text-spotify-green mt-1">△ +18s vs avg</p>
+                                <span class="text-green-500">✅</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Listeners average 4m 22s of 6-minute episodes (73%). If you shortened episodes by 10%, completion would rise to 75%. Or if you added engagement hook at 8:00, retention would improve +5%. Test both approaches: shorter episodes vs. hooks in current length.</p>
+                            </div>
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">Episodes Below 50% Completion</p>
+                                <p class="text-3xl font-bold text-spotify-text">3</p>
+                                <p class="text-xs text-spotify-text-muted mt-1">Avg completion: 42%</p>
+                                <span class="text-yellow-500">⚠️</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: You have 3 underperforming episodes (avg 42% completion). Common factor: longer length (6:30+), complex topics, missing guest. Fix: re-record intro segments or use learnings for future episodes. Consider re-promoting with updated thumbnail/description after improvements.</p>
+                            </div>
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">Series Completion Rate</p>
+                                <p class="text-3xl font-bold text-spotify-text">58%</p>
+                                <p class="text-xs text-spotify-text-muted mt-1">71% likely to continue</p>
+                                <span class="text-green-500">✅</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Series completion is 58%. Completion listeners have +32% lifetime value and +45% probability continuing next series. Invest in multi-episode arcs, add cliffhangers at episode end, create "binge" playlists for series. This drives sustained engagement and higher subscriber retention.</p>
                             </div>
                         </div>
+                        
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-xl font-semibold text-spotify-text">True Retention Curve (Scrubbable)</h3>
-                                <select id="episodeSelector" onchange="updateRetentionChart()" class="bg-spotify-dark border border-spotify-neutral rounded px-4 py-2 text-spotify-text text-sm">
-                                    <option value="Ep 124">Ep 124</option>
-                                    <option value="Ep 123">Ep 123</option>
-                                    <option value="Ep 122">Ep 122</option>
-                                </select>
-                            </div>
-                            <canvas id="retentionCurveChart" height="120"></canvas>
-                            <div class="mt-4 space-y-2">
-                                <div class="bg-spotify-dark border-l-4 border-red-500 p-3 rounded">
-                                    <p class="text-sm text-spotify-text-muted">
-                                        <strong class="text-spotify-text">🔴 DIP at 0:00-1:00:</strong> Intro drop-off (100% → 91%). Best performers average 98% at 1:00. Test shorter intro → expected +7% retention.
-                                    </p>
-                                </div>
-                                <div class="bg-spotify-dark border-l-4 border-spotify-green p-3 rounded">
-                                    <p class="text-sm text-spotify-text-muted">
-                                        <strong class="text-spotify-text">✅ SPIKE at 8:00:</strong> Strong moment (68% retention). Consider using this segment for Shorts preview.
-                                    </p>
-                                </div>
-                            </div>
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Episode Length vs Completion</h3>
+                            <canvas id="lengthVsCompletionChart" height="100"></canvas>
+                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: Optimal length is 4:00-5:00 minutes for maximum completion. Episodes >6:00 minutes drop to 58% completion. For long-form content, add structural element (hook, segment break, guest intro) every 3-4 minutes to maintain engagement throughout.</p>
                         </div>
+                        
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Streams vs. Starts Ratio</h3>
-                            <p class="text-sm text-spotify-text-muted mb-4">Starts: Play duration &gt; 0s | Streams: Play duration &gt; 60s (Quality Plays)</p>
-                            <canvas id="streamsVsStartsChart" height="100"></canvas>
-                            <div class="mt-4 text-center">
-                                <p class="text-sm text-spotify-text-muted">Average Ratio: <span class="text-spotify-green font-semibold">83.9%</span> (Quality Play Rate)</p>
-                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: 83.9% of starts convert to quality streams (>60s), indicating strong content quality. Ep 123 leads with 87.3% ratio—analyze its structure (interview format, pacing) to replicate success.</p>
-                            </div>
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Listener Drop-off Curve</h3>
+                            <canvas id="dropoffCurveChart" height="100"></canvas>
+                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: Drop-off at 12:00-15:00 signals boredom/distraction/saturation (18% exit rate). Fix: restructure segment, add visual/audio hook, tighten pacing, or reduce overall episode length to 5:00 minutes to eliminate this drop-off point entirely.</p>
                         </div>
+                        
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Engagement Velocity</h3>
-                            <p class="text-sm text-spotify-text-muted mb-4">Sum of (Saves + Shares + Follows) per 1,000 starts in first 24 hours</p>
-                            <canvas id="engagementVelocityChart" height="100"></canvas>
-                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: Ep 124 shows 12.5 engagement velocity (52% above 8.2 baseline), driven by viral moment content. Episodes published Tuesday 8 AM see 40% higher first-week engagement—align future releases to this timing.</p>
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Retention Curve by Episode</h3>
+                            <canvas id="retentionByEpisodeChart" height="120"></canvas>
+                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: Top episodes maintain 75% retention through minute 8. Bottom episodes drop to 52% by minute 8. Difference: production quality, pacing, guest engagement, topic relevance. Replicate top episode structure: intro (1:00), hook (4:00), engagement point (8:00).</p>
                         </div>
                     </div>
 
                     <!-- AUDIENCE INTELLIGENCE TAB -->
                     <div id="tab-audience" class="tab-content hidden">
-                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">What Else Your Audience Watches/Listens To</h3>
-                            <div class="mb-4 p-4 bg-spotify-dark rounded-lg border border-spotify-neutral">
-                                <p class="text-sm text-spotify-text-muted mb-2">Your audience also likes:</p>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-spotify-green/20 text-spotify-green rounded-full text-sm font-semibold">True Crime</span>
-                                    <span class="px-3 py-1 bg-spotify-green/20 text-spotify-green rounded-full text-sm font-semibold">Tech</span>
-                                    <span class="px-3 py-1 bg-spotify-green/20 text-spotify-green rounded-full text-sm font-semibold">Investigation</span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">Audience Retention Cohort</p>
+                                <div class="mt-3 space-y-2">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-spotify-text-muted">One-time:</span>
+                                        <span class="text-spotify-text font-semibold">34%</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-spotify-text-muted">2-5 episodes:</span>
+                                        <span class="text-spotify-text font-semibold">42%</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-spotify-text-muted">6+ loyal:</span>
+                                        <span class="text-spotify-green font-semibold">24%</span>
+                                    </div>
                                 </div>
+                                <span class="text-yellow-500">⚠️</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Only 24% are loyal (6+ episodes). Average is 28%. One-time listeners (34%) represent opportunity. To improve: series strategy, consistent release schedule (Tuesdays), listener CTA at episode end, follow-up notifications 3 days after first listen.</p>
                             </div>
-                            <div class="grid md:grid-cols-3 gap-4">
-                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <h4 class="text-lg font-semibold text-spotify-text mb-2">Crime Junkie</h4>
-                                    <div class="space-y-2 text-sm">
-                                        <div class="flex justify-between">
-                                            <span class="text-spotify-text-muted">Overlap</span>
-                                            <span class="text-spotify-text font-semibold">45%</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-spotify-text-muted">Total Listeners</span>
-                                            <span class="text-spotify-text">120,000</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-spotify-text-muted">Untapped</span>
-                                            <span class="text-spotify-green font-semibold">66,000</span>
-                                        </div>
-                                        <p class="text-xs text-spotify-text-muted mt-2 italic">💡 45% overlap = high collaboration potential. 66K untapped listeners from Crime Junkie's audience share your interests—guest appearance could reach 1.2K-1.8K new listeners.</p>
-                                        <button class="w-full mt-3 text-sm text-spotify-green font-semibold hover:underline text-center">Explore Collaboration →</button>
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">Returning Watch Time</p>
+                                <p class="text-3xl font-bold text-spotify-text">68%</p>
+                                <p class="text-xs text-spotify-text-muted mt-1">of total watch time</p>
+                                <p class="text-xs text-spotify-text-muted">Avg: 12m 34s per returning</p>
+                                <span class="text-green-500">✅</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Returning listeners are 57% of audience but 68% of watch time. They're +32% more valuable than one-time listeners. Prioritize retention strategy through series formats, consistent posting schedule, and subscriber engagement features.</p>
+                            </div>
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <p class="text-sm text-spotify-text-muted mb-1">Listening Environment & Device</p>
+                                <div class="mt-3 space-y-2">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-spotify-text-muted">Mobile:</span>
+                                        <span class="text-spotify-text font-semibold">62%</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-spotify-text-muted">Web:</span>
+                                        <span class="text-spotify-text font-semibold">20%</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-spotify-text-muted">Car/Embedded:</span>
+                                        <span class="text-spotify-text font-semibold">12%</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-spotify-text-muted">Smart Speaker:</span>
+                                        <span class="text-spotify-text font-semibold">6%</span>
                                     </div>
                                 </div>
-                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <h4 class="text-lg font-semibold text-spotify-text mb-2">Dateline</h4>
-                                    <div class="space-y-2 text-sm">
-                                        <div class="flex justify-between">
-                                            <span class="text-spotify-text-muted">Overlap</span>
-                                            <span class="text-spotify-text font-semibold">38%</span>
+                                <span class="text-green-500">✅</span>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Mobile (62%) listeners complete 65%, Web (20%) 72%, Car (12%) 58%. Mobile prefers shorter, punchy content. Optimize for mobile: shorter intros, clear audio, mobile-safe thumbnails. Adjust ad placement for mobile listening patterns.</p>
+                            </div>
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6" style="grid-column: span 2;">
+                                <p class="text-sm text-spotify-text-muted mb-1">Cross-Genre Listener Affinity</p>
+                                <div class="mt-3 space-y-4" id="genreAffinityBars">
+                                    <div class="genre-bar-group cursor-pointer hover:opacity-80 transition-opacity" data-genre-id="1" data-genre-bar>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-sm font-semibold text-spotify-text">Comedy</span>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs px-2 py-1 bg-spotify-green/20 text-spotify-green rounded">NEW</span>
+                                                <span class="text-sm font-bold text-spotify-green">67%</span>
+                                                <span class="text-xs text-spotify-green">↑ +8%</span>
+                                            </div>
                                         </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-spotify-text-muted">Total Listeners</span>
-                                            <span class="text-spotify-text">95,000</span>
+                                        <div class="w-full relative">
+                                            <div class="bg-spotify-green h-6 rounded-full flex items-center justify-end pr-2 transition-all" style="width: 67%">
+                                                <span class="text-xs font-semibold text-spotify-dark">67%</span>
+                                            </div>
                                         </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-spotify-text-muted">Untapped</span>
-                                            <span class="text-spotify-green font-semibold">58,900</span>
+                                    </div>
+                                    <div class="genre-bar-group cursor-pointer hover:opacity-80 transition-opacity" data-genre-id="2" data-genre-bar>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-sm font-semibold text-spotify-text">Self-Help</span>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-sm font-bold text-spotify-green">54%</span>
+                                                <span class="text-xs text-spotify-text-muted">—</span>
+                                            </div>
                                         </div>
-                                        <p class="text-xs text-spotify-text-muted mt-2 italic">💡 38% overlap indicates strong genre alignment. Dateline's investigative format matches your audience—cross-promotion could yield 800-1.2K new listeners with minimal effort.</p>
-                                        <button class="w-full mt-3 text-sm text-spotify-green font-semibold hover:underline text-center">Explore Collaboration →</button>
+                                        <div class="w-full relative">
+                                            <div class="bg-spotify-green h-6 rounded-full flex items-center justify-end pr-2 transition-all" style="width: 54%">
+                                                <span class="text-xs font-semibold text-spotify-dark">54%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="genre-bar-group cursor-pointer hover:opacity-80 transition-opacity" data-genre-id="3" data-genre-bar>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-sm font-semibold text-spotify-text">True Crime</span>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-sm font-bold text-spotify-green">42%</span>
+                                                <span class="text-xs text-red-500">↓ -3%</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-full relative">
+                                            <div class="bg-spotify-green h-6 rounded-full flex items-center justify-end pr-2 transition-all" style="width: 42%">
+                                                <span class="text-xs font-semibold text-spotify-dark">42%</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <h4 class="text-lg font-semibold text-spotify-text mb-2">True Crime Stories</h4>
-                                    <div class="space-y-2 text-sm">
-                                        <div class="flex justify-between">
-                                            <span class="text-spotify-text-muted">Overlap</span>
-                                            <span class="text-spotify-text font-semibold">32%</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-spotify-text-muted">Total Listeners</span>
-                                            <span class="text-spotify-text">180,000</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-spotify-text-muted">Untapped</span>
-                                            <span class="text-spotify-green font-semibold">122,400</span>
-                                        </div>
-                                        <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Largest untapped audience (122K) with 32% overlap. Despite lower overlap %, the massive audience size makes this a high-value partnership opportunity—estimated reach: 1.2K-1.8K new listeners.</p>
-                                        <button class="w-full mt-3 text-sm text-spotify-green font-semibold hover:underline text-center">Explore Collaboration →</button>
-                                    </div>
-                                </div>
+                                <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Your listeners span 8 genres. Strongest affinity: Comedy (67%). This reveals a psychographic pattern: your audience seeks entertainment with lighthearted engagement. Collaboration opportunities: partner with top Comedy podcasts (67% overlap potential). Content series: blend Comedy + Self-Help for +18% reach. <span class="text-spotify-green underline">Click any genre to explore collaboration opportunities.</span></p>
                             </div>
                         </div>
+                        
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Active Listening Hours (Time-of-Day Heatmap)</h3>
-                            <div class="grid grid-cols-8 gap-2 mb-4">
-                                <div class="text-center text-sm text-spotify-text-muted font-semibold">Hour</div>
-                                <div class="text-center text-sm text-spotify-text-muted font-semibold">Mon</div>
-                                <div class="text-center text-sm text-spotify-text-muted font-semibold">Tue</div>
-                                <div class="text-center text-sm text-spotify-text-muted font-semibold">Wed</div>
-                                <div class="text-center text-sm text-spotify-text-muted font-semibold">Thu</div>
-                                <div class="text-center text-sm text-spotify-text-muted font-semibold">Fri</div>
-                                <div class="text-center text-sm text-spotify-text-muted font-semibold">Sat</div>
-                                <div class="text-center text-sm text-spotify-text-muted font-semibold">Sun</div>
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Listener Demographics</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
+                                <div>
+                                    <p class="text-xs text-spotify-text-muted mb-1">Top Geography</p>
+                                    <p class="text-sm font-semibold text-spotify-text">USA: 45%</p>
+                                    <p class="text-xs text-spotify-text-muted">Canada: 18%</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-spotify-text-muted mb-1">Age Range</p>
+                                    <p class="text-sm font-semibold text-spotify-text">25-34: 38%</p>
+                                    <p class="text-xs text-spotify-text-muted">35-44: 28%</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-spotify-text-muted mb-1">Gender</p>
+                                    <p class="text-sm font-semibold text-spotify-text">Male: 58%</p>
+                                    <p class="text-xs text-spotify-text-muted">Female: 40%</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-spotify-text-muted mb-1">Language</p>
+                                    <p class="text-sm font-semibold text-spotify-text">English: 95%</p>
+                                    <p class="text-xs text-spotify-text-muted">Spanish: 3%</p>
+                                </div>
                             </div>
-                            <div class="space-y-2" id="listeningHeatmap"></div>
-                            <div class="mt-4 p-4 bg-spotify-dark border border-spotify-green rounded-lg">
-                                <p class="text-sm text-spotify-text-muted">
-                                    <strong class="text-spotify-text">💡 Highest potential impact:</strong> Publish on Tuesdays at 6 PM (720 listeners peak). Secondary: Weekday afternoons 3-6 PM.
-                                </p>
-                            </div>
+                            <p class="text-xs text-spotify-text-muted mt-3 italic">💡 Insight: Audience primarily USA (45%), 25-34 age (38%), male (58%), English (95%). Content resonates with tech-savvy millennials. Growth opportunity: female audience (40% but growing). Consider: female guest hosts, diverse topics, inclusive language to expand reach.</p>
                         </div>
-                    <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Loyalty Index (Cohort Analysis)</h3>
+                        
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">When Listeners Are Online</h3>
                             <div class="overflow-x-auto">
-                                <table class="min-w-full text-sm">
-                                    <thead>
-                                        <tr class="border-b border-spotify-neutral">
-                                            <th class="text-left py-2 text-spotify-text-muted">Cohort</th>
-                                            <th class="text-right py-2 text-spotify-text-muted">Month 1</th>
-                                            <th class="text-right py-2 text-spotify-text-muted">Month 2</th>
-                                            <th class="text-right py-2 text-spotify-text-muted">Month 3</th>
-                                            <th class="text-right py-2 text-spotify-text-muted">Month 6</th>
-                                            <th class="text-right py-2 text-spotify-text-muted">Month 12</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="border-b border-spotify-neutral">
-                                            <td class="py-2 text-spotify-text font-semibold">Nov 2024</td>
-                                            <td class="text-right py-2 text-spotify-text">100%</td>
-                                            <td class="text-right py-2 text-spotify-green">68%</td>
-                                            <td class="text-right py-2 text-spotify-green">52%</td>
-                                            <td class="text-right py-2 text-spotify-green">38%</td>
-                                            <td class="text-right py-2 text-spotify-green">28%</td>
-                                        </tr>
-                                        <tr class="border-b border-spotify-neutral">
-                                            <td class="py-2 text-spotify-text font-semibold">Oct 2024</td>
-                                            <td class="text-right py-2 text-spotify-text">100%</td>
-                                            <td class="text-right py-2 text-spotify-green">72%</td>
-                                            <td class="text-right py-2 text-spotify-green">58%</td>
-                                            <td class="text-right py-2 text-spotify-green">42%</td>
-                                            <td class="text-right py-2 text-spotify-green">32%</td>
-                                        </tr>
-                                        <tr class="border-b border-spotify-neutral">
-                                            <td class="py-2 text-spotify-text font-semibold">Sep 2024</td>
-                                            <td class="text-right py-2 text-spotify-text">100%</td>
-                                            <td class="text-right py-2 text-spotify-green">75%</td>
-                                            <td class="text-right py-2 text-spotify-green">62%</td>
-                                            <td class="text-right py-2 text-spotify-green">48%</td>
-                                            <td class="text-right py-2 text-spotify-green">35%</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="py-2 text-spotify-text font-semibold">Aug 2024</td>
-                                            <td class="text-right py-2 text-spotify-text">100%</td>
-                                            <td class="text-right py-2 text-spotify-green">78%</td>
-                                            <td class="text-right py-2 text-spotify-green">65%</td>
-                                            <td class="text-right py-2 text-spotify-green">52%</td>
-                                            <td class="text-right py-2 text-spotify-green">40%</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div id="listeningHeatmapFull" class="min-w-full"></div>
                             </div>
-                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: Retention is improving over time—Aug 2024 cohort shows 78% Month 2 retention vs. 68% for Nov 2024. This suggests newer listeners need stronger onboarding. Older cohorts (Aug) retain 40% at Month 12, indicating strong long-term value. Focus on improving Month 1-2 retention for new listeners through better hooks and episode structure.</p>
+                            <p class="text-xs text-spotify-text-muted mt-3 italic">💡 Insight: Peak window: Tuesday 6 PM. Listeners at peak complete 75% vs off-peak 65%. Next release: Tuesday 2 PM (4 hours before peak). Ads run: Tuesday 5-7 PM. Notification send: Tuesday 6 PM to maximize engagement.</p>
+                        </div>
+                        
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Listener Cohort Retention</h3>
+                            <canvas id="cohortRetentionChart" height="100"></canvas>
+                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: Biggest churn after episode 2. Average listener quits after 3.2 episodes. To improve: create strong episode 2 (series hook), improve quality consistency, add CTA at episode 1 end, send follow-up notification 3 days after first listen.</p>
+                        </div>
+                        
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Listener Geography & Engagement</h3>
+                            <canvas id="geographyEngagementChart" height="100"></canvas>
+                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: USA listeners complete 72%, Canada 68%, UK 65%. USA prefers guest interviews, Canada prefers trending topics. Content strategy: continue guest interviews for USA market, add trending topic segments for Canadian audience. Consider time zone optimization for releases.</p>
                         </div>
                     </div>
 
                     <!-- AI INSIGHTS & ACTIONS TAB -->
                     <div id="tab-insights" class="tab-content hidden">
                         <div class="bg-spotify-dark-secondary border border-spotify-green rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Pattern Recognition Engine</h3>
-                            <div class="space-y-4">
-                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <div>
-                                            <h4 class="font-semibold text-spotify-text mb-1">Episodes with 'Guest Name' in title</h4>
-                                            <p class="text-sm text-spotify-text-muted">Performs <span class="text-spotify-green font-semibold">+30%</span> better on <strong>CTR</strong></p>
-                                        </div>
-                                        <button class="text-sm text-spotify-green font-semibold hover:underline whitespace-nowrap ml-4">Verify Data →</button>
-                                    </div>
-                                    <div class="mt-2 flex flex-wrap gap-2">
-                                        <span class="text-xs px-2 py-1 bg-spotify-green/20 text-spotify-green rounded">Ep 123</span>
-                                        <span class="text-xs px-2 py-1 bg-spotify-green/20 text-spotify-green rounded">Ep 118</span>
-                                        <span class="text-xs px-2 py-1 bg-spotify-green/20 text-spotify-green rounded">Ep 115</span>
-                                    </div>
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Dashboard Summary</h3>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-sm text-spotify-text-muted mb-2"><strong class="text-spotify-text">Overview:</strong> Growth steady but completion lags by 12 points.</p>
+                                    <p class="text-sm text-spotify-text-muted mb-2"><strong class="text-spotify-text">Reach:</strong> Under-indexed on organic search; over-reliant on suggestions.</p>
                                 </div>
-                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <div>
-                                            <h4 class="font-semibold text-spotify-text mb-1">Tuesday 8 AM publish time</h4>
-                                            <p class="text-sm text-spotify-text-muted">Performs <span class="text-spotify-green font-semibold">+40%</span> better on <strong>First-week listeners</strong></p>
-                                        </div>
-                                        <button class="text-sm text-spotify-green font-semibold hover:underline whitespace-nowrap ml-4">Verify Data →</button>
-                                    </div>
-                                    <div class="mt-2 flex flex-wrap gap-2">
-                                        <span class="text-xs px-2 py-1 bg-spotify-green/20 text-spotify-green rounded">Ep 124</span>
-                                        <span class="text-xs px-2 py-1 bg-spotify-green/20 text-spotify-green rounded">Ep 121</span>
-                                        <span class="text-xs px-2 py-1 bg-spotify-green/20 text-spotify-green rounded">Ep 118</span>
-                                    </div>
-                                </div>
-                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <div>
-                                            <h4 class="font-semibold text-spotify-text mb-1">Interview format</h4>
-                                            <p class="text-sm text-spotify-text-muted">Performs <span class="text-spotify-green font-semibold">+35%</span> better on <strong>LTR</strong></p>
-                                        </div>
-                                        <button class="text-sm text-spotify-green font-semibold hover:underline whitespace-nowrap ml-4">Verify Data →</button>
-                                    </div>
-                                    <div class="mt-2 flex flex-wrap gap-2">
-                                        <span class="text-xs px-2 py-1 bg-spotify-green/20 text-spotify-green rounded">Ep 123</span>
-                                        <span class="text-xs px-2 py-1 bg-spotify-green/20 text-spotify-green rounded">Ep 120</span>
-                                        <span class="text-xs px-2 py-1 bg-spotify-green/20 text-spotify-green rounded">Ep 117</span>
-                                    </div>
+                                <div>
+                                    <p class="text-sm text-spotify-text-muted mb-2"><strong class="text-spotify-text">Engagement:</strong> Drop-off concentrated at 12–15 min; structure needs tightening.</p>
+                                    <p class="text-sm text-spotify-text-muted"><strong class="text-spotify-text">Audience:</strong> Comedy and self-help audiences offer strong collaboration upside.</p>
                                 </div>
                             </div>
+                            <div class="mt-4 p-3 bg-spotify-dark rounded-lg border border-spotify-green">
+                                <p class="text-sm text-spotify-text-muted">
+                                    <strong class="text-spotify-green">Overall Health: </strong>
+                                    <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs font-semibold">Good (Improving)</span>
+                                </p>
+                            </div>
                         </div>
-                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Predictive Growth Simulator</h3>
-                            <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-6">
+                        
+                        <h2 class="text-2xl font-bold text-spotify-text mb-6">Implementation Roadmap (Ranked by Impact Potential)</h2>
+                        
+                        <div class="space-y-6 mb-8">
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h3 class="text-lg font-semibold text-spotify-text">1. Shorten intro segment and add hook at 10-min mark</h3>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-2 py-1 bg-spotify-green/20 text-spotify-green rounded text-xs font-semibold">+8-12% completion rate</span>
+                                        <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-semibold">Low Effort</span>
+                                        <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs font-semibold">2-3 days</span>
+                                    </div>
+                                </div>
                                 <div class="mb-4">
-                                    <p class="text-spotify-text-muted mb-2">Current Growth Rate: <span class="text-spotify-green font-semibold">+12 subscribers/day</span></p>
-                                    <div class="w-full bg-spotify-dark-secondary rounded-full h-4 mb-2">
-                                        <div class="bg-spotify-green h-4 rounded-full" style="width: 68%"></div>
-                                    </div>
-                                    <p class="text-sm text-spotify-text-muted">On track to hit <span class="text-spotify-green font-semibold">10K Followers by Nov 12th</span></p>
+                                    <p class="text-sm text-spotify-text-muted mb-2"><strong class="text-spotify-text">Action Steps:</strong></p>
+                                    <ol class="list-decimal list-inside space-y-1 text-sm text-spotify-text-muted ml-4">
+                                        <li>Analyze current intro length (note: 3:00, niche avg 1:15)</li>
+                                        <li>Cut intro to &lt;1:30 and add re-engagement hook at 10-min mark</li>
+                                        <li>Test on next 2 episodes; measure completion lift</li>
+                                    </ol>
                                 </div>
-                                <div class="mt-6">
-                                    <label class="block text-sm text-spotify-text-muted mb-2">
-                                        Simulate Scenario: If I increase posting frequency by
-                                        <input type="range" min="1" max="3" step="0.5" value="2" id="frequencySlider" oninput="updateSimulator()" class="mx-2 w-32">
-                                        <span id="frequencyValue" class="text-spotify-text font-semibold">2x</span>
-                                    </label>
-                                    <div class="mt-4 p-4 bg-spotify-dark-secondary rounded-lg">
-                                        <p class="text-sm text-spotify-text-muted mb-2">Projected Impact:</p>
-                                        <div class="grid grid-cols-3 gap-4">
-                                            <div>
-                                                <p class="text-xs text-spotify-text-muted">New Timeline</p>
-                                                <p class="text-xl font-bold text-spotify-green">Nov 5th</p>
-                                                <p class="text-xs text-spotify-text-muted">7 days earlier</p>
-                                            </div>
-                                            <div>
-                                                <p class="text-xs text-spotify-text-muted">Subscribers/Day</p>
-                                                <p class="text-xl font-bold text-spotify-green">24</p>
-                                                <p class="text-xs text-spotify-text-muted">+100% increase</p>
-                                            </div>
-                                            <div>
-                                                <p class="text-xs text-spotify-text-muted">Total at 10K</p>
-                                                <p class="text-xl font-bold text-spotify-green">416 days</p>
-                                                <p class="text-xs text-spotify-text-muted">vs. 423 days</p>
-                                            </div>
-                                        </div>
+                                <p class="text-xs text-spotify-text-muted italic"><strong>Success Metric:</strong> Completion rate moves from 68% to 76%+ within 2 episodes</p>
+                            </div>
+                            
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h3 class="text-lg font-semibold text-spotify-text">2. Improve episode title/description SEO using high-volume keywords</h3>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-2 py-1 bg-spotify-green/20 text-spotify-green rounded text-xs font-semibold">+15% organic listeners</span>
+                                        <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs font-semibold">Medium Effort</span>
+                                        <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs font-semibold">1 week</span>
                                     </div>
                                 </div>
+                                <div class="mb-4">
+                                    <p class="text-sm text-spotify-text-muted mb-2"><strong class="text-spotify-text">Action Steps:</strong></p>
+                                    <ol class="list-decimal list-inside space-y-1 text-sm text-spotify-text-muted ml-4">
+                                        <li>Identify top 10 high-volume keywords from search analytics</li>
+                                        <li>Update titles/descriptions for next 5 episodes with keyword integration</li>
+                                        <li>Monitor search-driven listener growth over 2 weeks</li>
+                                    </ol>
+                                </div>
+                                <p class="text-xs text-spotify-text-muted italic"><strong>Success Metric:</strong> Organic listeners increase from 62% to 68%+ of total within 1 month</p>
+                            </div>
+                            
+                            <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h3 class="text-lg font-semibold text-spotify-text">3. Optimize subscriber notification timing and messaging</h3>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-2 py-1 bg-spotify-green/20 text-spotify-green rounded text-xs font-semibold">+25% notification click rate</span>
+                                        <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-semibold">Low Effort</span>
+                                        <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs font-semibold">3 days</span>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="text-sm text-spotify-text-muted mb-2"><strong class="text-spotify-text">Action Steps:</strong></p>
+                                    <ol class="list-decimal list-inside space-y-1 text-sm text-spotify-text-muted ml-4">
+                                        <li>Schedule notifications for Tuesday 6 PM (peak listening window)</li>
+                                        <li>A/B test notification copy: benefit-focused vs. curiosity-driven</li>
+                                        <li>Track click rate and completion rate for notification-driven listeners</li>
+                                    </ol>
+                                </div>
+                                <p class="text-xs text-spotify-text-muted italic"><strong>Success Metric:</strong> Notification click rate improves from 34% to 42%+ within 2 weeks</p>
                             </div>
                         </div>
+                        
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Content Gap Analysis</h3>
-                            <p class="text-sm text-spotify-text-muted mb-4">Compare your topics vs. Rising Search Trends in your category</p>
-                        <div class="space-y-3">
-                            <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <h4 class="font-semibold text-spotify-text mb-1">Trending Topic: <span class="text-spotify-green">"AI Tools"</span></h4>
-                                    <p class="text-sm text-spotify-text-muted">Volume: <span class="text-spotify-text">High</span> | Competition: <span class="text-spotify-text">Low</span> | Opportunity: <span class="text-spotify-green font-semibold">High</span></p>
-                                    <p class="text-sm text-spotify-text-muted mt-1">12,400 searches/month. <span class="text-yellow-500">You haven't covered this.</span></p>
+                            <div class="flex justify-between items-center cursor-pointer" onclick="toggleSection('quick-wins')">
+                                <h3 class="text-xl font-semibold text-spotify-text">Quick Wins (&lt; 1 week, &gt; 5% improvement)</h3>
+                                <span id="quick-wins-arrow" class="text-spotify-text-muted">▼</span>
                             </div>
-                            <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <h4 class="font-semibold text-spotify-text mb-1">Trending Topic: <span class="text-spotify-green">"Cold Cases"</span></h4>
-                                    <p class="text-sm text-spotify-text-muted">Volume: <span class="text-spotify-text">Medium</span> | Competition: <span class="text-spotify-text">Medium</span> | Opportunity: <span class="text-spotify-green font-semibold">Medium</span></p>
-                                    <p class="text-sm text-spotify-text-muted mt-1">5,600 searches/month. <span class="text-yellow-500">You haven't covered this.</span></p>
-                            </div>
-                            <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <h4 class="font-semibold text-spotify-text mb-1">Trending Topic: <span class="text-spotify-green">"Remote Work"</span></h4>
-                                    <p class="text-sm text-spotify-text-muted">Volume: <span class="text-spotify-text">High</span> | Competition: <span class="text-spotify-text">High</span> | Opportunity: <span class="text-spotify-green font-semibold">Low</span></p>
-                                    <p class="text-sm text-spotify-text-muted mt-1">8,900 searches/month. <span class="text-yellow-500">You haven't covered this.</span></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Automated Optimization Checklists</h3>
-                            <div class="space-y-3">
+                            <div id="quick-wins-content" class="mt-4 space-y-4 hidden">
                                 <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
-                                    <h4 class="font-semibold text-spotify-text mb-3">Viral Moment ep124</h4>
-                                    <div class="space-y-2">
-                                        <div class="flex items-center">
-                                            <span class="text-red-500 mr-2">✗</span>
-                                            <span class="text-sm text-spotify-text-muted">Title truncated on mobile? Yes</span>
-                        </div>
-                                        <div class="flex items-center">
-                                            <span class="text-spotify-green mr-2">✓</span>
-                                            <span class="text-sm text-spotify-text-muted">Description missing links? No</span>
-                    </div>
-                                        <div class="flex items-center">
-                                            <span class="text-spotify-green mr-2">✓</span>
-                                            <span class="text-sm text-spotify-text-muted">Artwork meets size requirements? Yes</span>
-                </div>
-                                        <div class="flex items-center">
-                                            <span class="text-red-500 mr-2">✗</span>
-                                            <span class="text-sm text-spotify-text-muted">Keywords optimized? No (missing 2 high-volume terms)</span>
-            </div>
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h4 class="font-semibold text-spotify-text">Add series cliffhanger at 8:00 mark</h4>
+                                        <span class="px-2 py-1 bg-spotify-green/20 text-spotify-green rounded text-xs font-semibold">+8% completion</span>
                                     </div>
+                                    <ol class="list-decimal list-inside space-y-1 text-sm text-spotify-text-muted ml-4">
+                                        <li>Add "Coming up next..." hook at 8:00 in next episode</li>
+                                        <li>Measure completion rate lift</li>
+                                    </ol>
+                                </div>
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h4 class="font-semibold text-spotify-text">Optimize thumbnail for mobile truncation</h4>
+                                        <span class="px-2 py-1 bg-spotify-green/20 text-spotify-green rounded text-xs font-semibold">+5% CTR</span>
+                                    </div>
+                                    <ol class="list-decimal list-inside space-y-1 text-sm text-spotify-text-muted ml-4">
+                                        <li>Test thumbnail designs with key text in center (mobile-safe zone)</li>
+                                        <li>Deploy best performer across next 3 episodes</li>
+                                    </ol>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <div class="flex justify-between items-center cursor-pointer" onclick="toggleSection('strategic-bets')">
+                                <h3 class="text-xl font-semibold text-spotify-text">Strategic Bets (2-4 weeks, &gt; 15% improvement)</h3>
+                                <span id="strategic-bets-arrow" class="text-spotify-text-muted">▼</span>
+                            </div>
+                            <div id="strategic-bets-content" class="mt-4 space-y-4 hidden">
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h4 class="font-semibold text-spotify-text">Create cross-genre collaboration series</h4>
+                                        <span class="px-2 py-1 bg-spotify-green/20 text-spotify-green rounded text-xs font-semibold">+18% reach</span>
+                                    </div>
+                                    <ol class="list-decimal list-inside space-y-1 text-sm text-spotify-text-muted ml-4">
+                                        <li>Partner with top 3 podcasts in Comedy genre (67% affinity)</li>
+                                        <li>Create 3-episode collaborative series</li>
+                                        <li>Cross-promote to both audiences</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Monthly Focus Areas</h3>
+                            <p class="text-sm text-spotify-text-muted mb-2">
+                                <strong class="text-spotify-text">This month, prioritize:</strong> Intro optimization (#1), SEO titles (#2), Notification timing (Quick Win)
+                            </p>
+                            <p class="text-sm text-spotify-text-muted mb-2">
+                                <strong class="text-spotify-text">De-prioritize:</strong> Long-form content experiments (low immediate impact)
+                            </p>
+                            <p class="text-sm text-spotify-text-muted">
+                                <strong class="text-spotify-text">Success target:</strong> Completion rate 68% → 74%
+                            </p>
+                        </div>
+                        
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Benchmark Dashboard</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <th class="text-left py-2 text-spotify-text-muted">Metric</th>
+                                            <th class="text-right py-2 text-spotify-text-muted">Your Value</th>
+                                            <th class="text-right py-2 text-spotify-text-muted">Category Median</th>
+                                            <th class="text-right py-2 text-spotify-text-muted">Top 10%</th>
+                                            <th class="text-center py-2 text-spotify-text-muted">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-2 text-spotify-text">Listener Growth</td>
+                                            <td class="text-right py-2 text-spotify-text">2.1%</td>
+                                            <td class="text-right py-2 text-spotify-text">1.8%</td>
+                                            <td class="text-right py-2 text-spotify-text">5.2%</td>
+                                            <td class="text-center py-2"><span class="text-yellow-500">●</span></td>
+                                        </tr>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-2 text-spotify-text">Completion Rate</td>
+                                            <td class="text-right py-2 text-spotify-text">68%</td>
+                                            <td class="text-right py-2 text-spotify-text">75%</td>
+                                            <td class="text-right py-2 text-spotify-text">85%</td>
+                                            <td class="text-center py-2"><span class="text-red-500">●</span></td>
+                                        </tr>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-2 text-spotify-text">CTR</td>
+                                            <td class="text-right py-2 text-spotify-text">5.2%</td>
+                                            <td class="text-right py-2 text-spotify-text">5.5%</td>
+                                            <td class="text-right py-2 text-spotify-text">8.1%</td>
+                                            <td class="text-center py-2"><span class="text-yellow-500">●</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 text-spotify-text">Subscriber Conversion</td>
+                                            <td class="text-right py-2 text-spotify-text">7.2%</td>
+                                            <td class="text-right py-2 text-spotify-text">5.0%</td>
+                                            <td class="text-right py-2 text-spotify-text">12.0%</td>
+                                            <td class="text-center py-2"><span class="text-green-500">●</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Focus on red metrics first. Completion Rate is your biggest opportunity—implement intro optimization and hook strategies to close the 7-point gap to median.</p>
                         </div>
                     </div>
 
@@ -2479,6 +2561,45 @@
                 </div>
             </div>
         </section>
+        
+        <!-- Genre Affinity Modal -->
+        <div id="genreModal" class="fixed inset-0 z-50 hidden items-center justify-center" style="background-color: rgba(0, 0, 0, 0.75); display: flex;">
+            <div class="bg-spotify-dark-secondary rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border border-spotify-neutral" style="border-radius: 12px; margin: 20px;">
+                <div class="p-6 border-b border-spotify-neutral flex justify-between items-center sticky top-0 bg-spotify-dark-secondary z-10">
+                    <h2 id="modalGenreTitle" class="text-xl font-semibold text-spotify-text"></h2>
+                    <button onclick="closeGenreModal()" class="text-spotify-text-muted hover:text-spotify-text text-2xl font-bold" style="font-size: 28px; line-height: 1;">&times;</button>
+                </div>
+                <div class="p-6">
+                    <div id="modalGenreHeader" class="mb-6"></div>
+                    <div id="modalGenreDescription" class="mb-6 p-4 bg-spotify-dark rounded-lg border border-spotify-neutral" style="border-radius: 8px;"></div>
+                    <div id="modalGenrePodcasts" class="mb-6">
+                        <h3 class="text-lg font-semibold text-spotify-text mb-4">Top Podcasts in This Genre</h3>
+                        <div id="modalPodcastsList" class="space-y-3"></div>
+                    </div>
+                    <div id="modalGenreCompletion" class="p-4 bg-spotify-dark rounded-lg border border-spotify-neutral" style="border-radius: 8px;"></div>
+                </div>
+                <div class="p-6 border-t border-spotify-neutral flex justify-end">
+                    <button onclick="closeGenreModal()" class="px-4 py-2 bg-spotify-neutral text-spotify-text rounded hover:bg-spotify-text-muted transition-colors" style="border-radius: 6px;">Close</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cross-Promotion Confirmation Modal -->
+        <div id="collabModal" class="fixed inset-0 z-50 hidden items-center justify-center" style="background-color: rgba(0, 0, 0, 0.75); display: flex;">
+            <div class="bg-spotify-dark-secondary rounded-lg shadow-xl max-w-md w-full mx-4 border border-spotify-neutral" style="border-radius: 12px;">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-spotify-text mb-4">Collaboration Request</h3>
+                    <p id="collabMessage" class="text-sm text-spotify-text-muted mb-4"></p>
+                    <div id="collabForm" class="mb-4 hidden">
+                        <textarea id="collabNote" class="w-full p-3 bg-spotify-dark border border-spotify-neutral rounded-lg text-sm text-spotify-text placeholder:text-spotify-text-muted" rows="3" placeholder="Optional: Add a note to your collaboration request..." style="border-radius: 6px;"></textarea>
+                    </div>
+                    <div class="flex gap-3 justify-end">
+                        <button onclick="closeCollabModal()" class="px-4 py-2 bg-spotify-neutral text-spotify-text rounded hover:bg-spotify-text-muted transition-colors" style="border-radius: 6px;">Cancel</button>
+                        <button id="collabSubmitBtn" onclick="submitCollabRequest()" class="px-4 py-2 text-white rounded hover:bg-green-600 transition-colors" style="background-color: #1DB954; border-radius: 6px;">Send Collaboration Request</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- CASE STUDY PAGE -->
         <section id="case-study" class="min-h-screen py-16 bg-spotify-dark-secondary">
@@ -2541,17 +2662,17 @@
         <!-- ABOUT PAGE -->
         <section id="about" class="min-h-screen py-16">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid md:grid-cols-3 gap-8 items-end mb-16">
+                <div class="grid md:grid-cols-3 gap-8 items-start mb-16">
                     <div class="md:col-span-2">
                         <h1 class="text-4xl md:text-5xl font-bold text-spotify-text mb-4">About Camron</h1>
                         <p class="text-xl text-spotify-text-muted mb-2">Spotify Enthusiast</p>
-                        <p class="text-lg text-spotify-text-muted mb-6">Product Manager With A Founders Mentality</p>
+                        <p class="text-lg text-spotify-text-muted mb-6">Product Manager with a Founders Mentality</p>
                         <p class="text-spotify-text-muted leading-relaxed mb-8">
-                            I'm a Senior Product Manager with 8+ years at Fyxt, a commercial real estate software company, where I've driven strategic product initiatives from conception to scale. I combine a founder's action-oriented instinct, disciplined execution, and deep passion for solving complex problems that exceed revenue and user experience goals.
+                            I'm a Senior Product Manager with 8+ years at Fyxt, a commercial real estate software company, where I've driven strategic product initiatives from conception to scale. I combine a founder's action oriented instinct, disciplined execution, and deep passion for solving complex problems that exceed revenue and user experience goals.
                         </p>
                     </div>
                     <div class="md:col-span-1">
-                        <img src="/images/Amy-and-Camron-136.png" alt="Camron Soltani" class="w-full rounded-lg shadow-lg" id="camron-photo" style="max-width: 100%; height: auto;" />
+                        <img src="public/images/Amy&amp_Camron-136.png" alt="Camron Soltani" class="w-full rounded-lg shadow-lg" id="camron-photo" />
                     </div>
                 </div>
 
@@ -2605,289 +2726,16 @@
     </footer>
 
     <script>
-        // Single scroll handler for anchor links - prevent conflicts and double scrolling
-        (function() {
-            // Prevent multiple initializations - use global flag
-            if (window.__anchorNavInitialized) {
-                console.log('Anchor navigation already initialized, skipping');
-                return;
-            }
-            window.__anchorNavInitialized = true;
-            
-            let isScrolling = false;
-            let scrollTimeout = null;
-            let currentTarget = null;
-            let scrollInProgress = false;
-            
-            // Completely prevent browser's automatic scroll to hash
-            function preventAutoScroll() {
-                // Store current scroll position
-                const scrollY = window.scrollY;
-                
-                // Temporarily remove hash to prevent auto-scroll
-                const hash = window.location.hash;
-                if (hash) {
-                    history.replaceState(null, '', window.location.pathname + window.location.search);
-                }
-                
-                // Restore scroll position immediately
-                window.scrollTo(0, scrollY);
-                
-                // Restore hash after a moment (without triggering scroll)
-                if (hash) {
-                    setTimeout(() => {
-                        history.replaceState(null, '', hash);
-                    }, 0);
-                }
-            }
-            
-            function scrollToTarget(targetId, immediate = false) {
-                if (scrollInProgress) {
-                    console.log('Scroll already in progress, ignoring');
-                    return false;
-                }
-                
-                const target = document.getElementById(targetId);
-                if (!target) {
-                    console.log('Target not found:', targetId);
-                    return false;
-                }
-                
-                scrollInProgress = true;
-                isScrolling = true;
-                currentTarget = targetId;
-                
-                // Clear any pending scrolls
-                if (scrollTimeout) {
-                    clearTimeout(scrollTimeout);
-                    scrollTimeout = null;
-                }
-                
-                // Calculate offset for sticky nav (45px height)
-                const navHeight = 45;
-                const targetRect = target.getBoundingClientRect();
-                const targetPosition = Math.max(0, targetRect.top + window.pageYOffset - navHeight);
-                
-                // Use requestAnimationFrame for smoother scroll
-                if (immediate) {
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'auto'
-                    });
-                    setTimeout(() => {
-                        isScrolling = false;
-                        currentTarget = null;
-                        scrollInProgress = false;
-                    }, 100);
-                } else {
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                    
-                    // Reset flag after scroll completes
-                    scrollTimeout = setTimeout(() => {
-                        isScrolling = false;
-                        currentTarget = null;
-                        scrollInProgress = false;
-                        scrollTimeout = null;
-                    }, 1500);
-                }
-                
-                return true;
-            }
-            
-            function handleAnchorClick(e) {
-                const link = e.target.closest('a[href^="#"]');
-                if (!link) return;
-                
-                // CRITICAL: Prevent default IMMEDIATELY - before any other logic
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                
-                // Prevent if already scrolling
-                if (scrollInProgress) {
-                    return;
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
-                
-                const href = link.getAttribute('href');
-                if (!href || href === '#') {
-                    if (href === '#home' || href === '#') {
-                        scrollInProgress = true;
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                        setTimeout(() => {
-                            scrollInProgress = false;
-                        }, 1000);
-                    }
-                    return;
-                }
-                
-                const targetId = href.slice(1);
-                if (!targetId) return;
-                
-                // Update URL FIRST (before any scrolling) to prevent browser auto-scroll
-                if (history.pushState) {
-                    history.pushState(null, '', href);
-                }
-                
-                // Prevent browser's automatic hash scroll
-                preventAutoScroll();
-                
-                // Use immediate scroll to target (no delay)
-                scrollToTarget(targetId);
-            }
-            
-            // Prevent browser's default hash navigation
-            function handleHashChange() {
-                // If we're already scrolling, ignore hash change
-                if (scrollInProgress || isScrolling) {
-                    preventAutoScroll();
-                    return;
-                }
-                
-                // Get hash from URL
-                const hash = window.location.hash.slice(1);
-                if (hash) {
-                    preventAutoScroll();
-                    // Small delay to prevent conflicts
-                    setTimeout(() => {
-                        scrollToTarget(hash);
-                    }, 100);
-                }
-            }
-            
-            // Prevent default anchor behavior on page load if hash is present
-            function preventInitialHashScroll() {
-                if (window.location.hash) {
-                    preventAutoScroll();
-                    const hash = window.location.hash.slice(1);
-                    // Delay to let page render, then scroll
-                    setTimeout(() => {
-                        scrollToTarget(hash, true);
-                    }, 300);
-                }
-            }
-            
-            // Setup event listeners
-            function setupAnchorNavigation() {
-                // Remove any existing listeners
-                document.removeEventListener('click', handleAnchorClick, true);
-                window.removeEventListener('hashchange', handleHashChange);
-                
-                // Add listeners with capture phase (runs before other handlers)
-                document.addEventListener('click', handleAnchorClick, true);
-                window.addEventListener('hashchange', handleHashChange, false);
-                
-                // Prevent initial auto-scroll
-                preventInitialHashScroll();
-            }
-            
-            // Initialize after DOM is ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', setupAnchorNavigation);
-            } else {
-                setupAnchorNavigation();
-            }
-            
-            // Also prevent on window load
-            window.addEventListener('load', () => {
-                preventAutoScroll();
             });
-        })();
-        
-        // Auto-hiding Navigation Bar
-        // Implements modern auto-hiding header behavior:
-        // - Visible at the top of the page
-        // - Hides when scrolling down (after first screen)
-        // - Shows when scrolling up (after first screen)
-        // Adjust threshold (viewport height multiplier) and transition duration in CSS above
-        (function() {
-            const nav = document.getElementById('main-nav');
-            if (!nav) return;
-            
-            let lastScrollY = 0;
-            let isScrolling = false;
-            
-            // Threshold: approximately one viewport height (80% of viewport)
-            // Adjust this multiplier to change when the nav starts hiding
-            const getThreshold = () => window.innerHeight * 0.8;
-            
-            // Minimum scroll delta to trigger hide/show (reduces noise from tiny movements)
-            const SCROLL_THRESHOLD = 5;
-            
-            function handleScroll() {
-                // Use requestAnimationFrame for performance
-                if (isScrolling) return;
-                isScrolling = true;
-                
-                requestAnimationFrame(() => {
-                    const currentScrollY = window.scrollY || window.pageYOffset;
-                    const threshold = getThreshold();
-                    const scrollDelta = currentScrollY - lastScrollY;
-                    
-                    // Ignore tiny movements to reduce noise
-                    if (Math.abs(scrollDelta) < SCROLL_THRESHOLD) {
-                        isScrolling = false;
-                        return;
-                    }
-                    
-                    // At the very top: always show nav
-                    if (currentScrollY <= threshold) {
-                        nav.classList.remove('nav-hidden');
-                        lastScrollY = currentScrollY;
-                        isScrolling = false;
-                        return;
-                    }
-                    
-                    // Below threshold: hide/show based on scroll direction
-                    if (scrollDelta > 0) {
-                        // Scrolling down: hide nav
-                        nav.classList.add('nav-hidden');
-                    } else {
-                        // Scrolling up: show nav
-                        nav.classList.remove('nav-hidden');
-                    }
-                    
-                    lastScrollY = currentScrollY;
-                    isScrolling = false;
-                });
-            }
-            
-            // Throttle scroll events for better performance
-            let ticking = false;
-            function onScroll() {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        handleScroll();
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            }
-            
-            // Initialize: show nav at top
-            lastScrollY = window.scrollY || window.pageYOffset;
-            if (lastScrollY <= getThreshold()) {
-                nav.classList.remove('nav-hidden');
-            }
-            
-            // Add scroll listener
-            window.addEventListener('scroll', onScroll, { passive: true });
-            
-            // Handle window resize (threshold changes with viewport height)
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(() => {
-                    const currentScrollY = window.scrollY || window.pageYOffset;
-                    const threshold = getThreshold();
-                    if (currentScrollY <= threshold) {
-                        nav.classList.remove('nav-hidden');
-                    }
-                }, 150);
-            }, { passive: true });
-        })();
+        });
 
         // Chart.js default configuration
         Chart.defaults.color = '#B3B3B3';
@@ -2988,20 +2836,130 @@
             { category: 'Skipped Mid-rolls', value: -800 },
         ];
 
+        // Cross-Genre Listener Affinity Data
+        const crossGenreAffinity = {
+            genres: [
+                {
+                    id: 1,
+                    name: "Comedy",
+                    percentOfAudience: 67,
+                    trend: "up",
+                    trendPercent: 8,
+                    isNew: true,
+                    description: "Your listeners enjoy comedy for entertainment and stress relief. The high engagement with comedy content suggests your audience values humor as a way to unwind and find enjoyment.",
+                    topPodcasts: [
+                        {
+                            id: 1,
+                            name: "Wait Wait... Don't Tell Me!",
+                            overlapPercent: 67,
+                            sharedListeners: 8300,
+                            listeners: "450K"
+                        },
+                        {
+                            id: 2,
+                            name: "SmartLess",
+                            overlapPercent: 62,
+                            sharedListeners: 7700,
+                            listeners: "320K"
+                        },
+                        {
+                            id: 3,
+                            name: "Conan O'Brien Needs A Friend",
+                            overlapPercent: 58,
+                            sharedListeners: 7200,
+                            listeners: "280K"
+                        }
+                    ],
+                    avgCompletionRate: 72
+                },
+                {
+                    id: 2,
+                    name: "Self-Help",
+                    percentOfAudience: 54,
+                    trend: "neutral",
+                    trendPercent: 0,
+                    isNew: false,
+                    description: "Your listeners seek personal growth and actionable insights. This genre aligns with audiences looking for self-improvement and practical advice.",
+                    topPodcasts: [
+                        {
+                            id: 4,
+                            name: "The Tim Ferriss Show",
+                            overlapPercent: 54,
+                            sharedListeners: 6700,
+                            listeners: "220K"
+                        },
+                        {
+                            id: 5,
+                            name: "The Daily Stoic",
+                            overlapPercent: 48,
+                            sharedListeners: 5950,
+                            listeners: "180K"
+                        },
+                        {
+                            id: 6,
+                            name: "The School of Greatness",
+                            overlapPercent: 45,
+                            sharedListeners: 5580,
+                            listeners: "150K"
+                        }
+                    ],
+                    avgCompletionRate: 68
+                },
+                {
+                    id: 3,
+                    name: "True Crime",
+                    percentOfAudience: 42,
+                    trend: "down",
+                    trendPercent: 3,
+                    isNew: false,
+                    description: "Your audience is drawn to investigative storytelling and mystery narratives. True crime content provides engaging narratives that keep listeners coming back.",
+                    topPodcasts: [
+                        {
+                            id: 7,
+                            name: "Crime Junkie",
+                            overlapPercent: 45,
+                            sharedListeners: 5580,
+                            listeners: "120K"
+                        },
+                        {
+                            id: 8,
+                            name: "My Favorite Murder",
+                            overlapPercent: 38,
+                            sharedListeners: 4710,
+                            listeners: "95K"
+                        },
+                        {
+                            id: 9,
+                            name: "Serial",
+                            overlapPercent: 35,
+                            sharedListeners: 4340,
+                            listeners: "85K"
+                        }
+                    ],
+                    avgCompletionRate: 65
+                }
+            ]
+        };
+
         // Chart instances
         let charts = {};
+        
+        // Current podcast for collaboration request
+        let currentCollabPodcast = null;
 
         // Tab Switching
         function switchTab(tabId) {
             // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.add('hidden');
+                content.style.display = 'none';
             });
             
             // Show selected tab content
             const selectedContent = document.getElementById(`tab-${tabId}`);
             if (selectedContent) {
                 selectedContent.classList.remove('hidden');
+                selectedContent.style.display = 'block';
             }
             
             // Update tab buttons
@@ -3016,13 +2974,10 @@
                 }
             });
             
-            // Initialize charts for the active tab after ensuring visibility
-            // Use requestAnimationFrame to ensure DOM is updated, then wait for next frame
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    initializeChartsForTab(tabId);
-                });
-            });
+            // Initialize charts for the active tab
+            setTimeout(() => {
+                initializeChartsForTab(tabId);
+            }, 100);
         }
 
         // Initialize charts based on active tab
@@ -3030,65 +2985,262 @@
             if (tabId === 'overview') {
                 initListenerTrendChart();
             } else if (tabId === 'reach') {
-                initImpressionsFunnelChart();
-                initTrafficSourceChart();
-                initNewVsReturningChart();
+                initTrafficSourceWaterfallChart();
+                initNewVsReturningAreaChart();
             } else if (tabId === 'engagement') {
-                initRetentionCurveChart();
-                initStreamsVsStartsChart();
-                initEngagementVelocityChart();
+                initLengthVsCompletionChart();
+                initDropoffCurveChart();
+                initRetentionByEpisodeChart();
             } else if (tabId === 'audience') {
-                initListeningHeatmap();
+                initListeningHeatmapFull();
+                initCohortRetentionChart();
+                initGeographyEngagementChart();
+                // Initialize genre bar click handlers
+                setTimeout(() => {
+                    initGenreBars();
+                }, 100);
+            } else if (tabId === 'insights') {
+                // AI Insights tab doesn't have charts, but ensure content is visible
+                // Content should already be in the HTML
             } else if (tabId === 'monetization') {
                 initRPMChart();
                 initSubscriberFunnelChart();
                 initRevenueChart();
             }
         }
+        
+        // Toggle expandable sections
+        function toggleSection(sectionId) {
+            const content = document.getElementById(`${sectionId}-content`);
+            const arrow = document.getElementById(`${sectionId}-arrow`);
+            if (content && arrow) {
+                content.classList.toggle('hidden');
+                arrow.textContent = content.classList.contains('hidden') ? '▼' : '▲';
+            }
+        }
+        
+        // Initialize genre bar click handlers
+        function initGenreBars() {
+            document.querySelectorAll('[data-genre-bar]').forEach(bar => {
+                bar.addEventListener('click', function(e) {
+                    const genreId = parseInt(this.dataset.genreId);
+                    const genre = crossGenreAffinity.genres.find(g => g.id === genreId);
+                    if (genre) {
+                        openGenreModal(genre);
+                    }
+                });
+                
+                // Add hover effect
+                bar.addEventListener('mouseenter', function() {
+                    const barFill = this.querySelector('.bg-spotify-green');
+                    if (barFill) {
+                        barFill.style.opacity = '0.8';
+                    }
+                });
+                
+                bar.addEventListener('mouseleave', function() {
+                    const barFill = this.querySelector('.bg-spotify-green');
+                    if (barFill) {
+                        barFill.style.opacity = '1';
+                    }
+                });
+            });
+        }
+        
+        // Open genre modal
+        function openGenreModal(genre) {
+            const modal = document.getElementById('genreModal');
+            const title = document.getElementById('modalGenreTitle');
+            const header = document.getElementById('modalGenreHeader');
+            const description = document.getElementById('modalGenreDescription');
+            const podcastsList = document.getElementById('modalPodcastsList');
+            const completion = document.getElementById('modalGenreCompletion');
+            
+            if (!modal) return;
+            
+            // Set title
+            title.textContent = `${genre.name} - ${genre.percentOfAudience}% of Your Audience`;
+            
+            // Set header with trend
+            let trendIcon = '—';
+            let trendColor = 'text-spotify-text-muted';
+            if (genre.trend === 'up') {
+                trendIcon = `↑ +${genre.trendPercent}%`;
+                trendColor = 'text-spotify-green';
+            } else if (genre.trend === 'down') {
+                trendIcon = `↓ -${Math.abs(genre.trendPercent)}%`;
+                trendColor = 'text-red-500';
+            }
+            
+            header.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <span class="text-sm text-spotify-text-muted">Trend:</span>
+                    <span class="text-sm font-semibold ${trendColor}">${trendIcon}</span>
+                    ${genre.isNew ? '<span class="text-xs px-2 py-1 bg-spotify-green/20 text-spotify-green rounded">NEW</span>' : ''}
+                </div>
+            `;
+            
+            // Set description
+            description.innerHTML = `<p class="text-sm text-spotify-text-muted">${genre.description}</p>`;
+            
+            // Set podcasts list
+            podcastsList.innerHTML = genre.topPodcasts.map(podcast => `
+                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4 hover:border-spotify-green transition-colors" style="border-radius: 8px;">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-spotify-text mb-1">${podcast.name}</h4>
+                            <div class="flex gap-4 text-sm text-spotify-text-muted">
+                                <span><strong class="text-spotify-text">Overlap:</strong> ${podcast.overlapPercent}%</span>
+                                <span><strong class="text-spotify-text">Shared Listeners:</strong> ${podcast.sharedListeners.toLocaleString()}</span>
+                            </div>
+                            <p class="text-xs text-spotify-text-muted mt-1">${podcast.listeners} total listeners</p>
+                        </div>
+                        <button onclick="suggestCrossPromotion('${podcast.name.replace(/'/g, "\\'")}', ${podcast.overlapPercent})" 
+                                class="px-4 py-2 bg-spotify-green text-white rounded hover:bg-green-600 transition-colors text-sm font-semibold whitespace-nowrap ml-4" 
+                                style="border-radius: 6px;">
+                            Suggest Cross-Promotion
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Set completion rate
+            completion.innerHTML = `
+                <p class="text-sm text-spotify-text-muted">
+                    <strong class="text-spotify-text">Listener Completion:</strong> Listeners from this genre complete <strong class="text-spotify-green">${genre.avgCompletionRate}%</strong> of your episodes on average.
+                </p>
+            `;
+            
+            // Show modal
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close genre modal
+        function closeGenreModal() {
+            const modal = document.getElementById('genreModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+            }
+            document.body.style.overflow = '';
+        }
+        
+        // Suggest cross-promotion
+        function suggestCrossPromotion(podcastName, overlapPercent) {
+            currentCollabPodcast = podcastName;
+            const modal = document.getElementById('collabModal');
+            const message = document.getElementById('collabMessage');
+            const form = document.getElementById('collabForm');
+            const submitBtn = document.getElementById('collabSubmitBtn');
+            
+            if (!modal) return;
+            
+            message.textContent = `We'll help you connect with ${podcastName} for cross-promotion opportunities. With ${overlapPercent}% audience overlap, this collaboration could reach thousands of new listeners.`;
+            
+            // Show form option (can toggle this)
+            form.classList.remove('hidden');
+            
+            // Show modal
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
+        
+        // Submit collaboration request
+        function submitCollabRequest() {
+            const note = document.getElementById('collabNote').value;
+            const modal = document.getElementById('collabModal');
+            const message = document.getElementById('collabMessage');
+            const form = document.getElementById('collabForm');
+            const submitBtn = document.getElementById('collabSubmitBtn');
+            
+            if (!currentCollabPodcast) return;
+            
+            // Show success message
+            message.innerHTML = `
+                <div class="p-4 bg-spotify-dark border border-spotify-green rounded-lg mb-4" style="border-radius: 8px;">
+                    <p class="text-sm text-spotify-green font-semibold">✓ Request sent to ${currentCollabPodcast}</p>
+                    <p class="text-xs text-spotify-text-muted mt-1">We'll notify you when they respond to your collaboration request.</p>
+                </div>
+            `;
+            form.classList.add('hidden');
+            submitBtn.style.display = 'none';
+            
+            // Close modal after 3 seconds
+            setTimeout(() => {
+                closeCollabModal();
+                closeGenreModal(); // Also close genre modal
+            }, 3000);
+        }
+        
+        // Close collaboration modal
+        function closeCollabModal() {
+            const modal = document.getElementById('collabModal');
+            const form = document.getElementById('collabForm');
+            const submitBtn = document.getElementById('collabSubmitBtn');
+            const message = document.getElementById('collabMessage');
+            const note = document.getElementById('collabNote');
+            
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+            }
+            
+            // Reset form
+            if (note) note.value = '';
+            if (form) form.classList.add('hidden');
+            if (submitBtn) submitBtn.style.display = 'block';
+            currentCollabPodcast = null;
+        }
+        
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            const genreModal = document.getElementById('genreModal');
+            const collabModal = document.getElementById('collabModal');
+            
+            if (genreModal && !genreModal.classList.contains('hidden')) {
+                if (e.target === genreModal) {
+                    closeGenreModal();
+                }
+            }
+            
+            if (collabModal && !collabModal.classList.contains('hidden')) {
+                if (e.target === collabModal) {
+                    closeCollabModal();
+                }
+            }
+        });
+        
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const genreModal = document.getElementById('genreModal');
+                const collabModal = document.getElementById('collabModal');
+                
+                if (collabModal && !collabModal.classList.contains('hidden')) {
+                    closeCollabModal();
+                } else if (genreModal && !genreModal.classList.contains('hidden')) {
+                    closeGenreModal();
+                }
+            }
+        });
+        
+        // Initialize genre bars when page loads or tab is switched
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initGenreBars);
+        } else {
+            initGenreBars();
+        }
 
         // Chart Initialization Functions
         function initListenerTrendChart() {
-            // Debug Mode
-            console.log('=== listenerTrendChart Debug ===');
-            console.log('Chart.js available:', typeof Chart !== 'undefined');
-            
-            // Check if Chart.js is loaded
-            if (typeof Chart === 'undefined') {
-                console.warn('Chart.js not loaded yet, retrying in 100ms');
-                setTimeout(initListenerTrendChart, 100);
-                return;
-            }
-            
             const ctx = document.getElementById('listenerTrendChart');
-            console.log('Canvas element:', ctx);
-            console.log('Canvas width:', ctx?.offsetWidth);
-            console.log('Canvas height:', ctx?.offsetHeight);
-            console.log('Parent visible:', ctx?.offsetParent !== null);
-            console.log('Parent dimensions:', ctx?.parentElement?.offsetWidth, 'x', ctx?.parentElement?.offsetHeight);
+            if (!ctx) return;
+            if (charts.listenerTrend) charts.listenerTrend.destroy();
             
-            if (!ctx) {
-                console.warn('listenerTrendChart canvas not found');
-                return;
-            }
-            
-            // Critical: Check if canvas has dimensions before initializing
-            const canvasWidth = ctx.offsetWidth;
-            const canvasHeight = ctx.offsetHeight;
-            
-            console.log('Canvas dimensions check:', { width: canvasWidth, height: canvasHeight });
-            
-            if (canvasWidth === 0 || canvasHeight === 0) {
-                console.warn('listenerTrendChart canvas has 0 dimensions, retrying in 100ms');
-                setTimeout(initListenerTrendChart, 100);
-                return;
-            }
-            
-            // Destroy existing chart if it exists
-            if (charts.listenerTrend) {
-                charts.listenerTrend.destroy();
-            }
-            
-            // Initialize chart
             charts.listenerTrend = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -3099,104 +3251,28 @@
                         borderColor: '#1DB954',
                         backgroundColor: 'rgba(29, 185, 84, 0.1)',
                         tension: 0.4,
-                        fill: true,
-                        borderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        pointBackgroundColor: '#1DB954',
-                        pointBorderColor: '#0a0a0a',
-                        pointBorderWidth: 2
+                        fill: true
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            backgroundColor: '#1a1a1a',
-                            titleColor: '#FFFFFF',
-                            bodyColor: '#B3B3B3',
-                            borderColor: '#1DB954',
-                            borderWidth: 1,
-                            padding: 12,
-                            displayColors: false
-                        }
+                        legend: { display: false }
                     },
                     scales: {
                         y: {
                             beginAtZero: false,
-                            grid: {
-                                color: '#535353',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                color: '#B3B3B3',
-                                font: {
-                                    size: 11
-                                }
-                            }
+                            grid: { color: '#535353' },
+                            ticks: { color: '#B3B3B3' }
                         },
                         x: {
-                            grid: {
-                                color: '#535353',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                color: '#B3B3B3',
-                                font: {
-                                    size: 11
-                                },
-                                maxRotation: 0
-                            }
+                            grid: { color: '#535353' },
+                            ticks: { color: '#B3B3B3' }
                         }
                     }
                 }
             });
-            
-            // Force resize after initialization to ensure proper rendering
-            setTimeout(() => {
-                if (charts.listenerTrend) {
-                    charts.listenerTrend.resize();
-                    charts.listenerTrend.update('none');
-                    console.log('listenerTrendChart initialized and resized successfully');
-                }
-            }, 50);
-        }
-        
-        // Initialize overview tab chart on page load
-        function initializeOverviewTab() {
-            // Ensure overview tab is visible
-            const overviewTab = document.getElementById('tab-overview');
-            if (overviewTab) {
-                overviewTab.classList.remove('hidden');
-            }
-            
-            // Update tab button styling
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                const btnTab = btn.getAttribute('data-tab');
-                if (btnTab === 'overview') {
-                    btn.classList.add('text-spotify-green', 'border-b-2', 'border-spotify-green');
-                    btn.classList.remove('text-spotify-text-muted');
-                } else {
-                    btn.classList.remove('text-spotify-green', 'border-b-2', 'border-spotify-green');
-                    btn.classList.add('text-spotify-text-muted');
-                }
-            });
-            
-            // Hide all other tabs
-            document.querySelectorAll('.tab-content').forEach(content => {
-                if (content.id !== 'tab-overview') {
-                    content.classList.add('hidden');
-                }
-            });
-            
-            // Delay chart initialization to ensure DOM is fully rendered
-            setTimeout(() => {
-                initListenerTrendChart();
-            }, 300);
         }
 
         function initImpressionsFunnelChart() {
@@ -3472,30 +3548,338 @@
             });
         }
 
-        function initListeningHeatmap() {
-            const heatmapEl = document.getElementById('listeningHeatmap');
+        function initTrafficSourceWaterfallChart() {
+            const ctx = document.getElementById('trafficSourceWaterfallChart');
+            if (!ctx) return;
+            if (charts.trafficWaterfall) charts.trafficWaterfall.destroy();
+            
+            const waterfallData = {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [
+                    { label: 'Search', data: [3400, 3600, 3800, 4200], backgroundColor: '#1DB954', stack: 'source' },
+                    { label: 'Suggested', data: [4300, 4400, 4600, 4800], backgroundColor: '#B3B3B3', stack: 'source' },
+                    { label: 'Browse', data: [2800, 2900, 3000, 3200], backgroundColor: '#535353', stack: 'source' },
+                    { label: 'External', data: [1000, 1100, 1200, 1300], backgroundColor: '#8B5CF6', stack: 'source' }
+                ]
+            };
+            
+            charts.trafficWaterfall = new Chart(ctx, {
+                type: 'bar',
+                data: waterfallData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { color: '#535353' }, ticks: { color: '#B3B3B3' } },
+                        y: { stacked: true, grid: { color: '#535353' }, ticks: { color: '#B3B3B3' } }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#B3B3B3' } }
+                    }
+                }
+            });
+        }
+        
+        function initNewVsReturningAreaChart() {
+            const ctx = document.getElementById('newVsReturningAreaChart');
+            if (!ctx) return;
+            if (charts.newVsReturningArea) charts.newVsReturningArea.destroy();
+            
+            charts.newVsReturningArea = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: newVsReturningData.map(d => d.date),
+                    datasets: [
+                        {
+                            label: 'New',
+                            data: newVsReturningData.map(d => d.new),
+                            borderColor: '#1DB954',
+                            backgroundColor: 'rgba(29, 185, 84, 0.2)',
+                            fill: true
+                        },
+                        {
+                            label: 'Returning',
+                            data: newVsReturningData.map(d => d.returning),
+                            borderColor: '#B3B3B3',
+                            backgroundColor: 'rgba(179, 179, 179, 0.2)',
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { color: '#535353' }, ticks: { color: '#B3B3B3' } },
+                        y: { grid: { color: '#535353' }, ticks: { color: '#B3B3B3' } }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#B3B3B3' } }
+                    }
+                }
+            });
+        }
+        
+        function initLengthVsCompletionChart() {
+            const ctx = document.getElementById('lengthVsCompletionChart');
+            if (!ctx) return;
+            if (charts.lengthVsCompletion) charts.lengthVsCompletion.destroy();
+            
+            const lengthData = [
+                { length: 3, completion: 82 },
+                { length: 4, completion: 75 },
+                { length: 5, completion: 72 },
+                { length: 6, completion: 68 },
+                { length: 7, completion: 62 },
+                { length: 8, completion: 58 }
+            ];
+            
+            charts.lengthVsCompletion = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Episodes',
+                        data: lengthData.map(d => ({ x: d.length, y: d.completion })),
+                        backgroundColor: '#1DB954',
+                        pointRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Episode Length (minutes)', color: '#B3B3B3' },
+                            grid: { color: '#535353' },
+                            ticks: { color: '#B3B3B3' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Completion %', color: '#B3B3B3' },
+                            grid: { color: '#535353' },
+                            ticks: { color: '#B3B3B3' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+        
+        function initDropoffCurveChart() {
+            const ctx = document.getElementById('dropoffCurveChart');
+            if (!ctx) return;
+            if (charts.dropoffCurve) charts.dropoffCurve.destroy();
+            
+            charts.dropoffCurve = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['0:00', '2:00', '4:00', '6:00', '8:00', '10:00', '12:00', '15:00', '20:00'],
+                    datasets: [{
+                        label: 'Retention',
+                        data: [100, 85, 78, 72, 68, 65, 58, 52, 45],
+                        borderColor: '#1DB954',
+                        backgroundColor: 'rgba(29, 185, 84, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { grid: { color: '#535353' }, ticks: { color: '#B3B3B3' } },
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: '#535353' },
+                            ticks: { color: '#B3B3B3' }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function initRetentionByEpisodeChart() {
+            const ctx = document.getElementById('retentionByEpisodeChart');
+            if (!ctx) return;
+            if (charts.retentionByEpisode) charts.retentionByEpisode.destroy();
+            
+            charts.retentionByEpisode = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['0:00', '2:00', '4:00', '6:00', '8:00', '10:00'],
+                    datasets: [
+                        {
+                            label: 'Top Episodes',
+                            data: [100, 88, 82, 78, 75, 72],
+                            borderColor: '#1DB954',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Average',
+                            data: [100, 85, 78, 72, 68, 65],
+                            borderColor: '#B3B3B3',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Bottom Episodes',
+                            data: [100, 80, 70, 62, 52, 45],
+                            borderColor: '#EF4444',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { color: '#535353' }, ticks: { color: '#B3B3B3' } },
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: '#535353' },
+                            ticks: { color: '#B3B3B3' }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#B3B3B3' } }
+                    }
+                }
+            });
+        }
+        
+        function initListeningHeatmapFull() {
+            const heatmapEl = document.getElementById('listeningHeatmapFull');
             if (!heatmapEl) return;
             
+            const days = ['Hour', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const hours = ['6 AM', '9 AM', '12 PM', '3 PM', '6 PM', '9 PM'];
+            
+            // Calculate max value for intensity
             const maxValue = Math.max(...listeningHoursHeatmap.flatMap(row => 
                 ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => row[day])
             ));
             
-            heatmapEl.innerHTML = listeningHoursHeatmap.map(row => {
-                return `
-                    <div class="grid grid-cols-8 gap-2">
-                        <div class="text-sm text-spotify-text-muted self-center">${row.hour}</div>
-                        ${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => {
-                            const value = row[day];
-                            const intensity = value / maxValue;
-                            return `
-                                <div class="h-10 rounded border border-spotify-neutral flex items-center justify-center text-xs text-spotify-text font-semibold" style="background-color: rgba(29, 185, 84, ${intensity * 0.6})">
-                                    ${value}
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                `;
-            }).join('');
+            heatmapEl.innerHTML = `
+                <div class="grid grid-cols-8 gap-2 mb-3" style="min-width: 600px;">
+                    ${days.map(day => `<div class="text-center text-xs text-spotify-text-muted font-semibold py-1" style="min-width: 60px;">${day}</div>`).join('')}
+                </div>
+                ${hours.map(hour => {
+                    const hourData = listeningHoursHeatmap.find(h => h.hour === hour);
+                    if (!hourData) return '';
+                    return `
+                        <div class="grid grid-cols-8 gap-2 mb-2" style="min-width: 600px;">
+                            <div class="text-xs text-spotify-text-muted self-center font-semibold py-2" style="min-width: 60px; text-align: right; padding-right: 8px;">${hour}</div>
+                            ${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => {
+                                const value = hourData[day];
+                                const intensity = value / maxValue;
+                                return `
+                                    <div class="h-10 rounded border border-spotify-neutral flex items-center justify-center text-xs text-spotify-text font-semibold" style="background-color: rgba(29, 185, 84, ${intensity * 0.7}); min-width: 60px;">
+                                        ${value}
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                }).join('')}
+            `;
+        }
+        
+        function initCohortRetentionChart() {
+            const ctx = document.getElementById('cohortRetentionChart');
+            if (!ctx) return;
+            if (charts.cohortRetention) charts.cohortRetention.destroy();
+            
+            charts.cohortRetention = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Month 1', 'Month 2', 'Month 3', 'Month 6', 'Month 12'],
+                    datasets: [
+                        {
+                            label: 'Nov 2024',
+                            data: [100, 68, 52, 38, 28],
+                            borderColor: '#1DB954',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Aug 2024',
+                            data: [100, 78, 65, 52, 40],
+                            borderColor: '#B3B3B3',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { color: '#535353' }, ticks: { color: '#B3B3B3' } },
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: '#535353' },
+                            ticks: { color: '#B3B3B3' }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#B3B3B3' } }
+                    }
+                }
+            });
+        }
+        
+        function initGeographyEngagementChart() {
+            const ctx = document.getElementById('geographyEngagementChart');
+            if (!ctx) return;
+            if (charts.geographyEngagement) charts.geographyEngagement.destroy();
+            
+            charts.geographyEngagement = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['USA', 'Canada', 'UK', 'Australia', 'Other'],
+                    datasets: [
+                        {
+                            label: 'Listeners',
+                            data: [5580, 2232, 1240, 620, 728],
+                            backgroundColor: '#1DB954'
+                        },
+                        {
+                            label: 'Avg Completion',
+                            data: [72, 68, 65, 63, 60],
+                            backgroundColor: '#B3B3B3',
+                            type: 'line',
+                            yAxisID: 'y1',
+                            borderColor: '#B3B3B3'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { color: '#535353' }, ticks: { color: '#B3B3B3' } },
+                        y: {
+                            grid: { color: '#535353' },
+                            ticks: { color: '#B3B3B3' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            max: 100,
+                            grid: { drawOnChartArea: false },
+                            ticks: { color: '#B3B3B3' }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#B3B3B3' } }
+                    }
+                }
+            });
         }
 
         function initRPMChart() {
@@ -3656,46 +4040,36 @@
                 img.style.display = 'block';
                 img.style.visibility = 'visible';
                 
-                // Special handling for About section photo - check if image failed to load
+                // Special handling for About section photo
                 if (img.alt === 'Camron Soltani') {
-                    // Check if image failed to load by testing if it's broken
-                    const testImg = new Image();
-                    testImg.onload = function() {
-                        // Image loaded successfully, do nothing
-                    };
-                    testImg.onerror = function() {
-                        // Image failed, try fallbacks
-                        console.log('Image failed to load, trying fallbacks...');
-                        const fallbacks = [
-                            '/images/Amy-and-Camron-136.png',  // Simple filename (correct)
-                            '/images/Amy%26amp%3B_Camron-136.png',  // Old URL-encoded &amp; as %26amp%3B
-                            '/images/Amy%26amp_Camron-136.png',  // Old URL-encoded &amp; (partial)
-                            '/images/Amy&amp_Camron-136.png'  // Old HTML entity &amp;
-                        ];
-                        
-                        let currentFallback = 0;
-                        
-                        function tryNext() {
-                            if (currentFallback < fallbacks.length) {
-                                img.src = fallbacks[currentFallback];
-                                console.log('Trying fallback:', fallbacks[currentFallback]);
-                                currentFallback++;
-                                
-                                img.onerror = function() {
-                                    tryNext();
-                                };
-                                
-                                img.onload = function() {
-                                    console.log('Image loaded successfully with:', this.src);
-                                };
-                            } else {
-                                console.error('All image fallbacks failed for Camron photo');
-                            }
+                    // Try multiple encoding approaches for the filename with &amp; (actual filename is Amy&amp_Camron-136.png)
+                    const fallbacks = [
+                        'public/images/Amy&amp_Camron-136.png',  // Exact filename as stored
+                        'public/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
+                        'public/images/Amy&amp;amp;_Camron-136.png',  // HTML entity &amp;amp; (decodes to &amp;)
+                        'public/images/Amy%26_Camron-136.png',  // URL-encoded &
+                        'public/images/Amy&_Camron-136.png'  // Direct &
+                    ];
+                    
+                    // Set initial src
+                    img.src = fallbacks[0];
+                    
+                    let currentFallback = 0;
+                    
+                    img.addEventListener('error', function() {
+                        console.log('Image failed, trying fallback:', fallbacks[currentFallback]);
+                        if (currentFallback < fallbacks.length - 1) {
+                            currentFallback++;
+                            this.src = fallbacks[currentFallback];
+                        } else {
+                            console.error('All image fallbacks failed for Camron photo');
+                            handleImageError(this);
                         }
-                        
-                        tryNext();
-                    };
-                    testImg.src = img.src;
+                    });
+                    
+                    img.addEventListener('load', function() {
+                        console.log('Camron photo loaded successfully:', this.src);
+                    });
                 } else {
                     // Add error handler for other images
                     img.addEventListener('error', function() {
@@ -3734,18 +4108,13 @@
             const photo = document.getElementById('camron-photo');
             if (!photo) return;
             
-            // Check if image already loaded successfully
-            if (photo.complete && photo.naturalHeight !== 0) {
-                console.log('Photo already loaded successfully');
-                return;
-            }
-            
-            // Try all possible encodings for the filename with literal &amp;
+            // Try all possible encodings for the filename with literal &amp; (actual filename is Amy&amp_Camron-136.png)
             const attempts = [
-                '/images/Amy-and-Camron-136.png',  // Simple filename (correct)
-                '/images/Amy%26amp%3B_Camron-136.png',  // Old URL-encoded &amp; as %26amp%3B
-                '/images/Amy%26amp_Camron-136.png',  // Old URL-encoded &amp; (partial)
-                '/images/Amy&amp_Camron-136.png'  // Old HTML entity &amp;
+                'public/images/Amy&amp_Camron-136.png',  // Exact filename as stored
+                'public/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
+                'public/images/Amy&amp;amp;_Camron-136.png',  // HTML entity &amp;amp; (decodes to &amp;)
+                'public/images/Amy%26_Camron-136.png',  // URL-encoded &
+                'public/images/Amy&_Camron-136.png'  // Direct &
             ];
             
             let currentAttempt = 0;
@@ -3769,75 +4138,16 @@
                 console.log('Photo loaded successfully with:', this.src);
             };
             
-            // Only try fallbacks if current src failed
-            if (!photo.complete || photo.naturalHeight === 0) {
-                tryNext();
-            }
+            // Start with first attempt
+            tryNext();
         }
         
         // Initialize on page load
-        function initializePage() {
-            // Use requestAnimationFrame to ensure CSS is applied
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    checkImages();
-                    loadCamronPhoto();
-                    
-                    // Initialize overview tab as default landing tab
-                    initializeOverviewTab();
-                });
-            });
-        }
-        
-        // Wait for window.load to ensure all resources (including CSS) are loaded
-        // This is especially important for hard refresh (Cmd+Shift+R)
-        window.addEventListener('load', function() {
-            // Wait for Chart.js to load
-            function waitForChart() {
-                if (typeof Chart !== 'undefined') {
-                    console.log('Chart.js loaded, initializing page');
-                    // Small delay to ensure CSS is fully applied after hard refresh
-                    setTimeout(() => {
-                        initializePage();
-                    }, 50);
-                } else {
-                    console.log('Waiting for Chart.js...');
-                    setTimeout(waitForChart, 50);
-                }
-            }
-            waitForChart();
+        document.addEventListener('DOMContentLoaded', function() {
+            switchTab('overview');
+            checkImages();
+            loadCamronPhoto();
         });
-        
-        // Fallback for DOMContentLoaded (in case window.load already fired)
-        if (document.readyState === 'complete') {
-            // Page already loaded, initialize immediately
-            function waitForChart() {
-                if (typeof Chart !== 'undefined') {
-                    console.log('Chart.js loaded (page already loaded), initializing page');
-                    setTimeout(() => {
-                        initializePage();
-                    }, 50);
-                } else {
-                    console.log('Waiting for Chart.js...');
-                    setTimeout(waitForChart, 50);
-                }
-            }
-            waitForChart();
-        } else {
-            // Also set up DOMContentLoaded as backup
-            document.addEventListener('DOMContentLoaded', function() {
-                function waitForChart() {
-                    if (typeof Chart !== 'undefined') {
-                        // Don't initialize here, wait for window.load instead
-                        console.log('Chart.js loaded, waiting for window.load...');
-                    } else {
-                        console.log('Waiting for Chart.js...');
-                        setTimeout(waitForChart, 50);
-                    }
-                }
-                waitForChart();
-            });
-        }
     </script>
 </body>
 </html>
