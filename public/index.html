@@ -1505,7 +1505,7 @@
                         <div class="relative mb-6">
                             <div class="bg-gradient-to-br from-spotify-dark via-spotify-dark-secondary to-spotify-dark rounded-lg p-2 border border-spotify-neutral shadow-lg overflow-hidden">
                                 <div class="relative aspect-video rounded-lg overflow-hidden">
-                                    <img src="public/images/Gemini_Generated_Image_ti9ydwti9ydwti9y.png" alt="Podcast creator at desk reviewing analytics dashboard with holographic UI elements showing charts, Shorts tiles, and audience segments" class="w-full h-full object-cover" />
+                                    <img src="/images/Gemini_Generated_Image_ti9ydwti9ydwti9y.png" alt="Podcast creator at desk reviewing analytics dashboard with holographic UI elements showing charts, Shorts tiles, and audience segments" class="w-full h-full object-cover" />
                                 </div>
                             </div>
                         </div>
@@ -1545,7 +1545,7 @@
                         <p class="text-sm text-spotify-green text-center font-semibold uppercase tracking-wide mb-2">Realizing Limitless Promotional Reach</p>
                         <div class="w-full rounded-lg flex justify-center items-center" style="overflow: hidden;">
                             <div style="width: 60%; max-width: 100%;">
-                                <img src="public/images/Gemini_Generated_Image_77ud1q77ud1q77ud.png" alt="Cross-genre audience consumption patterns and cross-promotion marketplace visualization" class="w-full h-auto object-contain rounded-lg" style="display: block;" />
+                                <img src="/images/Gemini_Generated_Image_77ud1q77ud1q77ud.png" alt="Cross-genre audience consumption patterns and cross-promotion marketplace visualization" class="w-full h-auto object-contain rounded-lg" style="display: block;" />
                             </div>
                         </div>
                     </div>
@@ -2672,7 +2672,7 @@
                         </p>
                     </div>
                     <div class="md:col-span-1">
-                        <img src="public/images/Amy&amp_Camron-136.png" alt="Camron Soltani" class="w-full rounded-lg shadow-lg" id="camron-photo" />
+                        <img src="/images/Amy&amp_Camron-136.png" alt="Camron Soltani" class="w-full rounded-lg shadow-lg" id="camron-photo" />
                     </div>
                 </div>
 
@@ -4044,11 +4044,11 @@
                 if (img.alt === 'Camron Soltani') {
                     // Try multiple encoding approaches for the filename with &amp; (actual filename is Amy&amp_Camron-136.png)
                     const fallbacks = [
-                        'public/images/Amy&amp_Camron-136.png',  // Exact filename as stored
-                        'public/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
-                        'public/images/Amy&amp;amp;_Camron-136.png',  // HTML entity &amp;amp; (decodes to &amp;)
-                        'public/images/Amy%26_Camron-136.png',  // URL-encoded &
-                        'public/images/Amy&_Camron-136.png'  // Direct &
+                        '/images/Amy&amp_Camron-136.png',  // Exact filename as stored
+                        '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
+                        '/images/Amy&amp;amp;_Camron-136.png',  // HTML entity &amp;amp; (decodes to &amp;)
+                        '/images/Amy%26_Camron-136.png',  // URL-encoded &
+                        '/images/Amy&_Camron-136.png'  // Direct &
                     ];
                     
                     // Set initial src
@@ -4110,11 +4110,11 @@
             
             // Try all possible encodings for the filename with literal &amp; (actual filename is Amy&amp_Camron-136.png)
             const attempts = [
-                'public/images/Amy&amp_Camron-136.png',  // Exact filename as stored
-                'public/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
-                'public/images/Amy&amp;amp;_Camron-136.png',  // HTML entity &amp;amp; (decodes to &amp;)
-                'public/images/Amy%26_Camron-136.png',  // URL-encoded &
-                'public/images/Amy&_Camron-136.png'  // Direct &
+                '/images/Amy&amp_Camron-136.png',  // Exact filename as stored
+                '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
+                '/images/Amy&amp;amp;_Camron-136.png',  // HTML entity &amp;amp; (decodes to &amp;)
+                '/images/Amy%26_Camron-136.png',  // URL-encoded &
+                '/images/Amy&_Camron-136.png'  // Direct &
             ];
             
             let currentAttempt = 0;
@@ -4144,9 +4144,20 @@
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            switchTab('overview');
+            // Initialize images first
             checkImages();
             loadCamronPhoto();
+            
+            // Initialize overview tab with charts
+            switchTab('overview');
+            
+            // Ensure chart initializes after a small delay to allow DOM to fully render
+            setTimeout(() => {
+                const ctx = document.getElementById('listenerTrendChart');
+                if (ctx && !charts.listenerTrend) {
+                    initListenerTrendChart();
+                }
+            }, 200);
         });
     </script>
 </body>
