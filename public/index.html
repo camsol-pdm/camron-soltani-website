@@ -1767,7 +1767,7 @@
                 <!-- Tab Content Container -->
                 <div id="dashboard-content">
                     <!-- OVERVIEW TAB -->
-                    <div id="tab-overview" class="tab-content hidden">
+                    <div id="tab-overview" class="tab-content">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
                     <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
                         <p class="text-sm text-spotify-text-muted mb-1">Total Listeners (28-day)</p>
@@ -2777,6 +2777,51 @@
                 }
             });
         }
+        
+        // Initialize overview tab chart on page load
+        function initializeOverviewTab() {
+            // Ensure overview tab is visible
+            const overviewTab = document.getElementById('tab-overview');
+            if (overviewTab) {
+                overviewTab.classList.remove('hidden');
+            }
+            
+            // Update tab button styling
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                const btnTab = btn.getAttribute('data-tab');
+                if (btnTab === 'overview') {
+                    btn.classList.add('text-spotify-green', 'border-b-2', 'border-spotify-green');
+                    btn.classList.remove('text-spotify-text-muted');
+                } else {
+                    btn.classList.remove('text-spotify-green', 'border-b-2', 'border-spotify-green');
+                    btn.classList.add('text-spotify-text-muted');
+                }
+            });
+            
+            // Hide all other tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                if (content.id !== 'tab-overview') {
+                    content.classList.add('hidden');
+                }
+            });
+            
+            // Initialize the chart after ensuring tab is visible
+            // Use multiple delays to ensure canvas has dimensions
+            setTimeout(() => {
+                const canvas = document.getElementById('listenerTrendChart');
+                if (canvas) {
+                    const rect = canvas.getBoundingClientRect();
+                    if (rect.width > 0 && rect.height > 0) {
+                        initListenerTrendChart();
+                    } else {
+                        // Retry if canvas doesn't have dimensions yet
+                        setTimeout(() => {
+                            initListenerTrendChart();
+                        }, 100);
+                    }
+                }
+            }, 100);
+        }
 
         function initImpressionsFunnelChart() {
             const ctx = document.getElementById('impressionsFunnelChart');
@@ -3359,19 +3404,19 @@
             checkImages();
             loadCamronPhoto();
             
-            // Initially land on Reach & Discovery tab
-            switchTab('reach');
-            
-            // After 0.05 seconds, simulate clicking the overview tab
-            setTimeout(() => {
-                const overviewButton = document.querySelector('[data-tab="overview"]');
-                if (overviewButton) {
-                    overviewButton.click();
-                } else {
-                    // Fallback if button not found
-                    switchTab('overview');
-                }
-            }, 50);
+            // Initialize overview tab as default landing tab
+            initializeOverviewTab();
+        });
+        
+        // Also try on window load as fallback
+        window.addEventListener('load', function() {
+            const canvas = document.getElementById('listenerTrendChart');
+            if (canvas && !charts.listenerTrend) {
+                // Chart not initialized yet, try again
+                setTimeout(() => {
+                    initListenerTrendChart();
+                }, 50);
+            }
         });
     </script>
 </body>
