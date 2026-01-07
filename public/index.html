@@ -2708,10 +2708,13 @@
                 }
             });
             
-            // Initialize charts for the active tab
-            setTimeout(() => {
-                initializeChartsForTab(tabId);
-            }, 100);
+            // Initialize charts for the active tab after ensuring visibility
+            // Use requestAnimationFrame to ensure DOM is updated, then wait for next frame
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    initializeChartsForTab(tabId);
+                });
+            });
         }
 
         // Initialize charts based on active tab
@@ -2739,6 +2742,16 @@
         function initListenerTrendChart() {
             const ctx = document.getElementById('listenerTrendChart');
             if (!ctx) return;
+            
+            // Check if canvas is visible and has dimensions
+            const canvas = ctx;
+            const rect = canvas.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) {
+                // Canvas not visible yet, retry after a short delay
+                setTimeout(() => initListenerTrendChart(), 50);
+                return;
+            }
+            
             if (charts.listenerTrend) charts.listenerTrend.destroy();
             
             charts.listenerTrend = new Chart(ctx, {
@@ -2773,6 +2786,13 @@
                     }
                 }
             });
+            
+            // Force resize after creation to ensure proper rendering
+            if (charts.listenerTrend) {
+                setTimeout(() => {
+                    charts.listenerTrend.resize();
+                }, 100);
+            }
         }
 
         function initImpressionsFunnelChart() {
