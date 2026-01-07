@@ -1767,7 +1767,7 @@
                 <!-- Tab Content Container -->
                 <div id="dashboard-content">
                     <!-- OVERVIEW TAB -->
-                    <div id="tab-overview" class="tab-content">
+                    <div id="tab-overview" class="tab-content hidden">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
                     <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
                         <p class="text-sm text-spotify-text-muted mb-1">Total Listeners (28-day)</p>
@@ -2741,155 +2741,41 @@
         // Chart Initialization Functions
         function initListenerTrendChart() {
             const ctx = document.getElementById('listenerTrendChart');
-            if (!ctx) {
-                console.log('ListenerTrendChart: Canvas element not found');
-                return;
-            }
+            if (!ctx) return;
+            if (charts.listenerTrend) charts.listenerTrend.destroy();
             
-            // Destroy existing chart if it exists
-            if (charts.listenerTrend) {
-                charts.listenerTrend.destroy();
-                charts.listenerTrend = null;
-            }
-            
-            // Check if canvas is visible and has dimensions
-            const canvas = ctx;
-            const tabContent = canvas.closest('.tab-content');
-            
-            // Check if tab content is hidden
-            if (tabContent && tabContent.classList.contains('hidden')) {
-                console.log('ListenerTrendChart: Tab is hidden, waiting for visibility...');
-                // Tab is hidden, wait for it to become visible using MutationObserver
-                const observer = new MutationObserver((mutations) => {
-                    if (!tabContent.classList.contains('hidden')) {
-                        observer.disconnect();
-                        // Tab is now visible, wait a bit then initialize
-                        setTimeout(() => {
-                            createListenerTrendChart();
-                        }, 150);
-                    }
-                });
-                
-                observer.observe(tabContent, {
-                    attributes: true,
-                    attributeFilter: ['class']
-                });
-                
-                // Also use IntersectionObserver as backup
-                const intersectionObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting && !tabContent.classList.contains('hidden')) {
-                            intersectionObserver.disconnect();
-                            setTimeout(() => {
-                                createListenerTrendChart();
-                            }, 150);
-                        }
-                    });
-                }, { threshold: 0.1 });
-                
-                intersectionObserver.observe(tabContent);
-                return;
-            }
-            
-            // Tab is visible, check canvas dimensions with retry logic
-            let retryCount = 0;
-            const maxRetries = 10;
-            
-            function checkAndCreate() {
-                const rect = canvas.getBoundingClientRect();
-                const computedStyle = window.getComputedStyle(canvas);
-                const isVisible = computedStyle.display !== 'none' && 
-                                 computedStyle.visibility !== 'hidden' &&
-                                 computedStyle.opacity !== '0';
-                
-                console.log('ListenerTrendChart: Checking dimensions', {
-                    width: rect.width,
-                    height: rect.height,
-                    isVisible: isVisible,
-                    retryCount: retryCount
-                });
-                
-                if (rect.width > 0 && rect.height > 0 && isVisible) {
-                    // Canvas has dimensions and is visible, create chart
-                    createListenerTrendChart();
-                } else if (retryCount < maxRetries) {
-                    // Canvas not ready yet, retry
-                    retryCount++;
-                    setTimeout(checkAndCreate, 100);
-                } else {
-                    console.error('ListenerTrendChart: Failed to initialize after max retries');
-                }
-            }
-            
-            checkAndCreate();
-        }
-        
-        function createListenerTrendChart() {
-            const ctx = document.getElementById('listenerTrendChart');
-            if (!ctx) {
-                console.error('ListenerTrendChart: Canvas not found in createListenerTrendChart');
-                return;
-            }
-            
-            // Final check for dimensions
-            const rect = ctx.getBoundingClientRect();
-            if (rect.width === 0 || rect.height === 0) {
-                console.log('ListenerTrendChart: Canvas has no dimensions, retrying...');
-                setTimeout(() => createListenerTrendChart(), 100);
-                return;
-            }
-            
-            console.log('ListenerTrendChart: Creating chart with dimensions', rect.width, 'x', rect.height);
-            
-            try {
-                charts.listenerTrend = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: listenerTrendData.map(d => d.date),
-                        datasets: [{
-                            label: 'Listeners',
-                            data: listenerTrendData.map(d => d.listeners),
-                            borderColor: '#1DB954',
-                            backgroundColor: 'rgba(29, 185, 84, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        }]
+            charts.listenerTrend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: listenerTrendData.map(d => d.date),
+                    datasets: [{
+                        label: 'Listeners',
+                        data: listenerTrendData.map(d => d.listeners),
+                        borderColor: '#1DB954',
+                        backgroundColor: 'rgba(29, 185, 84, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        animation: {
-                            duration: 0 // Disable animation for faster rendering
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: { color: '#535353' },
+                            ticks: { color: '#B3B3B3' }
                         },
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: false,
-                                grid: { color: '#535353' },
-                                ticks: { color: '#B3B3B3' }
-                            },
-                            x: {
-                                grid: { color: '#535353' },
-                                ticks: { color: '#B3B3B3' }
-                            }
+                        x: {
+                            grid: { color: '#535353' },
+                            ticks: { color: '#B3B3B3' }
                         }
                     }
-                });
-                
-                console.log('ListenerTrendChart: Chart created successfully');
-                
-                // Force resize after creation to ensure proper rendering
-                requestAnimationFrame(() => {
-                    if (charts.listenerTrend) {
-                        charts.listenerTrend.resize();
-                        console.log('ListenerTrendChart: Resize called');
-                    }
-                });
-            } catch (error) {
-                console.error('ListenerTrendChart: Error creating chart', error);
-            }
+                }
+            });
         }
 
         function initImpressionsFunnelChart() {
@@ -3470,33 +3356,9 @@
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
+            switchTab('overview');
             checkImages();
             loadCamronPhoto();
-            
-            // Check if overview tab is already visible (no hidden class)
-            const overviewTab = document.getElementById('tab-overview');
-            if (overviewTab && !overviewTab.classList.contains('hidden')) {
-                // Overview tab is already visible, don't call switchTab
-                // Just initialize the chart after a delay to ensure everything is rendered
-                setTimeout(() => {
-                    initListenerTrendChart();
-                }, 200);
-            } else {
-                // Overview tab is hidden, use switchTab to show it
-                switchTab('overview');
-            }
-        });
-        
-        // Also try initializing on window load as a fallback
-        window.addEventListener('load', function() {
-            const overviewTab = document.getElementById('tab-overview');
-            const canvas = document.getElementById('listenerTrendChart');
-            if (overviewTab && !overviewTab.classList.contains('hidden') && canvas && !charts.listenerTrend) {
-                // Overview is visible but chart not initialized, try again
-                setTimeout(() => {
-                    initListenerTrendChart();
-                }, 100);
-            }
         });
     </script>
 </body>
