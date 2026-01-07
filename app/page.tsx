@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import Script from 'next/script';
+import HTMLRenderer from './html-renderer';
 
 export default function Home() {
   // Read the exact HTML file on the server
@@ -11,7 +11,7 @@ export default function Home() {
   const bodyMatch = htmlContent.match(/<body[^>]*>([\s\S]*)<\/body>/i);
   let bodyContent = bodyMatch ? bodyMatch[1] : htmlContent;
   
-  // Extract head content for styles and scripts
+  // Extract head content for styles
   const headMatch = htmlContent.match(/<head[^>]*>([\s\S]*)<\/head>/i);
   const headContent = headMatch ? headMatch[1] : '';
   
@@ -21,11 +21,17 @@ export default function Home() {
   
   // Extract script tags from head
   const headScriptMatches = headContent.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/gi);
-  const headScripts = Array.from(headScriptMatches);
+  const headScripts = Array.from(headScriptMatches).map(script => ({
+    attrs: script[1],
+    content: script[2],
+  }));
   
   // Extract script tags from body
   const bodyScriptMatches = bodyContent.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/gi);
-  const bodyScripts = Array.from(bodyScriptMatches);
+  const bodyScripts = Array.from(bodyScriptMatches).map(script => ({
+    attrs: script[1],
+    content: script[2],
+  }));
   
   // Remove script tags from body content
   const bodyWithoutScripts = bodyContent.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
@@ -33,33 +39,11 @@ export default function Home() {
   return (
     <>
       {styles && <style dangerouslySetInnerHTML={{ __html: styles }} />}
-      {headScripts.map((script, i) => {
-        const attrs = script[1];
-        const content = script[2];
-        const srcMatch = attrs.match(/src=["']([^"']+)["']/i);
-        
-        if (srcMatch) {
-          return <Script key={`head-${i}`} src={srcMatch[1]} strategy="beforeInteractive" />;
-        }
-        if (content.trim()) {
-          return <Script key={`head-${i}`} id={`head-script-${i}`} strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: content }} />;
-        }
-        return null;
-      })}
-      <div dangerouslySetInnerHTML={{ __html: bodyWithoutScripts }} />
-      {bodyScripts.map((script, i) => {
-        const attrs = script[1];
-        const content = script[2];
-        const srcMatch = attrs.match(/src=["']([^"']+)["']/i);
-        
-        if (srcMatch) {
-          return <Script key={`body-${i}`} src={srcMatch[1]} strategy="afterInteractive" />;
-        }
-        if (content.trim()) {
-          return <Script key={`body-${i}`} id={`body-script-${i}`} strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: content }} />;
-        }
-        return null;
-      })}
+      <HTMLRenderer 
+        bodyContent={bodyWithoutScripts}
+        headScripts={headScripts}
+        bodyScripts={bodyScripts}
+      />
     </>
   );
 }
