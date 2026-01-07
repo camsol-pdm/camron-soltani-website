@@ -1,7 +1,6 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import Script from 'next/script';
-import HTMLContent from './html-content';
 
 export default function Home() {
   // Read the exact HTML file on the server
