@@ -3359,10 +3359,19 @@
             checkImages();
             loadCamronPhoto();
             
-            // Automatically show overview tab after 0.5 seconds
+            // Initially land on Reach & Discovery tab
+            switchTab('reach');
+            
+            // After 0.05 seconds, simulate clicking the overview tab
             setTimeout(() => {
-                switchTab('overview');
-            }, 500);
+                const overviewButton = document.querySelector('[data-tab="overview"]');
+                if (overviewButton) {
+                    overviewButton.click();
+                } else {
+                    // Fallback if button not found
+                    switchTab('overview');
+                }
+            }, 50);
         });
     </script>
 </body>
