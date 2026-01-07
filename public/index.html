@@ -2579,21 +2579,53 @@
     <script>
         // Single scroll handler for anchor links - prevent conflicts and double scrolling
         (function() {
-            // Prevent multiple initializations
-            if (window.__anchorNavInitialized) return;
+            // Prevent multiple initializations - use global flag
+            if (window.__anchorNavInitialized) {
+                console.log('Anchor navigation already initialized, skipping');
+                return;
+            }
             window.__anchorNavInitialized = true;
             
             let isScrolling = false;
             let scrollTimeout = null;
             let currentTarget = null;
+            let scrollInProgress = false;
+            
+            // Completely prevent browser's automatic scroll to hash
+            function preventAutoScroll() {
+                // Store current scroll position
+                const scrollY = window.scrollY;
+                
+                // Temporarily remove hash to prevent auto-scroll
+                const hash = window.location.hash;
+                if (hash) {
+                    history.replaceState(null, '', window.location.pathname + window.location.search);
+                }
+                
+                // Restore scroll position immediately
+                window.scrollTo(0, scrollY);
+                
+                // Restore hash after a moment (without triggering scroll)
+                if (hash) {
+                    setTimeout(() => {
+                        history.replaceState(null, '', hash);
+                    }, 0);
+                }
+            }
             
             function scrollToTarget(targetId, immediate = false) {
+                if (scrollInProgress) {
+                    console.log('Scroll already in progress, ignoring');
+                    return false;
+                }
+                
                 const target = document.getElementById(targetId);
-                if (!target) return false;
+                if (!target) {
+                    console.log('Target not found:', targetId);
+                    return false;
+                }
                 
-                // Prevent multiple scrolls to same target
-                if (isScrolling && currentTarget === targetId) return false;
-                
+                scrollInProgress = true;
                 isScrolling = true;
                 currentTarget = targetId;
                 
@@ -2606,7 +2638,7 @@
                 // Calculate offset for sticky nav (45px height)
                 const navHeight = 45;
                 const targetRect = target.getBoundingClientRect();
-                const targetPosition = targetRect.top + window.pageYOffset - navHeight;
+                const targetPosition = Math.max(0, targetRect.top + window.pageYOffset - navHeight);
                 
                 // Use requestAnimationFrame for smoother scroll
                 if (immediate) {
@@ -2614,8 +2646,11 @@
                         top: targetPosition,
                         behavior: 'auto'
                     });
-                    isScrolling = false;
-                    currentTarget = null;
+                    setTimeout(() => {
+                        isScrolling = false;
+                        currentTarget = null;
+                        scrollInProgress = false;
+                    }, 100);
                 } else {
                     window.scrollTo({
                         top: targetPosition,
@@ -2626,14 +2661,23 @@
                     scrollTimeout = setTimeout(() => {
                         isScrolling = false;
                         currentTarget = null;
+                        scrollInProgress = false;
                         scrollTimeout = null;
-                    }, 1000);
+                    }, 1500);
                 }
                 
                 return true;
             }
             
             function handleAnchorClick(e) {
+                // Prevent if already scrolling
+                if (scrollInProgress) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    return;
+                }
+                
                 const link = e.target.closest('a[href^="#"]');
                 if (!link) return;
                 
@@ -2643,7 +2687,11 @@
                     e.stopPropagation();
                     e.stopImmediatePropagation();
                     if (href === '#home' || href === '#') {
+                        scrollInProgress = true;
                         window.scrollTo({ top: 0, behavior: 'smooth' });
+                        setTimeout(() => {
+                            scrollInProgress = false;
+                        }, 1000);
                     }
                     return;
                 }
@@ -2651,58 +2699,70 @@
                 const targetId = href.slice(1);
                 if (!targetId) return;
                 
-                // Prevent all default behaviors immediately
+                // Prevent all default behaviors immediately - do this FIRST
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
+                e.stopImmediatePropagation(); // Call twice to be sure
+                
+                // Prevent browser's automatic hash scroll
+                preventAutoScroll();
                 
                 // Update URL without triggering scroll
                 if (history.pushState) {
                     history.pushState(null, '', href);
                 }
                 
-                // Scroll to target
-                scrollToTarget(targetId);
+                // Small delay to ensure browser doesn't auto-scroll
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        scrollToTarget(targetId);
+                    });
+                });
             }
             
             // Prevent browser's default hash navigation
             function handleHashChange() {
                 // If we're already scrolling, ignore hash change
-                if (isScrolling) return;
+                if (scrollInProgress || isScrolling) {
+                    preventAutoScroll();
+                    return;
+                }
                 
                 // Get hash from URL
                 const hash = window.location.hash.slice(1);
                 if (hash) {
+                    preventAutoScroll();
                     // Small delay to prevent conflicts
                     setTimeout(() => {
                         scrollToTarget(hash);
-                    }, 50);
+                    }, 100);
                 }
             }
             
             // Prevent default anchor behavior on page load if hash is present
             function preventInitialHashScroll() {
                 if (window.location.hash) {
+                    preventAutoScroll();
                     const hash = window.location.hash.slice(1);
-                    // Small delay to let page render, then scroll
+                    // Delay to let page render, then scroll
                     setTimeout(() => {
                         scrollToTarget(hash, true);
-                    }, 200);
+                    }, 300);
                 }
             }
             
             // Setup event listeners
             function setupAnchorNavigation() {
                 // Remove any existing listeners
-                const oldHandler = document.onclick;
                 document.removeEventListener('click', handleAnchorClick, true);
                 window.removeEventListener('hashchange', handleHashChange);
                 
-                // Add listeners with capture phase
+                // Add listeners with capture phase (runs before other handlers)
                 document.addEventListener('click', handleAnchorClick, true);
                 window.addEventListener('hashchange', handleHashChange, false);
                 
-                // Handle initial hash if present
+                // Prevent initial auto-scroll
                 preventInitialHashScroll();
             }
             
@@ -2712,6 +2772,11 @@
             } else {
                 setupAnchorNavigation();
             }
+            
+            // Also prevent on window load
+            window.addEventListener('load', () => {
+                preventAutoScroll();
+            });
         })();
 
         // Chart.js default configuration
