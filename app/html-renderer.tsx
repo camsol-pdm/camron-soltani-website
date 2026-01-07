@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface HTMLRendererProps {
   bodyContent: string;
@@ -9,7 +9,13 @@ interface HTMLRendererProps {
 }
 
 export default function HTMLRenderer({ bodyContent, headScripts, bodyScripts }: HTMLRendererProps) {
+  const scriptsExecuted = useRef(false);
+  
   useEffect(() => {
+    // Prevent scripts from running multiple times
+    if (scriptsExecuted.current) return;
+    scriptsExecuted.current = true;
+    
     // Execute head scripts first
     headScripts.forEach((script) => {
       const srcMatch = script.attrs.match(/src=["']([^"']+)["']/i);

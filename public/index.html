@@ -2577,69 +2577,125 @@
     </footer>
 
     <script>
-        // Single scroll handler for anchor links - prevent conflicts
+        // Single scroll handler for anchor links - prevent conflicts and double scrolling
         (function() {
+            // Prevent multiple initializations
+            if (window.__anchorNavInitialized) return;
+            window.__anchorNavInitialized = true;
+            
             let isScrolling = false;
             let scrollTimeout = null;
+            let currentTarget = null;
+            
+            function scrollToTarget(targetId, immediate = false) {
+                const target = document.getElementById(targetId);
+                if (!target) return false;
+                
+                // Prevent multiple scrolls to same target
+                if (isScrolling && currentTarget === targetId) return false;
+                
+                isScrolling = true;
+                currentTarget = targetId;
+                
+                // Clear any pending scrolls
+                if (scrollTimeout) {
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = null;
+                }
+                
+                // Calculate offset for sticky nav (45px height)
+                const navHeight = 45;
+                const targetRect = target.getBoundingClientRect();
+                const targetPosition = targetRect.top + window.pageYOffset - navHeight;
+                
+                // Use requestAnimationFrame for smoother scroll
+                if (immediate) {
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'auto'
+                    });
+                    isScrolling = false;
+                    currentTarget = null;
+                } else {
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Reset flag after scroll completes
+                    scrollTimeout = setTimeout(() => {
+                        isScrolling = false;
+                        currentTarget = null;
+                        scrollTimeout = null;
+                    }, 1000);
+                }
+                
+                return true;
+            }
             
             function handleAnchorClick(e) {
                 const link = e.target.closest('a[href^="#"]');
                 if (!link) return;
                 
                 const href = link.getAttribute('href');
-                if (!href || href === '#' || href === '#home') {
-                    // Handle home link specially
+                if (!href || href === '#') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
                     if (href === '#home' || href === '#') {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        e.stopImmediatePropagation();
                         window.scrollTo({ top: 0, behavior: 'smooth' });
-                        return;
                     }
                     return;
                 }
                 
                 const targetId = href.slice(1);
-                const target = document.getElementById(targetId);
+                if (!targetId) return;
                 
-                if (!target) return;
-                
-                // Prevent all default behaviors
+                // Prevent all default behaviors immediately
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
                 
-                // Clear any pending scrolls
-                if (scrollTimeout) {
-                    clearTimeout(scrollTimeout);
+                // Update URL without triggering scroll
+                if (history.pushState) {
+                    history.pushState(null, '', href);
                 }
                 
-                // Prevent multiple scrolls
-                if (isScrolling) return;
-                isScrolling = true;
-                
-                // Calculate offset for sticky nav (45px height)
-                const navHeight = 45;
-                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
-                
-                // Single scroll operation
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-                
-                // Reset flag after scroll completes
-                scrollTimeout = setTimeout(() => {
-                    isScrolling = false;
-                    scrollTimeout = null;
-                }, 1000);
+                // Scroll to target
+                scrollToTarget(targetId);
             }
             
-            // Use capture phase and attach once
+            // Prevent browser's default hash navigation
+            function handleHashChange(e) {
+                if (isScrolling) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+            
+            // Prevent default anchor behavior on page load if hash is present
+            function preventInitialHashScroll() {
+                if (window.location.hash) {
+                    const hash = window.location.hash.slice(1);
+                    // Small delay to let page render, then scroll
+                    setTimeout(() => {
+                        scrollToTarget(hash, true);
+                    }, 100);
+                }
+            }
+            
+            // Setup event listeners
             function setupAnchorNavigation() {
-                // Remove any existing listeners by cloning
+                // Remove any existing listeners
                 document.removeEventListener('click', handleAnchorClick, true);
+                window.removeEventListener('hashchange', handleHashChange);
+                
+                // Add listeners
                 document.addEventListener('click', handleAnchorClick, true);
+                window.addEventListener('hashchange', handleHashChange);
+                
+                // Handle initial hash if present
+                preventInitialHashScroll();
             }
             
             // Initialize after DOM is ready
