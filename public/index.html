@@ -2672,7 +2672,7 @@
                         </p>
                     </div>
                     <div class="md:col-span-1">
-                        <img src="/images/Amy&amp_Camron-136.png" alt="Camron Soltani" class="w-full rounded-lg shadow-lg" id="camron-photo" />
+                        <img src="/images/Amy-and-Camron-136.png" alt="Camron Soltani" class="w-full rounded-lg shadow-lg" id="camron-photo" />
                     </div>
                 </div>
 
@@ -3238,7 +3238,16 @@
         // Chart Initialization Functions
         function initListenerTrendChart() {
             const ctx = document.getElementById('listenerTrendChart');
-            if (!ctx) return;
+            if (!ctx) {
+                console.warn('listenerTrendChart canvas not found');
+                return;
+            }
+            // Ensure the canvas is visible before initializing
+            const tabContent = ctx.closest('.tab-content');
+            if (tabContent) {
+                tabContent.classList.remove('hidden');
+                tabContent.style.display = 'block';
+            }
             if (charts.listenerTrend) charts.listenerTrend.destroy();
             
             charts.listenerTrend = new Chart(ctx, {
@@ -4042,12 +4051,11 @@
                 
                 // Special handling for About section photo
                 if (img.alt === 'Camron Soltani') {
-                    // Try multiple encoding approaches for the filename with &amp; (actual filename is Amy&amp_Camron-136.png)
+                    // Try the correct filename (Amy-and-Camron-136.png)
                     const fallbacks = [
-                        '/images/Amy&amp_Camron-136.png',  // Exact filename as stored
+                        '/images/Amy-and-Camron-136.png',  // Correct filename with hyphen
+                        '/images/Amy&amp_Camron-136.png',  // Fallback to old filename if it exists
                         '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
-                        '/images/Amy&amp;amp;_Camron-136.png',  // HTML entity &amp;amp; (decodes to &amp;)
-                        '/images/Amy%26_Camron-136.png',  // URL-encoded &
                         '/images/Amy&_Camron-136.png'  // Direct &
                     ];
                     
@@ -4108,12 +4116,11 @@
             const photo = document.getElementById('camron-photo');
             if (!photo) return;
             
-            // Try all possible encodings for the filename with literal &amp; (actual filename is Amy&amp_Camron-136.png)
+            // Try the correct filename (Amy-and-Camron-136.png)
             const attempts = [
-                '/images/Amy&amp_Camron-136.png',  // Exact filename as stored
+                '/images/Amy-and-Camron-136.png',  // Correct filename with hyphen
+                '/images/Amy&amp_Camron-136.png',  // Fallback to old filename if it exists
                 '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
-                '/images/Amy&amp;amp;_Camron-136.png',  // HTML entity &amp;amp; (decodes to &amp;)
-                '/images/Amy%26_Camron-136.png',  // URL-encoded &
                 '/images/Amy&_Camron-136.png'  // Direct &
             ];
             
@@ -4148,16 +4155,29 @@
             checkImages();
             loadCamronPhoto();
             
-            // Initialize overview tab with charts
-            switchTab('overview');
+            // Make sure overview tab is visible first
+            const overviewTab = document.getElementById('tab-overview');
+            if (overviewTab) {
+                overviewTab.classList.remove('hidden');
+                overviewTab.style.display = 'block';
+            }
             
-            // Ensure chart initializes after a small delay to allow DOM to fully render
-            setTimeout(() => {
-                const ctx = document.getElementById('listenerTrendChart');
-                if (ctx && !charts.listenerTrend) {
-                    initListenerTrendChart();
+            // Update tab button styling
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                const btnTab = btn.getAttribute('data-tab');
+                if (btnTab === 'overview') {
+                    btn.classList.add('text-spotify-green', 'border-b-2', 'border-spotify-green');
+                    btn.classList.remove('text-spotify-text-muted');
+                } else {
+                    btn.classList.remove('text-spotify-green', 'border-b-2', 'border-spotify-green');
+                    btn.classList.add('text-spotify-text-muted');
                 }
-            }, 200);
+            });
+            
+            // Initialize chart after ensuring tab is visible and rendered
+            setTimeout(() => {
+                initListenerTrendChart();
+            }, 300);
         });
     </script>
 </body>
