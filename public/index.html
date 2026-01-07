@@ -2743,16 +2743,55 @@
             const ctx = document.getElementById('listenerTrendChart');
             if (!ctx) return;
             
-            // Check if canvas is visible and has dimensions
+            // Destroy existing chart if it exists
+            if (charts.listenerTrend) {
+                charts.listenerTrend.destroy();
+                charts.listenerTrend = null;
+            }
+            
+            // Check if canvas is visible and has dimensions using IntersectionObserver
             const canvas = ctx;
-            const rect = canvas.getBoundingClientRect();
-            if (rect.width === 0 || rect.height === 0) {
-                // Canvas not visible yet, retry after a short delay
-                setTimeout(() => initListenerTrendChart(), 50);
+            const tabContent = canvas.closest('.tab-content');
+            
+            // Check if tab content is hidden
+            if (tabContent && tabContent.classList.contains('hidden')) {
+                // Tab is hidden, wait for it to become visible
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            observer.disconnect();
+                            // Tab is now visible, initialize chart
+                            createListenerTrendChart();
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                observer.observe(tabContent);
                 return;
             }
             
-            if (charts.listenerTrend) charts.listenerTrend.destroy();
+            // Tab is visible, check canvas dimensions
+            const rect = canvas.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) {
+                // Canvas not visible yet, retry after a short delay
+                setTimeout(() => initListenerTrendChart(), 100);
+                return;
+            }
+            
+            // Create the chart
+            createListenerTrendChart();
+        }
+        
+        function createListenerTrendChart() {
+            const ctx = document.getElementById('listenerTrendChart');
+            if (!ctx) return;
+            
+            // Final check for dimensions
+            const rect = ctx.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) {
+                setTimeout(() => createListenerTrendChart(), 100);
+                return;
+            }
             
             charts.listenerTrend = new Chart(ctx, {
                 type: 'line',
@@ -2770,6 +2809,9 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: {
+                        duration: 0 // Disable animation for faster rendering
+                    },
                     plugins: {
                         legend: { display: false }
                     },
@@ -2788,11 +2830,11 @@
             });
             
             // Force resize after creation to ensure proper rendering
-            if (charts.listenerTrend) {
-                setTimeout(() => {
+            requestAnimationFrame(() => {
+                if (charts.listenerTrend) {
                     charts.listenerTrend.resize();
-                }, 100);
-            }
+                }
+            });
         }
 
         function initImpressionsFunnelChart() {
@@ -3373,7 +3415,21 @@
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            switchTab('overview');
+            // Check if overview tab is already visible (no hidden class)
+            const overviewTab = document.getElementById('tab-overview');
+            if (overviewTab && !overviewTab.classList.contains('hidden')) {
+                // Overview tab is already visible, initialize chart directly
+                // Use multiple requestAnimationFrame to ensure DOM is fully ready
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        initListenerTrendChart();
+                    });
+                });
+            } else {
+                // Overview tab is hidden, use switchTab to show it
+                switchTab('overview');
+            }
+            
             checkImages();
             loadCamronPhoto();
         });
