@@ -3238,31 +3238,8 @@
         // Chart Initialization Functions
         function initListenerTrendChart() {
             const ctx = document.getElementById('listenerTrendChart');
-            if (!ctx) {
-                console.warn('listenerTrendChart canvas not found');
-                return;
-            }
-            // Ensure the canvas is visible before initializing
-            const tabContent = ctx.closest('.tab-content');
-            if (tabContent) {
-                tabContent.classList.remove('hidden');
-                tabContent.style.display = 'block';
-            }
-            // Wait for canvas to have dimensions before initializing Chart.js
-            const checkDimensions = () => {
-                if (ctx.offsetWidth === 0 || ctx.offsetHeight === 0) {
-                    console.log('Canvas not ready, retrying...');
-                    setTimeout(checkDimensions, 100);
-                    return;
-                }
-                // Canvas has dimensions, safe to initialize
-                if (charts.listenerTrend) charts.listenerTrend.destroy();
-                _createListenerTrendChart(ctx);
-            };
-            checkDimensions();
-        }
-        
-        function _createListenerTrendChart(ctx) {
+            if (!ctx) return;
+            if (charts.listenerTrend) charts.listenerTrend.destroy();
             
             charts.listenerTrend = new Chart(ctx, {
                 type: 'line',
@@ -4165,33 +4142,9 @@
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize images first
+            switchTab('overview');
             checkImages();
             loadCamronPhoto();
-            
-            // Make sure overview tab is visible first
-            const overviewTab = document.getElementById('tab-overview');
-            if (overviewTab) {
-                overviewTab.classList.remove('hidden');
-                overviewTab.style.display = 'block';
-            }
-            
-            // Update tab button styling
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                const btnTab = btn.getAttribute('data-tab');
-                if (btnTab === 'overview') {
-                    btn.classList.add('text-spotify-green', 'border-b-2', 'border-spotify-green');
-                    btn.classList.remove('text-spotify-text-muted');
-                } else {
-                    btn.classList.remove('text-spotify-green', 'border-b-2', 'border-spotify-green');
-                    btn.classList.add('text-spotify-text-muted');
-                }
-            });
-            
-            // Initialize chart after ensuring tab is visible and rendered
-            setTimeout(() => {
-                initListenerTrendChart();
-            }, 300);
         });
     </script>
 </body>
