@@ -1,8 +1,4 @@
 {
-  "buildCommand": "cd \"Camron Soltani Website\" && npm install && npm run build",
-  "outputDirectory": "Camron Soltani Website/.next",
-  "installCommand": "cd \"Camron Soltani Website\" && npm install",
-  "framework": "nextjs",
   "rootDirectory": "Camron Soltani Website"
 }
 
