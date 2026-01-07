@@ -2746,10 +2746,18 @@
 
         // Chart Initialization Functions
         function initListenerTrendChart() {
-            const ctx = document.getElementById('listenerTrendChart');
-            
             // Debug Mode
             console.log('=== listenerTrendChart Debug ===');
+            console.log('Chart.js available:', typeof Chart !== 'undefined');
+            
+            // Check if Chart.js is loaded
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js not loaded yet, retrying in 100ms');
+                setTimeout(initListenerTrendChart, 100);
+                return;
+            }
+            
+            const ctx = document.getElementById('listenerTrendChart');
             console.log('Canvas element:', ctx);
             console.log('Canvas width:', ctx?.offsetWidth);
             console.log('Canvas height:', ctx?.offsetHeight);
@@ -2764,6 +2772,8 @@
             // Critical: Check if canvas has dimensions before initializing
             const canvasWidth = ctx.offsetWidth;
             const canvasHeight = ctx.offsetHeight;
+            
+            console.log('Canvas dimensions check:', { width: canvasWidth, height: canvasHeight });
             
             if (canvasWidth === 0 || canvasHeight === 0) {
                 console.warn('listenerTrendChart canvas has 0 dimensions, retrying in 100ms');
