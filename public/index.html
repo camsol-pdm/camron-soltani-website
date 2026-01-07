@@ -2666,10 +2666,17 @@
             }
             
             // Prevent browser's default hash navigation
-            function handleHashChange(e) {
-                if (isScrolling) {
-                    e.preventDefault();
-                    return false;
+            function handleHashChange() {
+                // If we're already scrolling, ignore hash change
+                if (isScrolling) return;
+                
+                // Get hash from URL
+                const hash = window.location.hash.slice(1);
+                if (hash) {
+                    // Small delay to prevent conflicts
+                    setTimeout(() => {
+                        scrollToTarget(hash);
+                    }, 50);
                 }
             }
             
@@ -2680,19 +2687,20 @@
                     // Small delay to let page render, then scroll
                     setTimeout(() => {
                         scrollToTarget(hash, true);
-                    }, 100);
+                    }, 200);
                 }
             }
             
             // Setup event listeners
             function setupAnchorNavigation() {
                 // Remove any existing listeners
+                const oldHandler = document.onclick;
                 document.removeEventListener('click', handleAnchorClick, true);
                 window.removeEventListener('hashchange', handleHashChange);
                 
-                // Add listeners
+                // Add listeners with capture phase
                 document.addEventListener('click', handleAnchorClick, true);
-                window.addEventListener('hashchange', handleHashChange);
+                window.addEventListener('hashchange', handleHashChange, false);
                 
                 // Handle initial hash if present
                 preventInitialHashScroll();
