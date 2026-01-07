@@ -3475,21 +3475,59 @@
         
         // Initialize on page load
         function initializePage() {
-            checkImages();
-            loadCamronPhoto();
-            
-            // Initialize overview tab as default landing tab
-            initializeOverviewTab();
+            // Use requestAnimationFrame to ensure CSS is applied
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    checkImages();
+                    loadCamronPhoto();
+                    
+                    // Initialize overview tab as default landing tab
+                    initializeOverviewTab();
+                });
+            });
         }
         
-        // Wait for both DOM and Chart.js to be ready
-        if (document.readyState === 'loading') {
+        // Wait for window.load to ensure all resources (including CSS) are loaded
+        // This is especially important for hard refresh (Cmd+Shift+R)
+        window.addEventListener('load', function() {
+            // Wait for Chart.js to load
+            function waitForChart() {
+                if (typeof Chart !== 'undefined') {
+                    console.log('Chart.js loaded, initializing page');
+                    // Small delay to ensure CSS is fully applied after hard refresh
+                    setTimeout(() => {
+                        initializePage();
+                    }, 50);
+                } else {
+                    console.log('Waiting for Chart.js...');
+                    setTimeout(waitForChart, 50);
+                }
+            }
+            waitForChart();
+        });
+        
+        // Fallback for DOMContentLoaded (in case window.load already fired)
+        if (document.readyState === 'complete') {
+            // Page already loaded, initialize immediately
+            function waitForChart() {
+                if (typeof Chart !== 'undefined') {
+                    console.log('Chart.js loaded (page already loaded), initializing page');
+                    setTimeout(() => {
+                        initializePage();
+                    }, 50);
+                } else {
+                    console.log('Waiting for Chart.js...');
+                    setTimeout(waitForChart, 50);
+                }
+            }
+            waitForChart();
+        } else {
+            // Also set up DOMContentLoaded as backup
             document.addEventListener('DOMContentLoaded', function() {
-                // Wait for Chart.js to load
                 function waitForChart() {
                     if (typeof Chart !== 'undefined') {
-                        console.log('Chart.js loaded, initializing page');
-                        initializePage();
+                        // Don't initialize here, wait for window.load instead
+                        console.log('Chart.js loaded, waiting for window.load...');
                     } else {
                         console.log('Waiting for Chart.js...');
                         setTimeout(waitForChart, 50);
@@ -3497,32 +3535,7 @@
                 }
                 waitForChart();
             });
-        } else {
-            // DOM already loaded
-            function waitForChart() {
-                if (typeof Chart !== 'undefined') {
-                    console.log('Chart.js loaded, initializing page');
-                    initializePage();
-                } else {
-                    console.log('Waiting for Chart.js...');
-                    setTimeout(waitForChart, 50);
-                }
-            }
-            waitForChart();
         }
-        
-        // Also try on window load as fallback
-        window.addEventListener('load', function() {
-            console.log('Window loaded, checking chart...');
-            const canvas = document.getElementById('listenerTrendChart');
-            if (canvas && !charts.listenerTrend && typeof Chart !== 'undefined') {
-                // Chart not initialized yet, try again
-                console.log('Chart not initialized, retrying...');
-                setTimeout(() => {
-                    initListenerTrendChart();
-                }, 100);
-            }
-        });
     </script>
 </body>
 </html>
