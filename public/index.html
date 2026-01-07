@@ -3356,9 +3356,13 @@
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            switchTab('overview');
             checkImages();
             loadCamronPhoto();
+            
+            // Automatically show overview tab after 0.5 seconds
+            setTimeout(() => {
+                switchTab('overview');
+            }, 500);
         });
     </script>
 </body>
