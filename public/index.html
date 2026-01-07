@@ -3248,7 +3248,21 @@
                 tabContent.classList.remove('hidden');
                 tabContent.style.display = 'block';
             }
-            if (charts.listenerTrend) charts.listenerTrend.destroy();
+            // Wait for canvas to have dimensions before initializing Chart.js
+            const checkDimensions = () => {
+                if (ctx.offsetWidth === 0 || ctx.offsetHeight === 0) {
+                    console.log('Canvas not ready, retrying...');
+                    setTimeout(checkDimensions, 100);
+                    return;
+                }
+                // Canvas has dimensions, safe to initialize
+                if (charts.listenerTrend) charts.listenerTrend.destroy();
+                _createListenerTrendChart(ctx);
+            };
+            checkDimensions();
+        }
+        
+        function _createListenerTrendChart(ctx) {
             
             charts.listenerTrend = new Chart(ctx, {
                 type: 'line',
