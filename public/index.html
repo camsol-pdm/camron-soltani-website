@@ -3493,9 +3493,11 @@
         // Navigation scroll behavior
         let lastScrollTop = 0;
         let scrollTimeout = null;
-        const nav = document.querySelector('nav');
+        let nav = null;
         
         function handleScroll() {
+            if (!nav) return;
+            
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             
             // Clear any existing timeout
@@ -3519,8 +3521,10 @@
             // Scrolling down - hide nav after a short delay
             else if (scrollTop > lastScrollTop) {
                 scrollTimeout = setTimeout(() => {
-                    nav.classList.remove('nav-visible');
-                    nav.classList.add('nav-hidden');
+                    if (nav) {
+                        nav.classList.remove('nav-visible');
+                        nav.classList.add('nav-hidden');
+                    }
                 }, 150); // Small delay before hiding
             }
             
@@ -3541,11 +3545,15 @@
         
         // Initialize navigation scroll behavior
         function initializeNavScroll() {
+            nav = document.querySelector('nav');
             if (nav) {
                 // Initially visible
                 nav.classList.add('nav-visible');
                 // Add scroll listener
                 window.addEventListener('scroll', onScroll, { passive: true });
+                console.log('Navigation scroll behavior initialized');
+            } else {
+                console.warn('Navigation element not found');
             }
         }
         
