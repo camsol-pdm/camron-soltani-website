@@ -2516,7 +2516,7 @@
                         </p>
                     </div>
                     <div class="md:col-span-1">
-                        <img src="" alt="Camron Soltani" class="w-full rounded-lg shadow-lg" id="camron-photo" />
+                        <img src="/images/Amy&amp_Camron-136.jpg" alt="Camron Soltani" class="w-full rounded-lg shadow-lg" id="camron-photo" />
                     </div>
                 </div>
 
@@ -3233,14 +3233,14 @@
                 img.style.visibility = 'visible';
                 
                 // Special handling for About section photo
-                if (img.alt === 'Camron Soltani') {
+                if (img.alt === 'Camron Soltani' && !img.src) {
                     // Try multiple encoding approaches for the filename with &amp;
                     const fallbacks = [
-                        'public/images/Amy%26amp_Camron-136.jpg',  // URL-encoded &amp;
-                        'public/images/Amy&amp;amp;_Camron-136.jpg',  // HTML entity &amp;amp; (decodes to &amp;)
-                        'public/images/Amy&amp_Camron-136.jpg',  // HTML entity &amp; (decodes to &)
-                        'public/images/Amy%26_Camron-136.jpg',  // URL-encoded &
-                        'public/images/Amy&_Camron-136.jpg'  // Direct &
+                        '/images/Amy&amp_Camron-136.jpg',  // HTML entity &amp; (matches actual filename)
+                        '/images/Amy%26amp_Camron-136.jpg',  // URL-encoded &amp;
+                        '/images/Amy&amp;amp;_Camron-136.jpg',  // HTML entity &amp;amp; (decodes to &amp;)
+                        '/images/Amy%26_Camron-136.jpg',  // URL-encoded &
+                        '/images/Amy&_Camron-136.jpg'  // Direct &
                     ];
                     
                     // Set initial src
