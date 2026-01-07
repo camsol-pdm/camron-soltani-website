@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - Unified Prototype</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts@2.12.7/umd/Recharts.js"></script>
+    <style>
+        :root {
+            --teal: #14b8a6;
+            --teal-dark: #0d9488;
+            --teal-light: #5eead4;
+            --charcoal: #1f2937;
+            --bg-light: #fafafa;
+            --bg-cream: #fef9f3;
+            --text-dark: #111827;
+            --text-gray: #6b7280;
+            --green: #10b981;
+            --yellow: #f59e0b;
+            --red: #ef4444;
+            --border: #e5e7eb;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Helvetica Neue, Arial, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--text-gray);
+            margin-bottom: 32px;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-gray);
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: var(--teal);
+        }
+
+        .tab.active {
+            color: var(--teal);
+            border-bottom-color: var(--teal);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        /* Metric Cards Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .metric-trend {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .metric-trend.up {
+            color: var(--green);
+        }
+
+        .metric-trend.down {
+            color: var(--red);
+        }
+
+        .metric-trend.neutral {
+            color: var(--text-gray);
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 18px;
+        }
+
+        .insight-btn {
+            margin-top: 12px;
+            padding: 6px 12px;
+            font-size: 12px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .insight-btn:hover {
+            background: var(--teal-dark);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .chart-insight-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            padding: 6px 12px;
+            font-size: 12px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-gray);
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+            margin: 20px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+
+        .modal-section {
+            margin-bottom: 20px;
+        }
+
+        .modal-section h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .modal-section p {
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Badge Styles */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-new {
+            background: var(--teal);
+            color: white;
+        }
+
+        .badge-impact {
+            background: var(--green);
+            color: white;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        .badge-effort-low {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-effort-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-effort-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Recommendation Cards */
+        .recommendation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .recommendation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .recommendation-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .recommendation-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .recommendation-steps {
+            margin: 16px 0;
+        }
+
+        .recommendation-steps ol {
+            margin-left: 20px;
+        }
+
+        .recommendation-steps li {
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .recommendation-metric {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Cross-Genre Affinity */
+        .genre-bar {
+            margin-bottom: 12px;
+        }
+
+        .genre-bar-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .genre-bar-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .genre-bar-fill {
+            height: 32px;
+            background: var(--teal);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .genre-bar-fill:hover {
+            opacity: 0.8;
+        }
+
+        .genre-trend {
+            font-size: 12px;
+            margin-left: 8px;
+        }
+
+        /* Heatmap */
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(24, 1fr);
+            gap: 4px;
+            margin-top: 16px;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        /* Expandable Sections */
+        .expandable {
+            margin-top: 20px;
+        }
+
+        .expandable-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-cream);
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .expandable-content {
+            display: none;
+            padding-top: 16px;
+        }
+
+        .expandable-content.active {
+            display: block;
+        }
+
+        /* Benchmark Table */
+        .benchmark-table {
+            margin-top: 20px;
+        }
+
+        .benchmark-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 16px;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+
+        .benchmark-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .benchmark-status.green {
+            background: var(--green);
+        }
+
+        .benchmark-status.yellow {
+            background: var(--yellow);
+        }
+
+        .benchmark-status.red {
+            background: var(--red);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analytics Dashboard</h1>
+        <p class="subtitle">Unified analytics with AI-powered insights</p>
+
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab active" data-tab="overview">Overview</button>
+            <button class="tab" data-tab="reach">Reach & Discovery</button>
+            <button class="tab" data-tab="engagement">Engagement & Content</button>
+            <button class="tab" data-tab="audience">Audience Insights</button>
+            <button class="tab" data-tab="research">Research & Implementation</button>
+        </div>
+
+        <!-- TAB 1: OVERVIEW -->
+        <div id="overview" class="tab-content active">
+            <!-- Metrics Grid - Ordered by Impact -->
+            <div class="metrics-grid">
+                <!-- 1. Listener Growth Rate (NEW) -->
+                <div class="metric-card">
+                    <div class="metric-label">Listener Growth Rate</div>
+                    <div class="metric-value">+2.1%</div>
+                    <div class="metric-trend up">△ +2.1% vs prior 28 days</div>
+                    <span class="status-badge">✅</span>
+                    <button class="insight-btn" onclick="showInsight('growth-rate')">💡 Show AI Insight</button>
+                    <div style="height: 40px; margin-top: 12px; background: linear-gradient(90deg, #10b981 0%, #34d399 100%); border-radius: 4px;"></div>
+                </div>
+
+                <!-- 2. Completion Rate (NEW) -->
+                <div class="metric-card">
+                    <div class="metric-label">Completion Rate</div>
+                    <div class="metric-value">68%</div>
+                    <div class="metric-trend down">△ -12% vs industry avg</div>
+                    <span class="status-badge">⚠️</span>
+                    <button class="insight-btn" onclick="showInsight('completion-rate')">💡 Show AI Insight</button>
+                    <div style="margin-top: 12px; display: flex; gap: 4px;">
+                        <div style="flex: 1; height: 8px; background: #10b981; border-radius: 4px;" title="25%: 91%"></div>
+                        <div style="flex: 1; height: 8px; background: #34d399; border-radius: 4px;" title="50%: 78%"></div>
+                        <div style="flex: 1; height: 8px; background: #f59e0b; border-radius: 4px;" title="75%: 72%"></div>
+                        <div style="flex: 1; height: 8px; background: #ef4444; border-radius: 4px;" title="100%: 68%"></div>
+                    </div>
+                </div>
+
+                <!-- 3. Total Listeners (EXISTING) -->
+                <div class="metric-card">
+                    <div class="metric-label">Total Listeners (28-day)</div>
+                    <div class="metric-value">12,400</div>
+                    <div class="metric-trend up">△ +2.1% vs avg</div>
+                    <span class="status-badge">✅</span>
+                    <button class="insight-btn" onclick="showInsight('total-listeners')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 4. Watch Time (EXISTING) -->
+                <div class="metric-card">
+                    <div class="metric-label">Watch Time (hours)</div>
+                    <div class="metric-value">3,420</div>
+                    <div class="metric-trend up">△ +8% vs avg</div>
+                    <span class="status-badge">✅</span>
+                    <button class="insight-btn" onclick="showInsight('watch-time')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 5. Impressions & CTR -->
+                <div class="metric-card">
+                    <div class="metric-label">Impressions</div>
+                    <div class="metric-value">94,500</div>
+                    <div class="metric-trend up">△ +3.8% vs avg</div>
+                    <span class="status-badge">✅</span>
+                    <button class="insight-btn" onclick="showInsight('impressions')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 6. Subscriber Conversion Rate (NEW) -->
+                <div class="metric-card">
+                    <div class="metric-label">Subscriber Conversion Rate</div>
+                    <div class="metric-value">7.2%</div>
+                    <div class="metric-trend up">△ +2.2% vs avg</div>
+                    <span class="status-badge">✅</span>
+                    <button class="insight-btn" onclick="showInsight('subscriber-conversion')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 7. CTR (EXISTING) -->
+                <div class="metric-card">
+                    <div class="metric-label">CTR</div>
+                    <div class="metric-value">5.2%</div>
+                    <div class="metric-trend down">△ -0.3% vs avg</div>
+                    <span class="status-badge">ℹ️</span>
+                    <button class="insight-btn" onclick="showInsight('ctr')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 8. Avg Listen Duration (EXISTING) -->
+                <div class="metric-card">
+                    <div class="metric-label">Avg Listen Duration</div>
+                    <div class="metric-value">4m 22s</div>
+                    <div class="metric-trend up">△ +18s vs avg</div>
+                    <span class="status-badge">✅</span>
+                    <button class="insight-btn" onclick="showInsight('avg-duration')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 9. Subscribers (EXISTING) -->
+                <div class="metric-card">
+                    <div class="metric-label">Subscribers</div>
+                    <div class="metric-value">890</div>
+                    <div class="metric-trend up">△ +12% vs avg</div>
+                    <span class="status-badge">✅</span>
+                    <button class="insight-btn" onclick="showInsight('subscribers')">💡 Show AI Insight</button>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <!-- Listener Trend Chart (EXISTING) -->
+            <div class="chart-container">
+                <div class="chart-insight-btn" onclick="showInsight('listener-trend')">💡 Show Insight</div>
+                <h3 class="card-title">Listener Trend (28 days)</h3>
+                <canvas id="listenerTrendChart" style="max-height: 300px;"></canvas>
+            </div>
+
+            <!-- Completion Rate Trend (NEW) -->
+            <div class="chart-container">
+                <div class="chart-insight-btn" onclick="showInsight('completion-trend')">💡 Show Insight</div>
+                <h3 class="card-title">Completion Rate Trend</h3>
+                <canvas id="completionTrendChart" style="max-height: 300px;"></canvas>
+            </div>
+
+            <!-- Top Episodes Table (EXISTING) -->
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 class="card-title">Top Episodes (30d)</h3>
+                    <button class="insight-btn" onclick="showInsight('top-episodes')">💡 Show Insight</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Episode</th>
+                                <th style="text-align: right;">Listens</th>
+                                <th style="text-align: right;">Avg Duration</th>
+                                <th style="text-align: right;">Completion %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Viral Moment ep124</td>
+                                <td style="text-align: right;">2,340</td>
+                                <td style="text-align: right;">4:45</td>
+                                <td style="text-align: right; color: var(--green);">72%</td>
+                            </tr>
+                            <tr>
+                                <td>Interview ep123</td>
+                                <td style="text-align: right;">1,890</td>
+                                <td style="text-align: right;">4:20</td>
+                                <td style="text-align: right; color: var(--green);">68%</td>
+                            </tr>
+                            <tr>
+                                <td>Trending Topic ep122</td>
+                                <td style="text-align: right;">1,650</td>
+                                <td style="text-align: right;">3:50</td>
+                                <td style="text-align: right; color: var(--green);">65%</td>
+                            </tr>
+                            <tr>
+                                <td>Series Finale ep121</td>
+                                <td style="text-align: right;">1,420</td>
+                                <td style="text-align: right;">4:10</td>
+                                <td style="text-align: right; color: var(--yellow);">62%</td>
+                            </tr>
+                            <tr>
+                                <td>Deep Dive ep120</td>
+                                <td style="text-align: right;">1,280</td>
+                                <td style="text-align: right;">3:30</td>
+                                <td style="text-align: right; color: var(--yellow);">58%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: REACH & DISCOVERY -->
+        <div id="reach" class="tab-content">
+            <div class="metrics-grid">
+                <!-- 1. Organic Listeners -->
+                <div class="metric-card">
+                    <div class="metric-label">Organic Listeners (Search + Browse)</div>
+                    <div class="metric-value">4,200</div>
+                    <div class="metric-trend down">34% of total (below avg)</div>
+                    <button class="insight-btn" onclick="showInsight('organic-listeners')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 2. Traffic Source Breakdown -->
+                <div class="metric-card" style="grid-column: span 2;">
+                    <div class="metric-label">Traffic Source Breakdown</div>
+                    <div style="display: flex; gap: 24px; margin-top: 16px;">
+                        <div style="flex: 1;">
+                            <canvas id="trafficSourceChart" style="max-height: 200px;"></canvas>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 12px; margin-bottom: 8px;"><strong>Search:</strong> 28%</div>
+                            <div style="font-size: 12px; margin-bottom: 8px;"><strong>Suggested:</strong> 35%</div>
+                            <div style="font-size: 12px; margin-bottom: 8px;"><strong>Browse:</strong> 15%</div>
+                            <div style="font-size: 12px; margin-bottom: 8px;"><strong>External:</strong> 12%</div>
+                            <div style="font-size: 12px; margin-bottom: 8px;"><strong>Notifications:</strong> 8%</div>
+                            <div style="font-size: 12px;"><strong>Playlist:</strong> 2%</div>
+                        </div>
+                    </div>
+                    <button class="insight-btn" onclick="showInsight('traffic-source')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 3. Unique New Listeners -->
+                <div class="metric-card">
+                    <div class="metric-label">Unique New Listeners</div>
+                    <div class="metric-value">240</div>
+                    <div style="font-size: 12px; color: var(--text-gray); margin-top: 4px;">180 returning</div>
+                    <div class="metric-trend up">57% new</div>
+                    <button class="insight-btn" onclick="showInsight('new-listeners')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 4. Suggested Episode Performance -->
+                <div class="metric-card">
+                    <div class="metric-label">Suggested Episode Performance</div>
+                    <div class="metric-value">4,100</div>
+                    <div style="font-size: 12px; color: var(--text-gray); margin-top: 4px;">Avg Duration: 4m 15s</div>
+                    <div style="font-size: 12px; color: var(--text-gray);">Completion: 71%</div>
+                    <button class="insight-btn" onclick="showInsight('suggested-performance')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 5. External Traffic -->
+                <div class="metric-card">
+                    <div class="metric-label">External Traffic</div>
+                    <div class="metric-value">450</div>
+                    <div style="font-size: 12px; color: var(--text-gray); margin-top: 4px;">Top: Email Newsletter (45%)</div>
+                    <button class="insight-btn" onclick="showInsight('external-traffic')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 6. Notification Performance -->
+                <div class="metric-card">
+                    <div class="metric-label">Notification Performance</div>
+                    <div class="metric-value">34%</div>
+                    <div style="font-size: 12px; color: var(--text-gray); margin-top: 4px;">Click Rate | 28% listened</div>
+                    <div style="font-size: 12px; color: var(--text-gray);">Completion: 65%</div>
+                    <button class="insight-btn" onclick="showInsight('notification-performance')">💡 Show AI Insight</button>
+                </div>
+            </div>
+
+            <!-- Traffic Source Waterfall -->
+            <div class="chart-container">
+                <div class="chart-insight-btn" onclick="showInsight('traffic-waterfall')">💡 Show Insight</div>
+                <h3 class="card-title">Traffic Source Waterfall (28 days)</h3>
+                <canvas id="trafficWaterfallChart" style="max-height: 300px;"></canvas>
+            </div>
+
+            <!-- Source Completion Scatter -->
+            <div class="chart-container">
+                <div class="chart-insight-btn" onclick="showInsight('source-completion')">💡 Show Insight</div>
+                <h3 class="card-title">Listener Source → Completion Rate</h3>
+                <canvas id="sourceCompletionChart" style="max-height: 300px;"></canvas>
+            </div>
+
+            <!-- New vs Returning -->
+            <div class="chart-container">
+                <div class="chart-insight-btn" onclick="showInsight('new-returning')">💡 Show Insight</div>
+                <h3 class="card-title">New vs Returning Listeners (28 days)</h3>
+                <canvas id="newReturningChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+
+        <!-- TAB 3: ENGAGEMENT & CONTENT PERFORMANCE -->
+        <div id="engagement" class="tab-content">
+            <div class="metrics-grid">
+                <!-- 1. Average Completion Rate -->
+                <div class="metric-card" style="grid-column: span 2;">
+                    <div class="metric-label">Average Completion Rate</div>
+                    <div class="metric-value">68%</div>
+                    <div class="metric-trend down">△ -12% vs category avg</div>
+                    <div style="margin-top: 16px; display: flex; gap: 12px;">
+                        <div style="flex: 1;">
+                            <div style="font-size: 12px; color: var(--text-gray); margin-bottom: 4px;">25%: 91%</div>
+                            <div style="height: 24px; background: var(--green); border-radius: 4px; width: 91%;"></div>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 12px; color: var(--text-gray); margin-bottom: 4px;">50%: 78%</div>
+                            <div style="height: 24px; background: #34d399; border-radius: 4px; width: 78%;"></div>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 12px; color: var(--text-gray); margin-bottom: 4px;">75%: 72%</div>
+                            <div style="height: 24px; background: var(--yellow); border-radius: 4px; width: 72%;"></div>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 12px; color: var(--text-gray); margin-bottom: 4px;">100%: 68%</div>
+                            <div style="height: 24px; background: var(--red); border-radius: 4px; width: 68%;"></div>
+                        </div>
+                    </div>
+                    <button class="insight-btn" onclick="showInsight('avg-completion')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 2. Avg Listen Duration (Expanded) -->
+                <div class="metric-card">
+                    <div class="metric-label">Avg Listen Duration</div>
+                    <div class="metric-value">4m 22s</div>
+                    <div style="font-size: 12px; color: var(--text-gray); margin-top: 4px;">73% of episode length</div>
+                    <div class="metric-trend up">△ +18s vs avg</div>
+                    <button class="insight-btn" onclick="showInsight('avg-duration-engagement')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 3. Episodes Below 50% Completion -->
+                <div class="metric-card">
+                    <div class="metric-label">Episodes Below 50% Completion</div>
+                    <div class="metric-value">3</div>
+                    <div style="font-size: 12px; color: var(--text-gray); margin-top: 4px;">Avg: 42% completion</div>
+                    <button class="insight-btn" onclick="showInsight('low-completion')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 4. Drop-off Curve -->
+                <div class="metric-card">
+                    <div class="metric-label">Listener Drop-off Curve</div>
+                    <div style="font-size: 14px; margin-top: 8px; font-weight: 600;">Steepest: 12-15 min</div>
+                    <div style="font-size: 12px; color: var(--red); margin-top: 4px;">18% exit rate</div>
+                    <button class="insight-btn" onclick="showInsight('dropoff-curve')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 5. Engagement Efficiency -->
+                <div class="metric-card">
+                    <div class="metric-label">Engagement Efficiency</div>
+                    <div style="font-size: 14px; margin-top: 8px;">High: 4 eps (65% listen time)</div>
+                    <div style="font-size: 12px; color: var(--text-gray); margin-top: 4px;">Mid: 8 | Low: 4</div>
+                    <button class="insight-btn" onclick="showInsight('engagement-efficiency')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 6. Series Completion Rate -->
+                <div class="metric-card">
+                    <div class="metric-label">Series Completion Rate</div>
+                    <div class="metric-value">58%</div>
+                    <div style="font-size: 12px; color: var(--text-gray); margin-top: 4px;">71% likely to continue</div>
+                    <button class="insight-btn" onclick="showInsight('series-completion')">💡 Show AI Insight</button>
+                </div>
+            </div>
+
+            <!-- Retention Curve by Episode -->
+            <div class="chart-container">
+                <div class="chart-insight-btn" onclick="showInsight('retention-curve')">💡 Show Insight</div>
+                <h3 class="card-title">Retention Curve by Episode</h3>
+                <canvas id="retentionCurveChart" style="max-height: 300px;"></canvas>
+            </div>
+
+            <!-- Completion Rate Distribution -->
+            <div class="chart-container">
+                <div class="chart-insight-btn" onclick="showInsight('completion-distribution')">💡 Show Insight</div>
+                <h3 class="card-title">Completion Rate Distribution</h3>
+                <canvas id="completionDistributionChart" style="max-height: 300px;"></canvas>
+            </div>
+
+            <!-- Length vs Completion Scatter -->
+            <div class="chart-container">
+                <div class="chart-insight-btn" onclick="showInsight('length-completion')">💡 Show Insight</div>
+                <h3 class="card-title">Episode Length vs Completion</h3>
+                <canvas id="lengthCompletionChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+
+        <!-- TAB 4: AUDIENCE INSIGHTS -->
+        <div id="audience" class="tab-content">
+            <div class="metrics-grid">
+                <!-- 1. Retention Cohort -->
+                <div class="metric-card">
+                    <div class="metric-label">Audience Retention Cohort</div>
+                    <div style="margin-top: 12px;">
+                        <div style="font-size: 14px; margin-bottom: 8px;">One-time: <strong>34%</strong></div>
+                        <div style="font-size: 14px; margin-bottom: 8px;">2-5 episodes: <strong>42%</strong></div>
+                        <div style="font-size: 14px;">6+ loyal: <strong>24%</strong></div>
+                    </div>
+                    <button class="insight-btn" onclick="showInsight('retention-cohort')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 2. Cross-Genre Listener Affinity (NEW - STRATEGIC) -->
+                <div class="metric-card" style="grid-column: span 2;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div class="metric-label">Cross-Genre Listener Affinity</div>
+                        <button class="insight-btn" onclick="showInsight('cross-genre')">💡 Show AI Insight</button>
+                    </div>
+                    <div id="genre-bars">
+                        <div class="genre-bar">
+                            <div class="genre-bar-header">
+                                <span class="genre-bar-name">Comedy <span class="badge badge-new">NEW</span></span>
+                                <span style="font-weight: 600; color: var(--teal);">67%</span>
+                                <span class="genre-trend" style="color: var(--green);">↑ +8%</span>
+                            </div>
+                            <div class="genre-bar-fill" style="width: 67%;" onclick="showGenreDetail('comedy')">67%</div>
+                        </div>
+                        <div class="genre-bar">
+                            <div class="genre-bar-header">
+                                <span class="genre-bar-name">Self-Help</span>
+                                <span style="font-weight: 600; color: var(--teal);">54%</span>
+                                <span class="genre-trend" style="color: var(--text-gray);">— 0%</span>
+                            </div>
+                            <div class="genre-bar-fill" style="width: 54%;" onclick="showGenreDetail('self-help')">54%</div>
+                        </div>
+                        <div class="genre-bar">
+                            <div class="genre-bar-header">
+                                <span class="genre-bar-name">True Crime</span>
+                                <span style="font-weight: 600; color: var(--teal);">42%</span>
+                                <span class="genre-trend" style="color: var(--red);">↓ -3%</span>
+                            </div>
+                            <div class="genre-bar-fill" style="width: 42%;" onclick="showGenreDetail('true-crime')">42%</div>
+                        </div>
+                        <div class="genre-bar">
+                            <div class="genre-bar-header">
+                                <span class="genre-bar-name">Technology</span>
+                                <span style="font-weight: 600; color: var(--teal);">38%</span>
+                                <span class="genre-trend" style="color: var(--green);">↑ +5%</span>
+                            </div>
+                            <div class="genre-bar-fill" style="width: 38%;" onclick="showGenreDetail('technology')">38%</div>
+                        </div>
+                        <div class="genre-bar">
+                            <div class="genre-bar-header">
+                                <span class="genre-bar-name">Business</span>
+                                <span style="font-weight: 600; color: var(--teal);">31%</span>
+                                <span class="genre-trend" style="color: var(--green);">↑ +2%</span>
+                            </div>
+                            <div class="genre-bar-fill" style="width: 31%;" onclick="showGenreDetail('business')">31%</div>
+                        </div>
+                    </div>
+                    <button class="insight-btn" style="margin-top: 12px;" onclick="toggleGenreList()">See Full List ▼</button>
+                    <div id="genre-list" style="display: none; margin-top: 16px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Genre</th>
+                                    <th style="text-align: right;">Affinity %</th>
+                                    <th style="text-align: right;">Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Comedy</td><td style="text-align: right;">67%</td><td style="text-align: right; color: var(--green);">↑ +8%</td></tr>
+                                <tr><td>Self-Help</td><td style="text-align: right;">54%</td><td style="text-align: right;">—</td></tr>
+                                <tr><td>True Crime</td><td style="text-align: right;">42%</td><td style="text-align: right; color: var(--red);">↓ -3%</td></tr>
+                                <tr><td>Technology</td><td style="text-align: right;">38%</td><td style="text-align: right; color: var(--green);">↑ +5%</td></tr>
+                                <tr><td>Business</td><td style="text-align: right;">31%</td><td style="text-align: right; color: var(--green);">↑ +2%</td></tr>
+                                <tr><td>Science</td><td style="text-align: right;">28%</td><td style="text-align: right;">—</td></tr>
+                                <tr><td>History</td><td style="text-align: right;">24%</td><td style="text-align: right; color: var(--green);">↑ +1%</td></tr>
+                                <tr><td>Health</td><td style="text-align: right;">19%</td><td style="text-align: right;">—</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="genre-detail" style="display: none; margin-top: 16px; padding: 16px; background: var(--bg-cream); border-radius: 8px;">
+                        <h4 style="font-weight: 600; margin-bottom: 12px;">Top Podcasts in this Genre</h4>
+                        <div id="genre-podcasts"></div>
+                    </div>
+                </div>
+
+                <!-- 3. Returning Listener Watch Time -->
+                <div class="metric-card">
+                    <div class="metric-label">Returning Listener Watch Time</div>
+                    <div class="metric-value">68%</div>
+                    <div style="font-size: 12px; color: var(--text-gray); margin-top: 4px;">of total watch time</div>
+                    <div style="font-size: 12px; color: var(--text-gray);">Avg: 12m 34s per returning</div>
+                    <button class="insight-btn" onclick="showInsight('returning-watchtime')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 4. Demographics -->
+                <div class="metric-card" style="grid-column: span 2;">
+                    <div class="metric-label">Listener Demographics</div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 12px;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-gray); margin-bottom: 4px;">Top Geography</div>
+                            <div style="font-weight: 600;">USA: 45%</div>
+                            <div style="font-size: 11px; color: var(--text-gray);">Canada: 18%</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-gray); margin-bottom: 4px;">Age Range</div>
+                            <div style="font-weight: 600;">25-34: 38%</div>
+                            <div style="font-size: 11px; color: var(--text-gray);">35-44: 28%</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-gray); margin-bottom: 4px;">Gender</div>
+                            <div style="font-weight: 600;">Male: 58%</div>
+                            <div style="font-size: 11px; color: var(--text-gray);">Female: 40%</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-gray); margin-bottom: 4px;">Language</div>
+                            <div style="font-weight: 600;">English: 95%</div>
+                            <div style="font-size: 11px; color: var(--text-gray);">Spanish: 3%</div>
+                        </div>
+                    </div>
+                    <button class="insight-btn" onclick="showInsight('demographics')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 5. Listening Environment -->
+                <div class="metric-card">
+                    <div class="metric-label">Listening Environment & Device</div>
+                    <div style="margin-top: 12px;">
+                        <div style="font-size: 14px; margin-bottom: 8px;">Mobile: <strong>62%</strong></div>
+                        <div style="font-size: 14px; margin-bottom: 8px;">Web: <strong>20%</strong></div>
+                        <div style="font-size: 14px; margin-bottom: 8px;">Car/Embedded: <strong>12%</strong></div>
+                        <div style="font-size: 14px;">Smart Speaker: <strong>6%</strong></div>
+                    </div>
+                    <button class="insight-btn" onclick="showInsight('listening-device')">💡 Show AI Insight</button>
+                </div>
+
+                <!-- 6. When Listeners Are Online -->
+                <div class="metric-card" style="grid-column: span 2;">
+                    <div class="metric-label">When Listeners Are Online</div>
+                    <div class="heatmap" id="listening-heatmap"></div>
+                    <button class="insight-btn" onclick="showInsight('listening-times')">💡 Show AI Insight</button>
+                </div>
+            </div>
+
+            <!-- Cohort Retention -->
+            <div class="chart-container">
+                <div class="chart-insight-btn" onclick="showInsight('cohort-retention')">💡 Show Insight</div>
+                <h3 class="card-title">Listener Cohort Retention</h3>
+                <canvas id="cohortRetentionChart" style="max-height: 300px;"></canvas>
+            </div>
+
+            <!-- Geography Engagement -->
+            <div class="chart-container">
+                <div class="chart-insight-btn" onclick="showInsight('geography-engagement')">💡 Show Insight</div>
+                <h3 class="card-title">Listener Geography & Engagement</h3>
+                <canvas id="geographyChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+
+        <!-- TAB 5: RESEARCH & IMPLEMENTATION GUIDE -->
+        <div id="research" class="tab-content">
+            <!-- Dashboard Summary Card -->
+            <div class="card" style="background: linear-gradient(135deg, #f0fdfa 0%, #fef9f3 100%); border: 2px solid var(--teal);">
+                <h3 class="card-title">Dashboard Summary</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                    <div>
+                        <strong>Overview:</strong> Growth steady but completion lags by 12 points.
+                    </div>
+                    <div>
+                        <strong>Reach:</strong> Under-indexed on organic search; over-reliant on suggestions.
+                    </div>
+                    <div>
+                        <strong>Engagement:</strong> Drop-off concentrated at 12–15 min; structure needs tightening.
+                    </div>
+                    <div>
+                        <strong>Audience:</strong> Comedy and self-help audiences offer strong collaboration upside.
+                    </div>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: white; border-radius: 8px;">
+                    <strong style="color: var(--teal);">Overall Health: </strong>
+                    <span style="background: var(--yellow); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Good (Improving)</span>
+                </div>
+            </div>
+
+            <!-- Implementation Roadmap -->
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin: 32px 0 16px;">Implementation Roadmap (Ranked by Impact Potential)</h2>
+            
+            <div id="recommendations-list">
+                <!-- Recommendation 1 -->
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-title">1. Shorten intro segment and add hook at 10-min mark</div>
+                        <div class="recommendation-badges">
+                            <span class="badge badge-impact">+8-12% completion rate</span>
+                            <span class="badge badge-effort-low">Low Effort</span>
+                            <span class="badge" style="background: #dbeafe; color: #1e40af;">2-3 days</span>
+                        </div>
+                    </div>
+                    <div class="recommendation-steps">
+                        <ol>
+                            <li>Analyze current intro length (note: 3:00, niche avg 1:15)</li>
+                            <li>Cut intro to &lt;1:30 and add re-engagement hook at 10-min mark</li>
+                            <li>Test on next 2 episodes; measure completion lift</li>
+                        </ol>
+                    </div>
+                    <div class="recommendation-metric">
+                        <strong>Success Metric:</strong> Completion rate moves from 68% to 76%+ within 2 episodes
+                    </div>
+                    <button class="insight-btn" style="margin-top: 12px;" onclick="window.location.hash='engagement'">Start This →</button>
+                </div>
+
+                <!-- Recommendation 2 -->
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-title">2. Improve episode title/description SEO using high-volume keywords</div>
+                        <div class="recommendation-badges">
+                            <span class="badge badge-impact">+15% organic listeners</span>
+                            <span class="badge badge-effort-medium">Medium Effort</span>
+                            <span class="badge" style="background: #dbeafe; color: #1e40af;">1 week</span>
+                        </div>
+                    </div>
+                    <div class="recommendation-steps">
+                        <ol>
+                            <li>Identify top 10 high-volume keywords from search analytics</li>
+                            <li>Update titles/descriptions for next 5 episodes with keyword integration</li>
+                            <li>Monitor search-driven listener growth over 2 weeks</li>
+                        </ol>
+                    </div>
+                    <div class="recommendation-metric">
+                        <strong>Success Metric:</strong> Organic listeners increase from 34% to 40%+ of total within 1 month
+                    </div>
+                    <button class="insight-btn" style="margin-top: 12px;" onclick="window.location.hash='reach'">Start This →</button>
+                </div>
+
+                <!-- Recommendation 3 -->
+                <div class="recommendation-card">
+                    <div class="recommendation-header">
+                        <div class="recommendation-title">3. Optimize subscriber notification timing and messaging</div>
+                        <div class="recommendation-badges">
+                            <span class="badge badge-impact">+25% notification click rate</span>
+                            <span class="badge badge-effort-low">Low Effort</span>
+                            <span class="badge" style="background: #dbeafe; color: #1e40af;">3 days</span>
+                        </div>
+                    </div>
+                    <div class="recommendation-steps">
+                        <ol>
+                            <li>Schedule notifications for Tuesday 6 PM (peak listening window)</li>
+                            <li>A/B test notification copy: benefit-focused vs. curiosity-driven</li>
+                            <li>Track click rate and completion rate for notification-driven listeners</li>
+                        </ol>
+                    </div>
+                    <div class="recommendation-metric">
+                        <strong>Success Metric:</strong> Notification click rate improves from 34% to 42%+ within 2 weeks
+                    </div>
+                    <button class="insight-btn" style="margin-top: 12px;" onclick="window.location.hash='reach'">Start This →</button>
+                </div>
+            </div>
+
+            <!-- Quick Wins -->
+            <div class="expandable">
+                <div class="expandable-header" onclick="toggleExpandable('quick-wins')">
+                    <h3 style="font-weight: 600;">Quick Wins (< 1 week, > 5% improvement)</h3>
+                    <span id="quick-wins-arrow">▼</span>
+                </div>
+                <div id="quick-wins-content" class="expandable-content">
+                    <div class="recommendation-card">
+                        <div class="recommendation-header">
+                            <div class="recommendation-title">Add series cliffhanger at 8:00 mark</div>
+                            <span class="badge badge-impact">+8% completion</span>
+                        </div>
+                        <div class="recommendation-steps">
+                            <ol>
+                                <li>Add "Coming up next..." hook at 8:00 in next episode</li>
+                                <li>Measure completion rate lift</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="recommendation-card">
+                        <div class="recommendation-header">
+                            <div class="recommendation-title">Optimize thumbnail for mobile truncation</div>
+                            <span class="badge badge-impact">+5% CTR</span>
+                        </div>
+                        <div class="recommendation-steps">
+                            <ol>
+                                <li>Test thumbnail designs with key text in center (mobile-safe zone)</li>
+                                <li>Deploy best performer across next 3 episodes</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategic Bets -->
+            <div class="expandable">
+                <div class="expandable-header" onclick="toggleExpandable('strategic-bets')">
+                    <h3 style="font-weight: 600;">Strategic Bets (2-4 weeks, > 15% improvement)</h3>
+                    <span id="strategic-bets-arrow">▼</span>
+                </div>
+                <div id="strategic-bets-content" class="expandable-content">
+                    <div class="recommendation-card">
+                        <div class="recommendation-header">
+                            <div class="recommendation-title">Create cross-genre collaboration series</div>
+                            <span class="badge badge-impact">+18% reach</span>
+                        </div>
+                        <div class="recommendation-steps">
+                            <ol>
+                                <li>Partner with top 3 podcasts in Comedy genre (67% affinity)</li>
+                                <li>Create 3-episode collaborative series</li>
+                                <li>Cross-promote to both audiences</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Focus -->
+            <div class="card" style="background: var(--bg-cream);">
+                <h3 class="card-title">Monthly Focus Areas</h3>
+                <p style="margin-bottom: 12px;">
+                    <strong>This month, prioritize:</strong> Intro optimization (#1), SEO titles (#2), Notification timing (Quick Win)
+                </p>
+                <p style="margin-bottom: 12px;">
+                    <strong>De-prioritize:</strong> Long-form content experiments (low immediate impact)
+                </p>
+                <p>
+                    <strong>Success target:</strong> Completion rate 68% → 74%
+                </p>
+            </div>
+
+            <!-- Benchmark Dashboard -->
+            <div class="card">
+                <h3 class="card-title">Benchmark Dashboard</h3>
+                <div class="benchmark-table">
+                    <div class="benchmark-row" style="font-weight: 600; border-bottom: 2px solid var(--border);">
+                        <div>Metric</div>
+                        <div style="text-align: center;">Your Value</div>
+                        <div style="text-align: center;">Category Median</div>
+                        <div style="text-align: center;">Top 10%</div>
+                        <div style="text-align: center;">Status</div>
+                    </div>
+                    <div class="benchmark-row">
+                        <div>Listener Growth</div>
+                        <div style="text-align: center;">2.1%</div>
+                        <div style="text-align: center;">1.8%</div>
+                        <div style="text-align: center;">5.2%</div>
+                        <div style="text-align: center;"><span class="benchmark-status yellow"></span></div>
+                    </div>
+                    <div class="benchmark-row">
+                        <div>Completion Rate</div>
+                        <div style="text-align: center;">68%</div>
+                        <div style="text-align: center;">75%</div>
+                        <div style="text-align: center;">85%</div>
+                        <div style="text-align: center;"><span class="benchmark-status red"></span></div>
+                    </div>
+                    <div class="benchmark-row">
+                        <div>CTR</div>
+                        <div style="text-align: center;">5.2%</div>
+                        <div style="text-align: center;">5.5%</div>
+                        <div style="text-align: center;">8.1%</div>
+                        <div style="text-align: center;"><span class="benchmark-status yellow"></span></div>
+                    </div>
+                    <div class="benchmark-row">
+                        <div>Subscriber Conversion</div>
+                        <div style="text-align: center;">7.2%</div>
+                        <div style="text-align: center;">5.0%</div>
+                        <div style="text-align: center;">12.0%</div>
+                        <div style="text-align: center;"><span class="benchmark-status green"></span></div>
+                    </div>
+                </div>
+                <button class="insight-btn" style="margin-top: 16px;">Focus on red metrics first →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Insight Modal -->
+    <div id="insightModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">AI Insight</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Switching
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            if (element) element.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            // Reinitialize charts when tab becomes visible
+            setTimeout(() => initializeCharts(), 100);
+        }
+
+        // Update tab buttons to pass element
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                switchTab(tabId, this);
+            });
+        });
+
+        // Chart instances
+        let charts = {};
+
+        // Modal Functions
+        const insights = {
+            'growth-rate': {
+                title: 'Listener Growth Rate',
+                body: `
+                    <div class="modal-section">
+                        <h3>INSIGHT</h3>
+                        <p>Your listener growth is 2.1%. This is above the median for podcasts in your category (1.8%). Growth is steady and accelerating, indicating strong content-market fit and effective promotional strategies.</p>
+                    </div>
+                    <div class="modal-section">
+                        <h3>RECOMMENDATION</h3>
+                        <p>To improve: Maintain current posting frequency and expand cross-promotion partnerships. Consider doubling down on episodes that show viral potential (e.g., ep124).</p>
+                    </div>
+                    <div class="modal-section">
+                        <h3>EXPECTED OUTCOME</h3>
+                        <p>If you continue current trajectory, growth could reach 3.5%+ within 3 months.</p>
+                    </div>
+                `
+            },
+            'completion-rate': {
+                title: 'Completion Rate',
+                body: `
+                    <div class="modal-section">
+                        <h3>INSIGHT</h3>
+                        <p>Only 68% complete your episodes vs 80% industry average. Drop-off is steepest at the 12-15 minute mark (18% exit rate), indicating listener fatigue or content pacing issues.</p>
+                    </div>
+                    <div class="modal-section">
+                        <h3>ROOT CAUSE</h3>
+                        <p>If completion is low, likely causes: intro too long (3:00 vs 1:15 avg), missing re-engagement hooks at midpoint, episode length exceeds optimal duration, or pacing issues at 12-15 min mark.</p>
+                    </div>
+                    <div class="modal-section">
+                        <h3>RECOMMENDATION</h3>
+                        <p>1. Cut intro to &lt;1:30<br>2. Add hook/re-engagement point at 10:00<br>3. Restructure content at 12-15 min mark to maintain pacing</p>
+                    </div>
+                    <div class="modal-section">
+                        <h3>EXPECTED OUTCOME</h3>
+                        <p>If you implement these changes, completion rate should improve to 76%+ within 2 episodes.</p>
+                    </div>
+                `
+            },
+            'total-listeners': {
+                title: 'Total Listeners (28-day)',
+                body: `
+                    <div class="modal-section">
+                        <h3>INSIGHT</h3>
+                        <p>Growth is steady but accelerating. Your 12,400 listeners represent a 2.1% increase vs average, indicating healthy growth trajectory.</p>
+                    </div>
+                    <div class="modal-section">
+                        <h3>RECOMMENDATION</h3>
+                        <p>To maintain momentum: Focus on completing underperforming episodes, optimize SEO for organic discovery, and leverage subscriber base for cross-promotion.</p>
+                    </div>
+                `
+            },
+            'watch-time': {
+                title: 'Watch Time (hours)',
+                body: `
+                    <div class="modal-section">
+                        <h3>INSIGHT</h3>
+                        <p>Watch time growth outpaces listener growth (+8% vs +2.1%), meaning existing listeners are engaging more deeply. This is a positive signal of content quality improvement.</p>
+                    </div>
+                    <div class="modal-section">
+                        <h3>RECOMMENDATION</h3>
+                        <p>Continue improving episode quality and consider longer-form content for engaged listeners. Also, optimize completion rate to maximize watch time per listener.</p>
+                    </div>
+                `
+            },
+            'ctr': {
+                title: 'CTR',
+                body: `
+                    <div class="modal-section">
+                        <h3>INSIGHT</h3>
+                        <p>CTR is slightly below average but stable (5.2% vs 5.5% median). Your title/thumbnail strategy is consistent but has room for optimization.</p>
+                    </div>
+                    <div class="modal-section">
+                        <h3>RECOMMENDATION</h3>
+                        <p>A/B test thumbnail designs with key text in mobile-safe zone. Creators with 8%+ CTR gain 25% more listeners. Test benefit-focused vs. curiosity-driven titles.</p>
+                    </div>
+                `
+            },
+            'cross-genre': {
+                title: 'Cross-Genre Listener Affinity',
+                body: `
+                    <div class="modal-section">
+                        <h3>INSIGHT</h3>
+                        <p>Your listeners span 8 genres. Strongest affinity: Comedy (67%). This reveals a psychographic pattern: your audience seeks entertainment with lighthearted engagement.</p>
+                    </div>
+                    <div class="modal-section">
+                        <h3>COLLABORATION OPPORTUNITIES</h3>
+                        <p>Top 3 podcasts with overlap:<br>
+                        - Podcast A: 67% overlap, 450K listeners<br>
+                        - Podcast B: 62% overlap, 320K listeners<br>
+                        - Podcast C: 58% overlap, 280K listeners</p>
+                    </div>
+                    <div class="modal-section">
+                        <h3>RECOMMENDATION</h3>
+                        <p>Content series: Blend Comedy + Self-Help (e.g., 'Comedy meets Self-Help') for +18% reach. Partner with top Comedy podcasts for cross-promotion series.</p>
+                    </div>
+                `
+            },
+            'impressions': {
+                title: 'Impressions',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Your impressions are 94,500, showing +3.8% growth. This indicates good visibility in discovery surfaces. Combined with CTR data, there's opportunity to convert more impressions to clicks.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Improve thumbnail and title optimization to increase CTR from current 5.2% to 7%+. Every 1% CTR increase = ~945 additional clicks.</p></div>`
+            },
+            'subscriber-conversion': {
+                title: 'Subscriber Conversion Rate',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>You converted 7.2% of listeners to subscribers (vs 5.0% average). Subscribers return +45% more often and have higher LTV.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>To improve: Add call-to-action placement by episode midpoint (around 4:00). Test different CTA messaging: value-focused vs. community-focused.</p></div><div class="modal-section"><h3>EXPECTED OUTCOME</h3><p>With optimized CTA placement, conversion could reach 9%+ within 1 month.</p></div>`
+            },
+            'avg-duration': {
+                title: 'Avg Listen Duration',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Listen duration is improving, likely due to shorter intros. Listeners average 4m 22s (73% of episode length).</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>If you shortened episodes by 10%, completion would rise to 75%. Or add engagement hook at 8:00 to improve retention by +5%.</p></div>`
+            },
+            'subscribers': {
+                title: 'Subscribers',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Subscriber growth significantly outpaces listener growth (+12% vs +2.1%), indicating strong content quality and listener loyalty.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Leverage subscriber base for cross-promotion. Consider exclusive content or early access to boost subscriber value.</p></div>`
+            },
+            'listener-trend': {
+                title: 'Listener Trend Chart',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Your peak was Tuesday Dec 9. Next upload: Schedule for Tuesday 6 PM (peak listening window) to maximize early momentum.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Listeners are most active Tuesdays 3-6 PM. Release episodes 2-4 hours before peak window for optimal discovery.</p></div>`
+            },
+            'completion-trend': {
+                title: 'Completion Rate Trend',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Average listener loses interest at 12:00-15:00. Completion has declined slightly over past 28 days.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Structure recommendation: Add re-engagement hook at 10:00. Tighten pacing at 12:00 mark. Consider restructuring content to maintain engagement through midpoint.</p></div>`
+            },
+            'top-episodes': {
+                title: 'Top Episodes',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Top 3 episodes share pattern: guest interviews, trending topics, and optimized episode lengths (4:00-4:45). All have completion rates above 65%.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Replicate: Continue guest interview format. Keep episodes in 4:00-5:00 range. Focus on trending, timely topics.</p></div>`
+            },
+            'organic-listeners': {
+                title: 'Organic Listeners (Search + Browse)',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Only 34% come from search/browse (YouTube avg: 45%). Over-reliant on algorithmic suggestions (35%).</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Action: Improve episode title/description SEO using high-volume keywords. Every 10 search listeners = +15 hours watch time (vs +8 hours for suggested).</p></div>`
+            },
+            'traffic-source': {
+                title: 'Traffic Source Breakdown',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Suggested drives 35% but only 28% return. Search listeners have +18% longer watch time. External traffic has best completion rate.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Invest in SEO titles/descriptions; every 10 search listeners = +1.5 hours watch time. Reduce reliance on suggested traffic by improving organic discovery.</p></div>`
+            },
+            'new-listeners': {
+                title: 'Unique New Listeners',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>You acquired 240 new listeners. At 43% return rate, ~103 will listen to second episode.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>To improve retention: Create series format. Add "Listen to next episode" CTA at end. Send follow-up notification 3 days after first listen.</p></div>`
+            },
+            'suggested-performance': {
+                title: 'Suggested Episode Performance',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Suggested listeners complete 71% vs 75% for search. They prefer shorter episodes (4:15 avg) and trending topics.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Create more trending topic episodes with 4:00-4:30 length to boost algorithmic amplification. These episodes get 2.3x more suggested exposure.</p></div>`
+            },
+            'external-traffic': {
+                title: 'External Traffic',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>External drives 12% listeners but 18% listen-hours. Email Newsletter has best ROI (45% of external traffic, 78% completion).</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Next campaign: Double down on email newsletter promotion. Reduce spend on low-performing external sources (social media: 35% traffic, 52% completion).</p></div>`
+            },
+            'notification-performance': {
+                title: 'Notification Performance',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Subscriber notification click rate is 34%. Leaders achieve 45%+. Current send time may not align with listener activity.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Send time: Tuesday 6 PM (when listeners are most active). A/B test benefit-focused vs. curiosity-driven notification copy.</p></div>`
+            },
+            'traffic-waterfall': {
+                title: 'Traffic Source Waterfall',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Search peaked week of Dec 2. Reason: keyword spike from trending topic episode (ep124).</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Replicate: Focus on trending topics with high search volume. Optimize titles with trending keywords for sustained search traffic.</p></div>`
+            },
+            'source-completion': {
+                title: 'Source → Completion Rate',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Listeners from External complete 78%, Search 75%, Suggested 71%, Browse 68%. External = quality source. Suggested = volume source.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>For growth prioritize External/Search (quality). For scale optimize Suggested/Browse (volume). Balance strategy: 40% quality, 60% volume.</p></div>`
+            },
+            'new-returning': {
+                title: 'New vs Returning Listeners',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>New listener share is 43%. Healthy channels maintain 35-40%. Slightly above optimal, indicating good growth but potential retention gap.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>To improve: Focus on retention strategy. Create series format. Add "binge" playlist. Improve completion rate to boost return rate.</p></div>`
+            },
+            'avg-completion': {
+                title: 'Average Completion Rate',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Your avg completion is 68% vs category 80%. Drop-off at 25% (91%), 50% (78%), 75% (72%), 100% (68%).</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Industry fix: Shorten intro (currently 3:00, target 1:15). Add hook at 10:00. Restructure content at 12:00-15:00 mark where 18% exit.</p></div>`
+            },
+            'avg-duration-engagement': {
+                title: 'Avg Listen Duration (Engagement)',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Listeners average 4m 22s of 6-minute episodes (73%). If you shortened by 10%, completion would rise to 75%.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Or if you added engagement hook at 8:00, retention would improve +5%. Test both approaches: shorter episodes vs. hooks in current length.</p></div>`
+            },
+            'low-completion': {
+                title: 'Episodes Below 50% Completion',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>You have 3 underperforming episodes (avg 42% completion). Common factor: longer length (6:30+), complex topics, missing guest.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Fix: Re-record intro segments or use learnings for future episodes. Consider re-promoting with updated thumbnail/description after improvements.</p></div>`
+            },
+            'dropoff-curve': {
+                title: 'Listener Drop-off Curve',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Drop-off at 12:00-15:00 signals boredom/distraction/saturation. 18% exit rate at this segment.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Fix: Restructure segment, add visual/audio hook, tighten pacing, or reduce overall episode length to 5:00.</p></div>`
+            },
+            'engagement-efficiency': {
+                title: 'Engagement Efficiency',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>65% of listen time from 4 high-engagement episodes (25% of total). Top episodes share: guest interviews, trending topics, optimal length.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Invest in: Guest interviews, trending topics, 4:00-4:45 length. De-prioritize: solo long-form, complex topics without guests.</p></div>`
+            },
+            'series-completion': {
+                title: 'Series Completion Rate',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Series completion is 58%. Completion listeners have +32% LTV and +45% probability continuing next series.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Invest in multi-episode arcs. Add cliffhangers at episode end. Create "binge" playlists for series. This drives sustained engagement.</p></div>`
+            },
+            'retention-curve': {
+                title: 'Retention Curve by Episode',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Top episodes maintain 75% through minute 8. Bottom drop to 52% by minute 8.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Difference: production quality, pacing, guest engagement, topic relevance. Replicate top episode structure: intro (1:00), hook (4:00), engagement (8:00).</p></div>`
+            },
+            'completion-distribution': {
+                title: 'Completion Rate Distribution',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>40% of episodes >75% completion. Leaders achieve 60%+.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>To shift: Focus on guest interviews, trending topics, optimal length (4:00-4:45), strong intros. Reduce solo episodes and complex topics.</p></div>`
+            },
+            'length-completion': {
+                title: 'Episode Length vs Completion',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Optimal length: 4:00-5:00 minutes. Episodes >6:00 minutes drop to 58% completion.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>For long-form, add structural element (hook, segment break, guest intro) every 3-4 minutes to maintain engagement.</p></div>`
+            },
+            'retention-cohort': {
+                title: 'Audience Retention Cohort',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Only 24% are loyal (6+ episodes). Average is 28%. One-time listeners (34%) represent opportunity.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>To improve: Series strategy, consistent release schedule (Tuesdays), listener CTA at episode end, follow-up notifications.</p></div>`
+            },
+            'returning-watchtime': {
+                title: 'Returning Listener Watch Time',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Returning listeners are 57% of audience but 68% of watch time. They're +32% more valuable.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Prioritize: Retention strategy, series format, consistent posting, subscriber engagement features.</p></div>`
+            },
+            'demographics': {
+                title: 'Listener Demographics',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Audience primarily USA (45%), 25-34 age (38%), male (58%), English (95%). Content resonates with tech-savvy millennials.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Growth opportunity: Female audience (40% but growing). Consider: Female guest hosts, diverse topics, inclusive language.</p></div>`
+            },
+            'listening-device': {
+                title: 'Listening Environment & Device',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Mobile (62%) listeners complete 65%, Web (20%) 72%, Car (12%) 58%. Mobile prefers shorter, punchy content.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Optimize for mobile: Shorter intros, clear audio, mobile-safe thumbnails. Adjust ad placement for mobile listening patterns.</p></div>`
+            },
+            'listening-times': {
+                title: 'When Listeners Are Online',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Peak window: Tuesday 6 PM. Listeners at peak complete 75% vs off-peak 65%.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Next release: Tuesday 2 PM (4 hours before peak). Ads run: Tuesday 5-7 PM. Notification send: Tuesday 6 PM.</p></div>`
+            },
+            'cohort-retention': {
+                title: 'Listener Cohort Retention',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>Biggest churn after episode 2. Average listener quits after 3.2 episodes.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>To improve: Create strong episode 2 (series hook), improve quality consistency, add CTA at episode 1 end, follow-up notification.</p></div>`
+            },
+            'geography-engagement': {
+                title: 'Listener Geography & Engagement',
+                body: `<div class="modal-section"><h3>INSIGHT</h3><p>USA listeners complete 72%, Canada 68%, UK 65%. USA prefers guest interviews, Canada prefers trending topics.</p></div><div class="modal-section"><h3>RECOMMENDATION</h3><p>Content strategy: Continue guest interviews for USA market. Add trending topic segments for Canadian audience. Consider time zone optimization for releases.</p></div>`
+            }
+        };
+
+        function showInsight(insightId) {
+            const insight = insights[insightId] || {
+                title: 'AI Insight',
+                body: '<div class="modal-section"><p>Detailed insight coming soon...</p></div>'
+            };
+            document.getElementById('modalTitle').textContent = insight.title;
+            document.getElementById('modalBody').innerHTML = insight.body;
+            document.getElementById('insightModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('insightModal').classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('insightModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Genre Detail Functions
+        const genreDetails = {
+            'comedy': [
+                { name: 'Podcast A', overlap: '67%', listeners: '450K' },
+                { name: 'Podcast B', overlap: '62%', listeners: '320K' },
+                { name: 'Podcast C', overlap: '58%', listeners: '280K' }
+            ],
+            'self-help': [
+                { name: 'Podcast D', overlap: '54%', listeners: '380K' },
+                { name: 'Podcast E', overlap: '51%', listeners: '290K' }
+            ]
+        };
+
+        function showGenreDetail(genre) {
+            const detail = document.getElementById('genre-detail');
+            const podcasts = document.getElementById('genre-podcasts');
+            const data = genreDetails[genre] || [];
+            
+            if (data.length > 0) {
+                podcasts.innerHTML = data.map(p => `
+                    <div style="padding: 8px; margin-bottom: 8px; background: white; border-radius: 4px;">
+                        <strong>${p.name}</strong> - ${p.overlap} overlap, ${p.listeners} listeners
+                    </div>
+                `).join('');
+                detail.style.display = 'block';
+            }
+        }
+
+        function toggleGenreList() {
+            const list = document.getElementById('genre-list');
+            list.style.display = list.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Expandable Sections
+        function toggleExpandable(id) {
+            const content = document.getElementById(id + '-content');
+            const arrow = document.getElementById(id + '-arrow');
+            content.classList.toggle('active');
+            arrow.textContent = content.classList.contains('active') ? '▲' : '▼';
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            const Chart = window.Chart;
+            if (!Chart) return;
+
+            // Listener Trend Chart
+            const listenerCtx = document.getElementById('listenerTrendChart');
+            if (listenerCtx && !charts.listenerTrend) {
+                charts.listenerTrend = new Chart(listenerCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Nov 4', 'Nov 11', 'Nov 18', 'Nov 25', 'Dec 2', 'Dec 9'],
+                        datasets: [{
+                            label: 'Listeners',
+                            data: [10200, 10800, 11200, 11800, 12200, 12400],
+                            borderColor: '#14b8a6',
+                            backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: false } }
+                    }
+                });
+            }
+
+            // Completion Trend Chart
+            const completionCtx = document.getElementById('completionTrendChart');
+            if (completionCtx && !charts.completionTrend) {
+                charts.completionTrend = new Chart(completionCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Nov 4', 'Nov 11', 'Nov 18', 'Nov 25', 'Dec 2', 'Dec 9'],
+                        datasets: [
+                            { label: '25%', data: [93, 92, 91, 91, 91, 91], borderColor: '#10b981' },
+                            { label: '50%', data: [80, 79, 78, 78, 78, 78], borderColor: '#34d399' },
+                            { label: '75%', data: [74, 73, 72, 72, 72, 72], borderColor: '#f59e0b' },
+                            { label: '100%', data: [70, 69, 68, 68, 68, 68], borderColor: '#ef4444' }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: false, max: 100 } }
+                    }
+                });
+            }
+
+            // Traffic Source Pie Chart
+            const trafficCtx = document.getElementById('trafficSourceChart');
+            if (trafficCtx && !charts.trafficSource) {
+                charts.trafficSource = new Chart(trafficCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Search', 'Suggested', 'Browse', 'External', 'Notifications', 'Playlist'],
+                        datasets: [{
+                            data: [28, 35, 15, 12, 8, 2],
+                            backgroundColor: ['#14b8a6', '#10b981', '#34d399', '#f59e0b', '#8b5cf6', '#6b7280']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            // Retention Curve Chart
+            const retentionCtx = document.getElementById('retentionCurveChart');
+            if (retentionCtx && !charts.retentionCurve) {
+                charts.retentionCurve = new Chart(retentionCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['0:00', '2:00', '4:00', '6:00', '8:00', '10:00', '12:00', '15:00', '20:00'],
+                        datasets: [
+                            { label: 'Top 3', data: [100, 92, 85, 80, 75, 72, 68, 62, 55], borderColor: '#10b981' },
+                            { label: 'Middle 3', data: [100, 88, 78, 70, 65, 60, 55, 48, 42], borderColor: '#f59e0b' },
+                            { label: 'Bottom 3', data: [100, 82, 68, 58, 52, 45, 38, 30, 25], borderColor: '#ef4444' }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: false, max: 100 } }
+                    }
+                });
+            }
+        }
+
+        // Initialize heatmap
+        function initializeHeatmap() {
+            const heatmap = document.getElementById('listening-heatmap');
+            if (!heatmap || heatmap.children.length > 0) return;
+
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const hours = Array.from({length: 24}, (_, i) => i);
+            
+            // Sample data for peak times (Tuesday 6 PM highest)
+            const peakData = {
+                'Tue': { 18: 0.9, 19: 0.85, 20: 0.75 },
+                'Wed': { 18: 0.8, 19: 0.75 },
+                'Thu': { 18: 0.82, 19: 0.78 },
+                'Fri': { 18: 0.75, 19: 0.7 }
+            };
+            
+            days.forEach((day, dIdx) => {
+                hours.forEach((hour, hIdx) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'heatmap-cell';
+                    let intensity = 0.2 + Math.random() * 0.3; // Base low activity
+                    
+                    // Add peak times
+                    if (peakData[day] && peakData[day][hour]) {
+                        intensity = peakData[day][hour];
+                    }
+                    
+                    cell.style.backgroundColor = `rgba(20, 184, 166, ${intensity})`;
+                    cell.style.color = intensity > 0.5 ? 'white' : 'black';
+                    cell.textContent = Math.floor(intensity * 100);
+                    cell.title = `${day} ${hour}:00 - ${Math.floor(intensity * 100)}% activity`;
+                    heatmap.appendChild(cell);
+                });
+            });
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            initializeHeatmap();
+        });
+    </script>
+</body>
+</html>
