@@ -2517,7 +2517,7 @@
                     </div>
                     <div class="md:col-span-1">
                         <div class="relative aspect-square rounded-lg overflow-hidden">
-                            <img src="/images/Amy%26amp%3B_Camron-136.png" alt="Camron Soltani" class="w-full h-full object-cover rounded-lg shadow-lg" id="camron-photo" />
+                            <img src="/images/Amy-and-Camron-136.png" alt="Camron Soltani" class="w-full h-full object-cover rounded-lg shadow-lg" id="camron-photo" />
                         </div>
                     </div>
                 </div>
@@ -3245,11 +3245,10 @@
                         // Image failed, try fallbacks
                         console.log('Image failed to load, trying fallbacks...');
                         const fallbacks = [
-                            '/images/Amy%26amp%3B_Camron-136.png',  // URL-encoded &amp; as %26amp%3B
-                            '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp; (partial)
-                            '/images/Amy&amp_Camron-136.png',  // HTML entity &amp;
-                            '/images/Amy%26_Camron-136.png',  // URL-encoded &
-                            '/images/Amy&_Camron-136.png'  // Direct &
+                            '/images/Amy-and-Camron-136.png',  // Simple filename (correct)
+                            '/images/Amy%26amp%3B_Camron-136.png',  // Old URL-encoded &amp; as %26amp%3B
+                            '/images/Amy%26amp_Camron-136.png',  // Old URL-encoded &amp; (partial)
+                            '/images/Amy&amp_Camron-136.png'  // Old HTML entity &amp;
                         ];
                         
                         let currentFallback = 0;
@@ -3321,11 +3320,10 @@
             
             // Try all possible encodings for the filename with literal &amp;
             const attempts = [
-                '/images/Amy%26amp%3B_Camron-136.png',  // URL-encoded &amp; as %26amp%3B (correct)
-                '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp; (partial)
-                '/images/Amy&amp_Camron-136.png',  // HTML entity &amp;
-                '/images/Amy%26_Camron-136.png',  // URL-encoded &
-                '/images/Amy&_Camron-136.png'  // Direct &
+                '/images/Amy-and-Camron-136.png',  // Simple filename (correct)
+                '/images/Amy%26amp%3B_Camron-136.png',  // Old URL-encoded &amp; as %26amp%3B
+                '/images/Amy%26amp_Camron-136.png',  // Old URL-encoded &amp; (partial)
+                '/images/Amy&amp_Camron-136.png'  // Old HTML entity &amp;
             ];
             
             let currentAttempt = 0;
