@@ -26,7 +26,7 @@ export default function HTMLRenderer({ bodyContent, headScripts, bodyScripts }: 
     (window as any).__scriptsExecuted = true;
     
     // Execute head scripts first
-    headScriptsRef.current.forEach((script) => {
+    headScriptsRef.current.forEach((script: { attrs: string; content: string }) => {
       const srcMatch = script.attrs.match(/src=["']([^"']+)["']/i);
       if (srcMatch) {
         const scriptEl = document.createElement('script');
@@ -42,7 +42,7 @@ export default function HTMLRenderer({ bodyContent, headScripts, bodyScripts }: 
     
     // Execute body scripts after a short delay to ensure DOM is ready
     setTimeout(() => {
-      bodyScriptsRef.current.forEach((script) => {
+      bodyScriptsRef.current.forEach((script: { attrs: string; content: string }) => {
         const srcMatch = script.attrs.match(/src=["']([^"']+)["']/i);
         if (srcMatch) {
           const scriptEl = document.createElement('script');
