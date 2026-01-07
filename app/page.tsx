@@ -5,7 +5,14 @@ import HTMLRenderer from './html-renderer';
 export default function Home() {
   // Read the exact HTML file on the server
   const htmlPath = join(process.cwd(), 'public', 'index.html');
-  const htmlContent = readFileSync(htmlPath, 'utf-8');
+  let htmlContent: string;
+  
+  try {
+    htmlContent = readFileSync(htmlPath, 'utf-8');
+  } catch (error) {
+    console.error('Error reading HTML file:', error);
+    throw new Error(`Could not find public/index.html at ${htmlPath}. Current working directory: ${process.cwd()}`);
+  }
   
   // Extract body content (everything inside <body> tags)
   const bodyMatch = htmlContent.match(/<body[^>]*>([\s\S]*)<\/body>/i);
