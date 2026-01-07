@@ -2795,6 +2795,99 @@
                 preventAutoScroll();
             });
         })();
+        
+        // Auto-hiding Navigation Bar
+        // Implements modern auto-hiding header behavior:
+        // - Visible at the top of the page
+        // - Hides when scrolling down (after first screen)
+        // - Shows when scrolling up (after first screen)
+        // Adjust threshold (viewport height multiplier) and transition duration in CSS above
+        (function() {
+            const nav = document.getElementById('main-nav');
+            if (!nav) return;
+            
+            let lastScrollY = 0;
+            let isScrolling = false;
+            
+            // Threshold: approximately one viewport height (80% of viewport)
+            // Adjust this multiplier to change when the nav starts hiding
+            const getThreshold = () => window.innerHeight * 0.8;
+            
+            // Minimum scroll delta to trigger hide/show (reduces noise from tiny movements)
+            const SCROLL_THRESHOLD = 5;
+            
+            function handleScroll() {
+                // Use requestAnimationFrame for performance
+                if (isScrolling) return;
+                isScrolling = true;
+                
+                requestAnimationFrame(() => {
+                    const currentScrollY = window.scrollY || window.pageYOffset;
+                    const threshold = getThreshold();
+                    const scrollDelta = currentScrollY - lastScrollY;
+                    
+                    // Ignore tiny movements to reduce noise
+                    if (Math.abs(scrollDelta) < SCROLL_THRESHOLD) {
+                        isScrolling = false;
+                        return;
+                    }
+                    
+                    // At the very top: always show nav
+                    if (currentScrollY <= threshold) {
+                        nav.classList.remove('nav-hidden');
+                        lastScrollY = currentScrollY;
+                        isScrolling = false;
+                        return;
+                    }
+                    
+                    // Below threshold: hide/show based on scroll direction
+                    if (scrollDelta > 0) {
+                        // Scrolling down: hide nav
+                        nav.classList.add('nav-hidden');
+                    } else {
+                        // Scrolling up: show nav
+                        nav.classList.remove('nav-hidden');
+                    }
+                    
+                    lastScrollY = currentScrollY;
+                    isScrolling = false;
+                });
+            }
+            
+            // Throttle scroll events for better performance
+            let ticking = false;
+            function onScroll() {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        handleScroll();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }
+            
+            // Initialize: show nav at top
+            lastScrollY = window.scrollY || window.pageYOffset;
+            if (lastScrollY <= getThreshold()) {
+                nav.classList.remove('nav-hidden');
+            }
+            
+            // Add scroll listener
+            window.addEventListener('scroll', onScroll, { passive: true });
+            
+            // Handle window resize (threshold changes with viewport height)
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    const currentScrollY = window.scrollY || window.pageYOffset;
+                    const threshold = getThreshold();
+                    if (currentScrollY <= threshold) {
+                        nav.classList.remove('nav-hidden');
+                    }
+                }, 150);
+            }, { passive: true });
+        })();
 
         // Chart.js default configuration
         Chart.defaults.color = '#B3B3B3';
