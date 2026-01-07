@@ -3464,22 +3464,53 @@
         }
         
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        function initializePage() {
             checkImages();
             loadCamronPhoto();
             
             // Initialize overview tab as default landing tab
             initializeOverviewTab();
-        });
+        }
+        
+        // Wait for both DOM and Chart.js to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                // Wait for Chart.js to load
+                function waitForChart() {
+                    if (typeof Chart !== 'undefined') {
+                        console.log('Chart.js loaded, initializing page');
+                        initializePage();
+                    } else {
+                        console.log('Waiting for Chart.js...');
+                        setTimeout(waitForChart, 50);
+                    }
+                }
+                waitForChart();
+            });
+        } else {
+            // DOM already loaded
+            function waitForChart() {
+                if (typeof Chart !== 'undefined') {
+                    console.log('Chart.js loaded, initializing page');
+                    initializePage();
+                } else {
+                    console.log('Waiting for Chart.js...');
+                    setTimeout(waitForChart, 50);
+                }
+            }
+            waitForChart();
+        }
         
         // Also try on window load as fallback
         window.addEventListener('load', function() {
+            console.log('Window loaded, checking chart...');
             const canvas = document.getElementById('listenerTrendChart');
-            if (canvas && !charts.listenerTrend) {
+            if (canvas && !charts.listenerTrend && typeof Chart !== 'undefined') {
                 // Chart not initialized yet, try again
+                console.log('Chart not initialized, retrying...');
                 setTimeout(() => {
                     initListenerTrendChart();
-                }, 50);
+                }, 100);
             }
         });
     </script>
