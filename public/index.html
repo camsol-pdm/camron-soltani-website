@@ -2577,48 +2577,78 @@
     </footer>
 
     <script>
-        // Smooth scrolling for anchor links - prevent double scroll
-        let isScrolling = false;
-        
-        function setupSmoothScroll() {
-            document.querySelectorAll('a[href^="#"]').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    const href = this.getAttribute('href');
-                    if (!href || href === '#') return;
-                    
-                    const targetId = href.slice(1);
-                    const target = document.getElementById(targetId);
-                    
-                    if (!target) return;
-                    
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.stopImmediatePropagation();
-                    
-                    // Prevent multiple scrolls
-                    if (isScrolling) return;
-                    isScrolling = true;
-                    
-                    // Scroll to target
-                    target.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'start' 
-                    });
-                    
-                    // Reset flag after scroll completes
-                    setTimeout(() => {
-                        isScrolling = false;
-                    }, 1000);
-                }, true); // Use capture phase to prevent other handlers
-            });
-        }
-        
-        // Initialize smooth scroll after DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', setupSmoothScroll);
-        } else {
-            setupSmoothScroll();
-        }
+        // Single scroll handler for anchor links - prevent conflicts
+        (function() {
+            let isScrolling = false;
+            let scrollTimeout = null;
+            
+            function handleAnchorClick(e) {
+                const link = e.target.closest('a[href^="#"]');
+                if (!link) return;
+                
+                const href = link.getAttribute('href');
+                if (!href || href === '#' || href === '#home') {
+                    // Handle home link specially
+                    if (href === '#home' || href === '#') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        return;
+                    }
+                    return;
+                }
+                
+                const targetId = href.slice(1);
+                const target = document.getElementById(targetId);
+                
+                if (!target) return;
+                
+                // Prevent all default behaviors
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                // Clear any pending scrolls
+                if (scrollTimeout) {
+                    clearTimeout(scrollTimeout);
+                }
+                
+                // Prevent multiple scrolls
+                if (isScrolling) return;
+                isScrolling = true;
+                
+                // Calculate offset for sticky nav (45px height)
+                const navHeight = 45;
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                
+                // Single scroll operation
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+                
+                // Reset flag after scroll completes
+                scrollTimeout = setTimeout(() => {
+                    isScrolling = false;
+                    scrollTimeout = null;
+                }, 1000);
+            }
+            
+            // Use capture phase and attach once
+            function setupAnchorNavigation() {
+                // Remove any existing listeners by cloning
+                document.removeEventListener('click', handleAnchorClick, true);
+                document.addEventListener('click', handleAnchorClick, true);
+            }
+            
+            // Initialize after DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', setupAnchorNavigation);
+            } else {
+                setupAnchorNavigation();
+            }
+        })();
 
         // Chart.js default configuration
         Chart.defaults.color = '#B3B3B3';
