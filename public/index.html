@@ -2516,7 +2516,9 @@
                         </p>
                     </div>
                     <div class="md:col-span-1">
-                        <img src="/images/Amy&amp_Camron-136.png" alt="Camron Soltani" class="w-full rounded-lg shadow-lg" id="camron-photo" />
+                        <div class="relative aspect-square rounded-lg overflow-hidden">
+                            <img src="/images/Amy%26amp%3B_Camron-136.png" alt="Camron Soltani" class="w-full h-full object-cover rounded-lg shadow-lg" id="camron-photo" />
+                        </div>
                     </div>
                 </div>
 
@@ -3232,36 +3234,47 @@
                 img.style.display = 'block';
                 img.style.visibility = 'visible';
                 
-                // Special handling for About section photo
-                if (img.alt === 'Camron Soltani' && !img.src) {
-                    // Try multiple encoding approaches for the filename with &amp;
-                    const fallbacks = [
-                        '/images/Amy&amp_Camron-136.png',  // HTML entity &amp; (matches actual filename)
-                        '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
-                        '/images/Amy&amp;amp;_Camron-136.png',  // HTML entity &amp;amp; (decodes to &amp;)
-                        '/images/Amy%26_Camron-136.png',  // URL-encoded &
-                        '/images/Amy&_Camron-136.png'  // Direct &
-                    ];
-                    
-                    // Set initial src
-                    img.src = fallbacks[0];
-                    
-                    let currentFallback = 0;
-                    
-                    img.addEventListener('error', function() {
-                        console.log('Image failed, trying fallback:', fallbacks[currentFallback]);
-                        if (currentFallback < fallbacks.length - 1) {
-                            currentFallback++;
-                            this.src = fallbacks[currentFallback];
-                        } else {
-                            console.error('All image fallbacks failed for Camron photo');
-                            handleImageError(this);
+                // Special handling for About section photo - check if image failed to load
+                if (img.alt === 'Camron Soltani') {
+                    // Check if image failed to load by testing if it's broken
+                    const testImg = new Image();
+                    testImg.onload = function() {
+                        // Image loaded successfully, do nothing
+                    };
+                    testImg.onerror = function() {
+                        // Image failed, try fallbacks
+                        console.log('Image failed to load, trying fallbacks...');
+                        const fallbacks = [
+                            '/images/Amy%26amp%3B_Camron-136.png',  // URL-encoded &amp; as %26amp%3B
+                            '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp; (partial)
+                            '/images/Amy&amp_Camron-136.png',  // HTML entity &amp;
+                            '/images/Amy%26_Camron-136.png',  // URL-encoded &
+                            '/images/Amy&_Camron-136.png'  // Direct &
+                        ];
+                        
+                        let currentFallback = 0;
+                        
+                        function tryNext() {
+                            if (currentFallback < fallbacks.length) {
+                                img.src = fallbacks[currentFallback];
+                                console.log('Trying fallback:', fallbacks[currentFallback]);
+                                currentFallback++;
+                                
+                                img.onerror = function() {
+                                    tryNext();
+                                };
+                                
+                                img.onload = function() {
+                                    console.log('Image loaded successfully with:', this.src);
+                                };
+                            } else {
+                                console.error('All image fallbacks failed for Camron photo');
+                            }
                         }
-                    });
-                    
-                    img.addEventListener('load', function() {
-                        console.log('Camron photo loaded successfully:', this.src);
-                    });
+                        
+                        tryNext();
+                    };
+                    testImg.src = img.src;
                 } else {
                     // Add error handler for other images
                     img.addEventListener('error', function() {
@@ -3300,11 +3313,17 @@
             const photo = document.getElementById('camron-photo');
             if (!photo) return;
             
+            // Check if image already loaded successfully
+            if (photo.complete && photo.naturalHeight !== 0) {
+                console.log('Photo already loaded successfully');
+                return;
+            }
+            
             // Try all possible encodings for the filename with literal &amp;
             const attempts = [
-                '/images/Amy&amp_Camron-136.png',  // HTML entity &amp; (matches actual filename)
-                '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
-                '/images/Amy&amp;amp;_Camron-136.png',  // HTML entity &amp;amp; (decodes to &amp;)
+                '/images/Amy%26amp%3B_Camron-136.png',  // URL-encoded &amp; as %26amp%3B (correct)
+                '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp; (partial)
+                '/images/Amy&amp_Camron-136.png',  // HTML entity &amp;
                 '/images/Amy%26_Camron-136.png',  // URL-encoded &
                 '/images/Amy&_Camron-136.png'  // Direct &
             ];
@@ -3330,8 +3349,10 @@
                 console.log('Photo loaded successfully with:', this.src);
             };
             
-            // Start with first attempt
-            tryNext();
+            // Only try fallbacks if current src failed
+            if (!photo.complete || photo.naturalHeight === 0) {
+                tryNext();
+            }
         }
         
         // Initialize on page load
