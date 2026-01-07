@@ -1,7 +1,4 @@
 import type { Metadata } from 'next';
-import './globals.css';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Camron Soltani - Product Manager | Spotify Podcast Creator Tools',
@@ -13,14 +10,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body className="bg-spotify-dark text-spotify-text">
-        <Navigation />
-        <main>{children}</main>
-        <Footer />
-      </body>
-    </html>
-  );
+  return children;
 }
-
