@@ -2516,7 +2516,7 @@
                         </p>
                     </div>
                     <div class="md:col-span-1">
-                        <img src="/images/Amy&amp_Camron-136.jpg" alt="Camron Soltani" class="w-full rounded-lg shadow-lg" id="camron-photo" />
+                        <img src="/images/Amy&amp_Camron-136.png" alt="Camron Soltani" class="w-full rounded-lg shadow-lg" id="camron-photo" />
                     </div>
                 </div>
 
@@ -3236,11 +3236,11 @@
                 if (img.alt === 'Camron Soltani' && !img.src) {
                     // Try multiple encoding approaches for the filename with &amp;
                     const fallbacks = [
-                        '/images/Amy&amp_Camron-136.jpg',  // HTML entity &amp; (matches actual filename)
-                        '/images/Amy%26amp_Camron-136.jpg',  // URL-encoded &amp;
-                        '/images/Amy&amp;amp;_Camron-136.jpg',  // HTML entity &amp;amp; (decodes to &amp;)
-                        '/images/Amy%26_Camron-136.jpg',  // URL-encoded &
-                        '/images/Amy&_Camron-136.jpg'  // Direct &
+                        '/images/Amy&amp_Camron-136.png',  // HTML entity &amp; (matches actual filename)
+                        '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
+                        '/images/Amy&amp;amp;_Camron-136.png',  // HTML entity &amp;amp; (decodes to &amp;)
+                        '/images/Amy%26_Camron-136.png',  // URL-encoded &
+                        '/images/Amy&_Camron-136.png'  // Direct &
                     ];
                     
                     // Set initial src
@@ -3302,11 +3302,11 @@
             
             // Try all possible encodings for the filename with literal &amp;
             const attempts = [
-                'public/images/Amy%26amp_Camron-136.jpg',  // URL-encoded &amp;
-                'public/images/Amy&amp;amp;_Camron-136.jpg',  // HTML entity &amp;amp; (decodes to &amp;)
-                'public/images/Amy&amp_Camron-136.jpg',  // HTML entity &amp; (decodes to &)
-                'public/images/Amy%26_Camron-136.jpg',  // URL-encoded &
-                'public/images/Amy&_Camron-136.jpg'  // Direct &
+                '/images/Amy&amp_Camron-136.png',  // HTML entity &amp; (matches actual filename)
+                '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
+                '/images/Amy&amp;amp;_Camron-136.png',  // HTML entity &amp;amp; (decodes to &amp;)
+                '/images/Amy%26_Camron-136.png',  // URL-encoded &
+                '/images/Amy&_Camron-136.png'  // Direct &
             ];
             
             let currentAttempt = 0;
