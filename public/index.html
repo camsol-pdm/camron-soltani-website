@@ -4374,11 +4374,30 @@
 
         // Chart Initialization Functions
         function initListenerTrendChart() {
+            // Ensure Chart.js is loaded
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js not ready for listener trend chart, retrying...');
+                setTimeout(initListenerTrendChart, 100);
+                return;
+            }
+            
             const ctx = document.getElementById('listenerTrendChart');
-            if (!ctx) return;
+            if (!ctx) {
+                console.warn('Listener trend chart canvas not found, retrying...');
+                setTimeout(initListenerTrendChart, 100);
+                return;
+            }
+            
+            // Ensure data is available
+            if (!listenerTrendData || listenerTrendData.length === 0) {
+                console.error('Listener trend data not available');
+                return;
+            }
+            
             if (charts.listenerTrend) charts.listenerTrend.destroy();
             
-            charts.listenerTrend = new Chart(ctx, {
+            try {
+                charts.listenerTrend = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: listenerTrendData.map(d => d.date),
@@ -4422,6 +4441,10 @@
                     }
                 }
             });
+            console.log('Listener trend chart initialized successfully');
+            } catch (error) {
+                console.error('Error initializing listener trend chart:', error);
+            }
         }
 
         function initImpressionsFunnelChart() {
