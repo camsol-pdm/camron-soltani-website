@@ -5509,18 +5509,18 @@
             checkImages();
             loadCamronPhoto();
             
-            // Ensure overview tab is visible
-            const overviewTab = document.getElementById('tab-overview');
-            if (overviewTab) {
-                overviewTab.classList.remove('hidden');
-                overviewTab.style.display = 'block';
+            // Ensure overview tab is visible and switch to it
+            const overviewTabEl = document.getElementById('tab-overview');
+            if (overviewTabEl) {
+                overviewTabEl.classList.remove('hidden');
+                overviewTabEl.style.display = 'block';
             }
             
             // Switch to overview tab to trigger button styling
             switchTab('overview');
             
             // Explicitly initialize chart on initial page load
-            // Use multiple attempts to ensure Chart.js and DOM are ready
+            // ResizeObserver will wait for container dimensions if needed
             setTimeout(() => {
                 initListenerTrendChart();
                 
@@ -5534,10 +5534,11 @@
                     } else if (canvas && !charts.listenerTrend) {
                         // Retry initialization if chart wasn't created
                         console.log('Retrying chart initialization on initial load');
+                        listenerChartInitialized = false; // Reset flag to allow retry
                         initListenerTrendChart();
                     }
-                }, 300);
-            }, 300);
+                }, 500);
+            }, 500);
         }
         
         // Use window.onload to ensure all scripts are loaded
