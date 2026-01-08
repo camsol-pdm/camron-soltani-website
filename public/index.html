@@ -1456,6 +1456,37 @@
             max-width: 100%;
             max-height: 100%;
         }
+        
+        /* Fix navigation link styling to prevent conflicts */
+        #main-nav a {
+            padding: 0 !important;
+            border-radius: 0 !important;
+            transform: none !important;
+        }
+        
+        #main-nav a:hover {
+            background: transparent !important;
+            transform: none !important;
+        }
+        
+        #main-nav a::before {
+            display: none !important;
+        }
+        
+        /* Ensure navigation container doesn't overflow */
+        #main-nav > div > div {
+            min-width: 0;
+        }
+        
+        /* Hide scrollbar but allow scrolling on mobile */
+        #main-nav .overflow-x-auto::-webkit-scrollbar {
+            display: none;
+        }
+        
+        #main-nav .overflow-x-auto {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -1466,14 +1497,14 @@
                 <a href="#home" class="text-lg font-semibold text-spotify-text hover:text-spotify-green transition-colors">
                     Camron Soltani – Product Manager
                 </a>
-                <div class="flex flex-wrap gap-4 md:gap-8">
-                    <a href="#home" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base">Home</a>
-                    <a href="#opportunity" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base">The Opportunity</a>
-                    <a href="#solution" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base">The Solution</a>
-                    <a href="#roadmap" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base">Roadmap</a>
-                    <a href="#analytics" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base">Analytics</a>
-                    <a href="#case-studies" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base">Case Studies</a>
-                    <a href="#about" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base">About</a>
+                <div class="flex flex-nowrap gap-3 md:gap-6 items-center overflow-x-auto">
+                    <a href="#home" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">Home</a>
+                    <a href="#opportunity" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">The Opportunity</a>
+                    <a href="#solution" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">The Solution</a>
+                    <a href="#roadmap" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">Roadmap</a>
+                    <a href="#analytics" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">Analytics</a>
+                    <a href="#case-studies" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">Case Studies</a>
+                    <a href="#about" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">About</a>
                 </div>
             </div>
         </div>
