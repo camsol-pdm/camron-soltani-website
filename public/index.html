@@ -2311,7 +2311,10 @@
                             </div>
                         </div>
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Listener Trend (28 days)</h3>
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Episode Completion Rate Analysis</h3>
+                            <div id="episodeCompletionDashboard" class="mb-6">
+                                <p class="text-spotify-text-muted text-sm">Loading episode completion analysis...</p>
+                            </div>
                             <canvas id="listenerTrendChart" height="100"></canvas>
                             <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: Your listener trend shows steady growth over the past 28 days, with a 21.6% increase from Nov 4 to Dec 9. The upward trajectory indicates healthy audience expansion. Continue optimizing publish timing and content quality to maintain this growth momentum.</p>
                         </div>
@@ -4120,7 +4123,7 @@
         // Initialize charts based on active tab
         function initializeChartsForTab(tabId) {
             if (tabId === 'overview') {
-                initListenerTrendChart();
+                initEpisodeCompletionCharts();
             } else if (tabId === 'reach') {
                 initTrafficSourceWaterfallChart();
                 initNewVsReturningAreaChart();
