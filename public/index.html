@@ -2310,12 +2310,6 @@
                                 <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Monthly revenue of $3,290 comes from ads ($2,400) and subscriptions ($890). Your RPM of $3.10 is above the $2.80 genre benchmark. Opportunity: add ad markers at high-retention timestamps (2:00, 5:00, 12:00) to capture an additional $180-240/month.</p>
                             </div>
                         </div>
-                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Listener Trend (28 days)</h3>
-                            <div style="position: relative; height: 400px; width: 100%; overflow: visible;">
-                                <canvas id="listenerTrendChart" style="width: 100% !important; height: 100% !important;"></canvas>
-                            </div>
-                        </div>
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
                             <h3 class="text-xl font-semibold text-spotify-text mb-4">Top Episodes (30d)</h3>
                             <div class="overflow-x-auto">
@@ -3880,14 +3874,15 @@
         Chart.defaults.backgroundColor = '#212121';
 
         // Mock Data
-        const listenerTrendData = [
-            { date: 'Nov 4', listeners: 10200 },
-            { date: 'Nov 11', listeners: 10800 },
-            { date: 'Nov 18', listeners: 11200 },
-            { date: 'Nov 25', listeners: 11800 },
-            { date: 'Dec 2', listeners: 12200 },
-            { date: 'Dec 9', listeners: 12400 },
-        ];
+        // listenerTrendData mock data preserved for future reference:
+        // const listenerTrendData = [
+        //     { date: 'Nov 4', listeners: 10200 },
+        //     { date: 'Nov 11', listeners: 10800 },
+        //     { date: 'Nov 18', listeners: 11200 },
+        //     { date: 'Nov 25', listeners: 11800 },
+        //     { date: 'Dec 2', listeners: 12200 },
+        //     { date: 'Dec 9', listeners: 12400 },
+        // ];
 
         const impressionsCTRFunnelData = [
             { name: 'Impressions', value: 238000 },
@@ -4116,23 +4111,12 @@
                 initializeChartsForTab(tabId);
             }, 100);
             
-            // Special handling for overview tab - ensure chart renders after visibility change
-            if (tabId === 'overview') {
-                setTimeout(() => {
-                    const canvas = document.getElementById('listenerTrendChart');
-                    if (canvas && charts.listenerTrend) {
-                        // Force resize and update when tab becomes visible
-                        charts.listenerTrend.resize();
-                        charts.listenerTrend.update('none');
-                    }
-                }, 300);
-            }
         }
 
         // Initialize charts based on active tab
         function initializeChartsForTab(tabId) {
             if (tabId === 'overview') {
-                initListenerTrendChart();
+                // Listener trend chart removed
             } else if (tabId === 'reach') {
                 initTrafficSourceWaterfallChart();
                 initNewVsReturningAreaChart();
@@ -4385,125 +4369,15 @@
         }
 
         // Chart Initialization Functions
-        // SIMPLIFIED: Match the exact pattern of working charts (no ResizeObserver, no flags)
-        function initListenerTrendChart() {
-            // Ensure Chart.js is loaded first
-            if (typeof Chart === 'undefined') {
-                console.warn('Chart.js not ready, retrying in 100ms...');
-                setTimeout(initListenerTrendChart, 100);
-                return;
-            }
-            
-            const ctx = document.getElementById('listenerTrendChart');
-            if (!ctx) {
-                console.warn('Canvas not found, retrying in 100ms...');
-                setTimeout(initListenerTrendChart, 100);
-                return;
-            }
-            
-            // CRITICAL: Ensure tab is visible before initializing
-            const tabContent = ctx.closest('.tab-content');
-            if (tabContent) {
-                tabContent.classList.remove('hidden');
-                tabContent.style.display = 'block';
-                // Force layout recalculation
-                void tabContent.offsetHeight;
-            }
-            
-            // Verify canvas is actually visible and has dimensions
-            const rect = ctx.getBoundingClientRect();
-            if (rect.width === 0 || rect.height === 0) {
-                console.warn('Canvas has no dimensions, retrying in 200ms...');
-                setTimeout(initListenerTrendChart, 200);
-                return;
-            }
-            
-            if (charts.listenerTrend) charts.listenerTrend.destroy();
-            
-            charts.listenerTrend = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: listenerTrendData.map(d => d.date),
-                    datasets: [{
-                        label: 'Listeners',
-                        data: listenerTrendData.map(d => d.listeners),
-                        borderColor: '#1DB954',
-                        backgroundColor: 'rgba(29, 185, 84, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: false,
-                    layout: {
-                        padding: {
-                            top: 10,
-                            bottom: 10
-                        }
-                    },
-                    plugins: {
-                        legend: { 
-                            display: false 
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            grid: { 
-                                color: '#535353' 
-                            },
-                            ticks: { 
-                                color: '#B3B3B3' 
-                            }
-                        },
-                        x: {
-                            grid: { 
-                                color: '#535353' 
-                            },
-                            ticks: { 
-                                color: '#B3B3B3' 
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        
-        // Use IntersectionObserver as fallback to initialize when canvas becomes visible
-        function setupListenerTrendChartObserver() {
-            const canvas = document.getElementById('listenerTrendChart');
-            if (!canvas) {
-                setTimeout(setupListenerTrendChartObserver, 100);
-                return;
-            }
-            
-            // If Chart.js isn't loaded yet, wait
-            if (typeof Chart === 'undefined') {
-                setTimeout(setupListenerTrendChartObserver, 100);
-                return;
-            }
-            
-            // Create observer to initialize when canvas becomes visible (fallback)
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && !charts.listenerTrend) {
-                        initListenerTrendChart();
-                        setTimeout(() => {
-                            if (charts.listenerTrend) {
-                                charts.listenerTrend.resize();
-                                charts.listenerTrend.update('none');
-                            }
-                        }, 100);
-                    }
-                });
-            }, { 
-                threshold: 0.1
-            });
-            
-            observer.observe(canvas);
-        }
+        // Note: Listener Trend chart removed - mock data preserved for future use:
+        // listenerTrendData = [
+        //     { date: 'Nov 4', listeners: 10200 },
+        //     { date: 'Nov 11', listeners: 10800 },
+        //     { date: 'Nov 18', listeners: 11200 },
+        //     { date: 'Nov 25', listeners: 11800 },
+        //     { date: 'Dec 2', listeners: 12200 },
+        //     { date: 'Dec 9', listeners: 12400 },
+        // ]
 
         function initImpressionsFunnelChart() {
             const ctx = document.getElementById('impressionsFunnelChart');
