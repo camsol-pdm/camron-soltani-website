@@ -3634,20 +3634,75 @@
     </footer>
 
     <script>
+        // Flag to track if navigation is being triggered by a click
+        let isNavigationClick = false;
+        let navigationClickTimeout = null;
+        let targetSectionId = null;
+
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
+                    // Get target section ID
+                    targetSectionId = target.getAttribute('id');
+                    
+                    // Set flag to prevent active state updates during scroll animation
+                    isNavigationClick = true;
+                    
+                    // Clear any existing timeout
+                    if (navigationClickTimeout) {
+                        clearTimeout(navigationClickTimeout);
+                    }
+                    
                     const offsetTop = target.offsetTop - 45; // Account for fixed nav height
+                    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    const scrollDistance = Math.abs(offsetTop - currentScrollTop);
+                    
+                    // Estimate scroll duration (typical smooth scroll: ~1000px per second)
+                    // Minimum 300ms, maximum 1000ms for smooth scroll
+                    const estimatedDuration = Math.min(Math.max(scrollDistance / 1.5, 300), 1000);
+                    
+                    // Scroll to target
                     window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+                    
+                    // Update active state immediately to target section
+                    updateActiveNavToSection(targetSectionId);
+                    
+                    // Reset flag after scroll animation completes
+                    navigationClickTimeout = setTimeout(function() {
+                        isNavigationClick = false;
+                        targetSectionId = null;
+                        // Final update to ensure correct active state
+                        updateActiveNav();
+                    }, estimatedDuration + 100); // Add 100ms buffer
                 }
             });
         });
 
+        // Function to update active nav to a specific section
+        function updateActiveNavToSection(sectionId) {
+            const navLinks = document.querySelectorAll('#main-nav a[href^="#"]');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('text-spotify-green', 'font-semibold');
+                link.classList.add('text-spotify-text-muted');
+                const href = link.getAttribute('href');
+                if (href === `#${sectionId}` || (sectionId === 'home' && href === '#home')) {
+                    link.classList.remove('text-spotify-text-muted');
+                    link.classList.add('text-spotify-green', 'font-semibold');
+                }
+            });
+        }
+
         // Active navigation state based on scroll position
         function updateActiveNav() {
+            // Skip update if navigation click is in progress
+            if (isNavigationClick) {
+                return;
+            }
+            
             const sections = document.querySelectorAll('section[id]');
             const navLinks = document.querySelectorAll('#main-nav a[href^="#"]');
             
@@ -3675,15 +3730,42 @@
             });
         }
         
-        // Update active nav on scroll
+        // Update active nav on scroll (only if not clicking)
         let ticking = false;
         window.addEventListener('scroll', function() {
+            // Don't update during navigation clicks
+            if (isNavigationClick) {
+                return;
+            }
+            
             if (!ticking) {
                 window.requestAnimationFrame(function() {
                     updateActiveNav();
                     ticking = false;
                 });
                 ticking = true;
+            }
+        });
+        
+        // Handle manual scrolls that might interrupt navigation clicks
+        let manualScrollTimeout = null;
+        window.addEventListener('scroll', function() {
+            // If user manually scrolls during a navigation click, cancel the navigation state
+            if (isNavigationClick && manualScrollTimeout === null) {
+                manualScrollTimeout = setTimeout(function() {
+                    // Check if user is still manually scrolling (not just the smooth scroll)
+                    // Cancel navigation click state if scroll continues beyond expected duration
+                    if (isNavigationClick) {
+                        isNavigationClick = false;
+                        targetSectionId = null;
+                        if (navigationClickTimeout) {
+                            clearTimeout(navigationClickTimeout);
+                            navigationClickTimeout = null;
+                        }
+                        updateActiveNav();
+                    }
+                    manualScrollTimeout = null;
+                }, 150); // Give a small window to detect if it's manual vs smooth
             }
         });
         
