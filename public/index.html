@@ -4184,15 +4184,17 @@
                 // Check if we've scrolled past the home section
                 const pastHomeSection = scrollTop > homeSectionBottom;
                 
-                if (scrollDirection === 'down' && pastHomeSection) {
-                    // Hide nav when scrolling down past home section
+                // Priority 1: Always show nav when within or above home section
+                if (scrollTop <= homeSectionBottom) {
+                    nav.classList.remove('nav-hidden');
+                }
+                // Priority 2: Show nav immediately on any upward scroll (anywhere on page)
+                else if (scrollDirection === 'up') {
+                    nav.classList.remove('nav-hidden');
+                }
+                // Priority 3: Hide nav when scrolling down past home section
+                else if (scrollDirection === 'down' && pastHomeSection) {
                     nav.classList.add('nav-hidden');
-                } else if (scrollDirection === 'up') {
-                    // Show nav immediately on any upward scroll
-                    nav.classList.remove('nav-hidden');
-                } else if (scrollTop <= homeSectionBottom) {
-                    // Always show nav when within or above home section
-                    nav.classList.remove('nav-hidden');
                 }
                 
                 lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
