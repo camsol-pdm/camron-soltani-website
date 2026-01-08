@@ -147,6 +147,12 @@
             border-bottom: 1px solid var(--spotify-border);
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
             position: relative;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Navigation scroll hide/show */
+        nav.nav-hidden {
+            transform: translateY(-100%);
         }
         
         nav::before {
@@ -1454,7 +1460,7 @@
 </head>
 <body class="antialiased">
     <!-- Navigation -->
-    <nav class="bg-spotify-dark-secondary border-b border-spotify-neutral sticky top-0 z-50" style="height: 45px;">
+    <nav id="main-nav" class="bg-spotify-dark-secondary border-b border-spotify-neutral sticky top-0 z-50" style="height: 45px;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
             <div class="flex justify-between items-center h-full">
                 <a href="#home" class="text-lg font-semibold text-spotify-text hover:text-spotify-green transition-colors">
@@ -4157,6 +4163,59 @@
             // Start with first attempt
             tryNext();
         }
+        
+        // Navigation scroll hide/show functionality
+        (function() {
+            let lastScrollTop = 0;
+            let isScrolling = false;
+            const nav = document.getElementById('main-nav');
+            const homeSection = document.getElementById('home');
+            
+            if (!nav || !homeSection) return;
+            
+            function handleScroll() {
+                if (isScrolling) return;
+                isScrolling = true;
+                
+                requestAnimationFrame(function() {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    const homeSectionBottom = homeSection.offsetTop + homeSection.offsetHeight;
+                    const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
+                    
+                    // Check if we've scrolled past the home section
+                    const pastHomeSection = scrollTop > homeSectionBottom;
+                    
+                    if (scrollDirection === 'down' && pastHomeSection) {
+                        // Hide nav when scrolling down past home section
+                        nav.classList.add('nav-hidden');
+                    } else if (scrollDirection === 'up') {
+                        // Show nav immediately on any upward scroll
+                        nav.classList.remove('nav-hidden');
+                    } else if (scrollTop <= homeSectionBottom) {
+                        // Always show nav when within or above home section
+                        nav.classList.remove('nav-hidden');
+                    }
+                    
+                    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+                    isScrolling = false;
+                });
+            }
+            
+            // Throttle scroll events
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        handleScroll();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            
+            // Initialize nav state on page load
+            handleScroll();
+        })();
         
         // Initialize on page load - wait for all resources including Chart.js
         function initializeDashboard() {
