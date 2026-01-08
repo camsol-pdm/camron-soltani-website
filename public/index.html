@@ -4376,92 +4376,161 @@
         }
 
         // Chart Initialization Functions
-        function initListenerTrendChart() {
+        function initEpisodeCompletionCharts() {
             // Ensure Chart.js is loaded
             if (typeof Chart === 'undefined') {
-                console.warn('Chart.js not ready for listener trend chart, retrying...');
-                setTimeout(initListenerTrendChart, 100);
+                console.warn('Chart.js not ready for episode completion charts, retrying...');
+                setTimeout(initEpisodeCompletionCharts, 100);
                 return;
             }
-            
-            const ctx = document.getElementById('listenerTrendChart');
-            if (!ctx) {
-                console.warn('Listener trend chart canvas not found, retrying...');
-                setTimeout(initListenerTrendChart, 100);
-                return;
-            }
-            
-            // Ensure the overview tab is visible (canvas needs to be in visible DOM)
+
             const overviewTab = document.getElementById('tab-overview');
             if (overviewTab) {
                 overviewTab.classList.remove('hidden');
                 overviewTab.style.display = 'block';
+                void overviewTab.offsetHeight;
             }
-            
-            // Ensure data is available
-            if (!listenerTrendData || listenerTrendData.length === 0) {
-                console.error('Listener trend data not available');
-                return;
-            }
-            
-            // Check if canvas has dimensions
-            const rect = ctx.getBoundingClientRect();
-            if (rect.width === 0 || rect.height === 0) {
-                console.warn('Listener trend canvas has no dimensions, retrying...');
-                setTimeout(initListenerTrendChart, 200);
-                return;
-            }
-            
-            if (charts.listenerTrend) charts.listenerTrend.destroy();
-            
-            try {
-                charts.listenerTrend = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: listenerTrendData.map(d => d.date),
-                    datasets: [{
-                        label: 'Listeners',
-                        data: listenerTrendData.map(d => d.listeners),
-                        borderColor: '#1DB954',
-                        backgroundColor: 'rgba(29, 185, 84, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `Listeners: ${context.parsed.y.toLocaleString()}`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            grid: { color: '#535353' },
-                            ticks: { 
-                                color: '#B3B3B3',
-                                callback: function(value) {
-                                    return value.toLocaleString();
-                                }
-                            }
-                        },
-                        x: {
-                            grid: { color: '#535353' },
-                            ticks: { color: '#B3B3B3' }
-                        }
-                    }
+
+            // Episode completion data (15 episodes)
+            const episodeCompletionData = [
+                { episode: 'Ep 01', title: 'Welcome to the Dark Side', completionRate: 69 },
+                { episode: 'Ep 02', title: 'Patterns in Chaos', completionRate: 72 },
+                { episode: 'Ep 03', title: 'Crime Scene Analysis', completionRate: 68 },
+                { episode: 'Ep 04', title: 'Motive, Means, Opportunity', completionRate: 71 },
+                { episode: 'Ep 05', title: 'The Investigation Begins', completionRate: 74 },
+                { episode: 'Ep 06', title: 'Victim Profile', completionRate: 73 },
+                { episode: 'Ep 07', title: 'The Confession', completionRate: 77 },
+                { episode: 'Ep 08', title: 'Mapping the Killer', completionRate: 70 },
+                { episode: 'Ep 09', title: 'The Verdict', completionRate: 76 },
+                { episode: 'Ep 10', title: 'Behavioral Clues', completionRate: 65 },
+                { episode: 'Ep 11', title: 'The Innocent Man', completionRate: 78 },
+                { episode: 'Ep 12', title: 'True Crime Deep Dive', completionRate: 81 },
+                { episode: 'Ep 13', title: 'Justice Delayed', completionRate: 75 },
+                { episode: 'Ep 14', title: 'The Unraveling', completionRate: 69 },
+                { episode: 'Ep 15', title: 'Psychology of Manipulation', completionRate: 72 },
+            ];
+
+            // Initialize line chart
+            const lineCtx = document.getElementById('episodeCompletionTrendChart');
+            if (lineCtx) {
+                const rect = lineCtx.getBoundingClientRect();
+                if (rect.width === 0 || rect.height === 0) {
+                    setTimeout(initEpisodeCompletionCharts, 200);
+                    return;
                 }
-            });
-            console.log('Listener trend chart initialized successfully');
-            } catch (error) {
-                console.error('Error initializing listener trend chart:', error);
+
+                if (charts.episodeCompletionTrend) charts.episodeCompletionTrend.destroy();
+
+                try {
+                    charts.episodeCompletionTrend = new Chart(lineCtx, {
+                        type: 'line',
+                        data: {
+                            labels: episodeCompletionData.map(d => d.episode),
+                            datasets: [{
+                                label: 'Completion %',
+                                data: episodeCompletionData.map(d => d.completionRate),
+                                borderColor: '#1DB954',
+                                backgroundColor: 'rgba(29, 185, 84, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 4,
+                                pointHoverRadius: 6
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `Completion: ${context.parsed.y}%`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: false,
+                                    min: 50,
+                                    max: 85,
+                                    grid: { color: '#535353' },
+                                    ticks: {
+                                        color: '#B3B3B3',
+                                        callback: function(value) {
+                                            return value + '%';
+                                        }
+                                    }
+                                },
+                                x: {
+                                    grid: { color: '#535353' },
+                                    ticks: { color: '#B3B3B3' }
+                                }
+                            }
+                        }
+                    });
+                    console.log('Episode completion trend chart initialized successfully');
+                } catch (error) {
+                    console.error('Error initializing episode completion trend chart:', error);
+                }
+            }
+
+            // Initialize bar chart
+            const barCtx = document.getElementById('episodeCompletionBarChart');
+            if (barCtx) {
+                if (charts.episodeCompletionBar) charts.episodeCompletionBar.destroy();
+
+                try {
+                    charts.episodeCompletionBar = new Chart(barCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: episodeCompletionData.map(d => d.episode),
+                            datasets: [{
+                                label: 'Completion %',
+                                data: episodeCompletionData.map(d => d.completionRate),
+                                backgroundColor: '#1DB954',
+                                borderColor: '#1DB954',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `Completion: ${context.parsed.y}%`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: false,
+                                    min: 50,
+                                    max: 85,
+                                    grid: { color: '#535353' },
+                                    ticks: {
+                                        color: '#B3B3B3',
+                                        callback: function(value) {
+                                            return value + '%';
+                                        }
+                                    }
+                                },
+                                x: {
+                                    grid: { color: '#535353' },
+                                    ticks: { color: '#B3B3B3' }
+                                }
+                            }
+                        }
+                    });
+                    console.log('Episode completion bar chart initialized successfully');
+                } catch (error) {
+                    console.error('Error initializing episode completion bar chart:', error);
+                }
             }
         }
 
