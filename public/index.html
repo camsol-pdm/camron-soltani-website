@@ -4115,13 +4115,35 @@
             setTimeout(() => {
                 initializeChartsForTab(tabId);
             }, 100);
+            
+            // Special handling for overview tab - ensure chart renders after visibility change
+            if (tabId === 'overview') {
+                setTimeout(() => {
+                    const canvas = document.getElementById('listenerTrendChart');
+                    if (canvas && charts.listenerTrend) {
+                        // Force resize and update when tab becomes visible
+                        charts.listenerTrend.resize();
+                        charts.listenerTrend.update('none');
+                    }
+                }, 300);
+            }
         }
 
         // Initialize charts based on active tab
         function initializeChartsForTab(tabId) {
             if (tabId === 'overview') {
-                // Use IntersectionObserver approach for listener trend chart
-                setupListenerTrendChartObserver();
+                // Initialize listener trend chart immediately when overview tab is active
+                // Use a small delay to ensure tab is fully visible
+                setTimeout(() => {
+                    initListenerTrendChart();
+                    // Force chart resize/update after initialization
+                    if (charts.listenerTrend) {
+                        setTimeout(() => {
+                            charts.listenerTrend.resize();
+                            charts.listenerTrend.update('none');
+                        }, 100);
+                    }
+                }, 200);
             } else if (tabId === 'reach') {
                 initTrafficSourceWaterfallChart();
                 initNewVsReturningAreaChart();
@@ -4459,7 +4481,7 @@
             }
         }
         
-        // Use IntersectionObserver to initialize when canvas becomes visible
+        // Use IntersectionObserver as fallback to initialize when canvas becomes visible
         function setupListenerTrendChartObserver() {
             const canvas = document.getElementById('listenerTrendChart');
             if (!canvas) {
@@ -4473,25 +4495,24 @@
                 return;
             }
             
-            // Create observer to initialize when canvas becomes visible
+            // Create observer to initialize when canvas becomes visible (fallback)
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting && !charts.listenerTrend) {
                         initListenerTrendChart();
-                        observer.unobserve(canvas); // Only initialize once
+                        setTimeout(() => {
+                            if (charts.listenerTrend) {
+                                charts.listenerTrend.resize();
+                                charts.listenerTrend.update('none');
+                            }
+                        }, 100);
                     }
                 });
             }, { 
-                threshold: 0.1 // Initialize when 10% visible
+                threshold: 0.1
             });
             
             observer.observe(canvas);
-            
-            // Also try immediate initialization if already visible
-            const rect = canvas.getBoundingClientRect();
-            if (rect.width > 0 && rect.height > 0) {
-                initListenerTrendChart();
-            }
         }
 
         function initImpressionsFunnelChart() {
