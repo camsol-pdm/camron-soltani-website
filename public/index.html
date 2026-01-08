@@ -1941,6 +1941,7 @@
                         <button onclick="switchTab('audience')" data-tab="audience" class="px-6 py-3 font-semibold text-spotify-text-muted hover:text-spotify-text tab-button">Audience Intelligence</button>
                         <button onclick="switchTab('insights')" data-tab="insights" class="px-6 py-3 font-semibold text-spotify-text-muted hover:text-spotify-text tab-button">AI Insights & Actions</button>
                         <button onclick="switchTab('monetization')" data-tab="monetization" class="px-6 py-3 font-semibold text-spotify-text-muted hover:text-spotify-text tab-button">Monetization</button>
+                        <button onclick="switchTab('agents')" data-tab="agents" class="px-6 py-3 font-semibold text-spotify-text-muted hover:text-spotify-text tab-button">Agent Performance</button>
                     </div>
                 </div>
 
@@ -2753,6 +2754,427 @@
                                 </div>
                                 <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: $2,000/month in lost revenue primarily from unfilled ad slots at high-retention timestamps (2:00, 5:00, 12:00). Adding ad markers at these points could capture $180-240/month immediately. The remaining gap comes from skipped mid-rolls—consider shorter, more integrated ad formats to reduce skip rates.</p>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- AGENT PERFORMANCE TAB -->
+                    <div id="tab-agents" class="tab-content hidden">
+                        <!-- 1. Agent Impact Summary (28 days) -->
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-6">Agent Impact Summary (28 days)</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
+                                    <p class="text-sm text-spotify-text-muted mb-2">Total Automations Executed</p>
+                                    <p class="text-3xl font-bold text-spotify-text mb-1">47</p>
+                                    <p class="text-xs text-spotify-text-muted">Your enabled agents worked 47 times to grow your show</p>
+                                </div>
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
+                                    <p class="text-sm text-spotify-text-muted mb-2">Incremental Listeners Generated</p>
+                                    <p class="text-3xl font-bold text-spotify-green mb-1">3,240</p>
+                                    <p class="text-xs text-spotify-text-muted">26.1% of your new listeners came from agent-driven actions</p>
+                                </div>
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
+                                    <p class="text-sm text-spotify-text-muted mb-2">Incremental Revenue</p>
+                                    <p class="text-3xl font-bold text-spotify-green mb-1">$487</p>
+                                    <p class="text-xs text-spotify-text-muted">Agents generated $487 in additional sponsorship + subscription revenue</p>
+                                </div>
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
+                                    <p class="text-sm text-spotify-text-muted mb-2">Time Saved</p>
+                                    <p class="text-3xl font-bold text-spotify-text mb-1">12.5 hrs</p>
+                                    <p class="text-xs text-spotify-text-muted">⏱️ Agents automated tasks that would have taken 12.5 hours of manual work</p>
+                                </div>
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-4">
+                                    <p class="text-sm text-spotify-text-muted mb-2">Agent Efficiency Score</p>
+                                    <p class="text-3xl font-bold text-spotify-green mb-1">8.7/10</p>
+                                    <p class="text-xs text-spotify-text-muted">⭐ Your agents are performing above average; industry avg: 7.2</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Your Enabled Agents -->
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-6">Your Enabled Agents</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <!-- Cross-Promotion Agent -->
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-5">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="text-lg font-semibold text-spotify-text">Cross-Promotion Agent</h4>
+                                        <span class="px-3 py-1 bg-spotify-green text-white text-xs font-semibold rounded-full">Enabled & Performing ✅</span>
+                                    </div>
+                                    <div class="space-y-3 mb-4">
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted">Automations This Month</p>
+                                            <p class="text-xl font-bold text-spotify-text">18</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted">Key Results</p>
+                                            <ul class="text-sm text-spotify-text-muted space-y-1">
+                                                <li>• 1,840 new listeners</li>
+                                                <li>• 3 partnerships secured</li>
+                                                <li>• $280 incremental revenue</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted">ROI</p>
+                                            <p class="text-lg font-bold text-spotify-green">$3.20 per $1 spent</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-spotify-text-muted italic">💡 Insight: Your Cross-Promotion Agent is identifying high-affinity partnerships effectively. 18 outreach actions resulted in 3 successful partnerships, generating strong listener growth at a cost-effective rate.</p>
+                                </div>
+
+                                <!-- Boost Optimization Agent -->
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-5">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="text-lg font-semibold text-spotify-text">Boost Optimization Agent</h4>
+                                        <span class="px-3 py-1 bg-spotify-green text-white text-xs font-semibold rounded-full">Enabled & Performing ✅</span>
+                                    </div>
+                                    <div class="space-y-3 mb-4">
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted">Automations This Month</p>
+                                            <p class="text-xl font-bold text-spotify-text">22</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted">Key Results</p>
+                                            <ul class="text-sm text-spotify-text-muted space-y-1">
+                                                <li>• 1,200 new listeners</li>
+                                                <li>• $180 incremental revenue</li>
+                                                <li>• 8 episodes optimized</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted">ROI</p>
+                                            <p class="text-lg font-bold text-spotify-green">$4.50 per $1 spent</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-spotify-text-muted italic">💡 Insight: Boost Optimization Agent is allocating budget efficiently. Your agent automatically boosted underperforming episodes at optimal times, resulting in 1,200 new listeners with minimal spend.</p>
+                                </div>
+
+                                <!-- Content Optimization Agent -->
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-5">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="text-lg font-semibold text-spotify-text">Content Optimization Agent</h4>
+                                        <span class="px-3 py-1 bg-spotify-green text-white text-xs font-semibold rounded-full">Enabled & Performing ✅</span>
+                                    </div>
+                                    <div class="space-y-3 mb-4">
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted">Automations This Month</p>
+                                            <p class="text-xl font-bold text-spotify-text">7</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted">Key Results</p>
+                                            <ul class="text-sm text-spotify-text-muted space-y-1">
+                                                <li>• 200 new listeners</li>
+                                                <li>• 5 thumbnails optimized</li>
+                                                <li>• 4 titles improved</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted">ROI</p>
+                                            <p class="text-lg font-bold text-spotify-green">$1.80 per $1 spent</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-spotify-text-muted italic">💡 Insight: Content Optimization Agent has improved CTR by suggesting and implementing thumbnail and title changes. These optimizations are driving incremental discovery through better visual presentation.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Agent ROI Breakdown -->
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Agent ROI Breakdown</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <th class="text-left py-3 text-spotify-text font-semibold">Agent Name</th>
+                                            <th class="text-right py-3 text-spotify-text-muted font-semibold">Monthly Cost</th>
+                                            <th class="text-right py-3 text-spotify-text-muted font-semibold">Revenue Generated</th>
+                                            <th class="text-right py-3 text-spotify-text-muted font-semibold">Net Gain</th>
+                                            <th class="text-right py-3 text-spotify-text-muted font-semibold">Multiplier</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-3 text-spotify-text">Cross-Promotion Agent</td>
+                                            <td class="text-right py-3 text-spotify-text-muted">$20</td>
+                                            <td class="text-right py-3 text-spotify-green">$280</td>
+                                            <td class="text-right py-3 text-spotify-green">+$260</td>
+                                            <td class="text-right py-3 text-spotify-text">14.0x</td>
+                                        </tr>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-3 text-spotify-text">Boost Optimization Agent</td>
+                                            <td class="text-right py-3 text-spotify-text-muted">$18</td>
+                                            <td class="text-right py-3 text-spotify-green">$180</td>
+                                            <td class="text-right py-3 text-spotify-green">+$162</td>
+                                            <td class="text-right py-3 text-spotify-text">10.0x</td>
+                                        </tr>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-3 text-spotify-text">Content Optimization Agent</td>
+                                            <td class="text-right py-3 text-spotify-text-muted">$17</td>
+                                            <td class="text-right py-3 text-spotify-green">$27</td>
+                                            <td class="text-right py-3 text-spotify-green">+$10</td>
+                                            <td class="text-right py-3 text-spotify-text">1.6x</td>
+                                        </tr>
+                                        <tr class="border-t-2 border-spotify-green bg-spotify-dark">
+                                            <td class="py-4 text-spotify-text font-bold">TOTAL</td>
+                                            <td class="text-right py-4 text-spotify-text font-bold">$55</td>
+                                            <td class="text-right py-4 text-spotify-green font-bold">$487</td>
+                                            <td class="text-right py-4 text-spotify-green font-bold">+$432</td>
+                                            <td class="text-right py-4 text-spotify-text font-bold">8.9x</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: You're earning $8.90 for every $1 spent on agents. Industry average: 4.2x. Your agents are performing exceptionally well, generating strong ROI across all enabled agents.</p>
+                        </div>
+
+                        <!-- 4. Agent Performance vs. Manual Efforts -->
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Agent Performance vs. Manual Efforts (What You're Avoiding)</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <th class="text-left py-3 text-spotify-text font-semibold">Task</th>
+                                            <th class="text-center py-3 text-spotify-text-muted font-semibold">Agent</th>
+                                            <th class="text-center py-3 text-spotify-text-muted font-semibold">Manual</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-3 text-spotify-text">Cross-promo outreach & follow-up</td>
+                                            <td class="text-center py-3 text-spotify-green">8 min</td>
+                                            <td class="text-center py-3 text-spotify-text-muted">45 min</td>
+                                        </tr>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-3 text-spotify-text">Partnership negotiation prep</td>
+                                            <td class="text-center py-3 text-spotify-green">20 min</td>
+                                            <td class="text-center py-3 text-spotify-text-muted">1-2 hours</td>
+                                        </tr>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-3 text-spotify-text">Boost timing & placement optimization</td>
+                                            <td class="text-center py-3 text-spotify-green">Algorithm-optimized</td>
+                                            <td class="text-center py-3 text-spotify-text-muted">Guesswork</td>
+                                        </tr>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-3 text-spotify-text">Content thumbnail/title testing</td>
+                                            <td class="text-center py-3 text-spotify-green">Real-time</td>
+                                            <td class="text-center py-3 text-spotify-text-muted">2-4 hours per episode</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-3 text-spotify-text">Campaign result tracking</td>
+                                            <td class="text-center py-3 text-spotify-green">Instant dashboard</td>
+                                            <td class="text-center py-3 text-spotify-text-muted">Spreadsheet</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: Your agents are handling the repetitive work. You focus on creating great content.</p>
+                        </div>
+
+                        <!-- 5. Projected 90-Day Impact -->
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Projected 90-Day Impact</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <th class="text-left py-3 text-spotify-text font-semibold">Metric</th>
+                                            <th class="text-right py-3 text-spotify-text-muted font-semibold">Current (28 days)</th>
+                                            <th class="text-right py-3 text-spotify-text-muted font-semibold">Projected (90 days)</th>
+                                            <th class="text-center py-3 text-spotify-text-muted font-semibold">Change</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-3 text-spotify-text">Monthly Incremental Listeners</td>
+                                            <td class="text-right py-3 text-spotify-text">3,240</td>
+                                            <td class="text-right py-3 text-spotify-green font-bold">9,720</td>
+                                            <td class="text-center py-3 text-spotify-green">📈 +26.1%</td>
+                                        </tr>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-3 text-spotify-text">Monthly Incremental Revenue</td>
+                                            <td class="text-right py-3 text-spotify-text">$487</td>
+                                            <td class="text-right py-3 text-spotify-green font-bold">$1,461</td>
+                                            <td class="text-center py-3 text-spotify-green">📈 +20.8%</td>
+                                        </tr>
+                                        <tr class="border-b border-spotify-neutral">
+                                            <td class="py-3 text-spotify-text">Agent Automations</td>
+                                            <td class="text-right py-3 text-spotify-text">47</td>
+                                            <td class="text-right py-3 text-spotify-green font-bold">141+</td>
+                                            <td class="text-center py-3 text-spotify-green">📈 Growing</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-3 text-spotify-text">Hours Saved</td>
+                                            <td class="text-right py-3 text-spotify-text">12.5</td>
+                                            <td class="text-right py-3 text-spotify-green font-bold">37.5</td>
+                                            <td class="text-center py-3 text-spotify-text-muted">⏱️ Compounding</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: In 90 days, agents will have generated 9,720+ listeners and $1,461 in additional revenue.</p>
+                        </div>
+
+                        <!-- 6. Top Performing Agent Action This Month -->
+                        <div class="bg-spotify-dark-secondary border-2 border-spotify-green rounded-lg p-6 mb-8">
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="text-2xl">🏆</span>
+                                <h3 class="text-xl font-semibold text-spotify-text">Top Performing Agent Action This Month</h3>
+                            </div>
+                            <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-5 space-y-4">
+                                <div>
+                                    <p class="text-sm text-spotify-text-muted mb-1">Agent & Action</p>
+                                    <p class="text-lg font-bold text-spotify-text">Boost Optimization Agent - Episode 124 Boost</p>
+                                </div>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div>
+                                        <p class="text-sm text-spotify-text-muted mb-1">Episode</p>
+                                        <p class="text-spotify-text font-semibold">Viral Moment ep124</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-spotify-text-muted mb-1">Decision</p>
+                                        <p class="text-spotify-text font-semibold">Boosted at optimal time</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-spotify-text-muted mb-1">Result</p>
+                                        <p class="text-spotify-green font-bold">+890 listeners</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-spotify-text-muted mb-1">Agent Cost</p>
+                                        <p class="text-spotify-text font-semibold">$12</p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm text-spotify-text-muted mb-1">Net Gain</p>
+                                        <p class="text-xl font-bold text-spotify-green">+$134 revenue</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-spotify-text-muted mb-1">Confidence Score</p>
+                                        <p class="text-xl font-bold text-spotify-green">94%</p>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: This is the type of optimization your agent excels at—finding the perfect moment and audience match.</p>
+                            </div>
+                        </div>
+
+                        <!-- 7. Available Agents You Could Enable -->
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-6">Available Agents You Could Enable</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <!-- Scheduling Agent -->
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-5">
+                                    <h4 class="text-lg font-semibold text-spotify-text mb-3">Scheduling Agent</h4>
+                                    <div class="space-y-3 mb-4">
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted mb-1"><strong class="text-spotify-text">What it does:</strong></p>
+                                            <p class="text-sm text-spotify-text-muted">Analyzes listener patterns and publishes at optimal times automatically.</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted mb-1"><strong class="text-spotify-text">Creator Impact:</strong></p>
+                                            <p class="text-sm text-spotify-text-muted">+350-450 listeners/month</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted mb-1"><strong class="text-spotify-text">Monthly Cost:</strong></p>
+                                            <p class="text-lg font-bold text-spotify-text">$8/month</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted mb-1"><strong class="text-spotify-text">Recommended For:</strong></p>
+                                            <p class="text-sm text-spotify-text-muted">Creators who want consistent optimal publish timing without manual scheduling.</p>
+                                        </div>
+                                    </div>
+                                    <button class="w-full px-4 py-2 bg-spotify-green text-white rounded-lg font-semibold hover:bg-green-600 transition-colors">Enable Agent</button>
+                                </div>
+
+                                <!-- Sponsorship Intelligence Agent -->
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-5">
+                                    <h4 class="text-lg font-semibold text-spotify-text mb-3">Sponsorship Intelligence Agent</h4>
+                                    <div class="space-y-3 mb-4">
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted mb-1"><strong class="text-spotify-text">What it does:</strong></p>
+                                            <p class="text-sm text-spotify-text-muted">Tracks sponsorship rates and suggests optimal pricing based on your audience size.</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted mb-1"><strong class="text-spotify-text">Creator Impact:</strong></p>
+                                            <p class="text-sm text-spotify-text-muted">+$120-180/month revenue</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted mb-1"><strong class="text-spotify-text">Monthly Cost:</strong></p>
+                                            <p class="text-lg font-bold text-spotify-text">$18/month</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted mb-1"><strong class="text-spotify-text">Recommended For:</strong></p>
+                                            <p class="text-sm text-spotify-text-muted">Creators actively seeking sponsorships or optimizing existing deals.</p>
+                                        </div>
+                                    </div>
+                                    <button class="w-full px-4 py-2 bg-spotify-green text-white rounded-lg font-semibold hover:bg-green-600 transition-colors">Enable Agent</button>
+                                </div>
+
+                                <!-- Audience Insights Agent -->
+                                <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-5">
+                                    <h4 class="text-lg font-semibold text-spotify-text mb-3">Audience Insights Agent</h4>
+                                    <div class="space-y-3 mb-4">
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted mb-1"><strong class="text-spotify-text">What it does:</strong></p>
+                                            <p class="text-sm text-spotify-text-muted">Provides weekly listener summaries and engagement analysis for better decisions.</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted mb-1"><strong class="text-spotify-text">Creator Impact:</strong></p>
+                                            <p class="text-sm text-spotify-text-muted">Better decisions, strategic clarity</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted mb-1"><strong class="text-spotify-text">Monthly Cost:</strong></p>
+                                            <p class="text-lg font-bold text-spotify-text">$12/month</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-spotify-text-muted mb-1"><strong class="text-spotify-text">Recommended For:</strong></p>
+                                            <p class="text-sm text-spotify-text-muted">Creators who want deeper audience intelligence to inform content strategy.</p>
+                                        </div>
+                                    </div>
+                                    <button class="w-full px-4 py-2 bg-spotify-green text-white rounded-lg font-semibold hover:bg-green-600 transition-colors">Enable Agent</button>
+                                </div>
+                            </div>
+                            <p class="text-xs text-spotify-text-muted mt-6 italic">💡 Insight: Creators who enable 4+ agents see 2.3x faster growth. But start with what's working for you—these agents are ready whenever you want to enable them. Enable/disable agents anytime from Agent Settings.</p>
+                        </div>
+
+                        <!-- 8. Your Agent Configuration -->
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Your Agent Configuration</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+                                <div>
+                                    <p class="text-sm text-spotify-text-muted mb-1">Agents Enabled</p>
+                                    <p class="text-2xl font-bold text-spotify-green">3</p>
+                                    <p class="text-xs text-spotify-text-muted">of 7 available</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-spotify-text-muted mb-1">Agents Disabled</p>
+                                    <p class="text-2xl font-bold text-spotify-text">4</p>
+                                    <p class="text-xs text-spotify-text-muted">available to enable anytime</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-spotify-text-muted mb-1">Monthly Agent Cost</p>
+                                    <p class="text-2xl font-bold text-spotify-text">$55</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-spotify-text-muted mb-1">Monthly Agent Revenue</p>
+                                    <p class="text-2xl font-bold text-spotify-green">$487</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-spotify-text-muted mb-1">Net Monthly Benefit</p>
+                                    <p class="text-2xl font-bold text-spotify-green">+$432</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-spotify-text-muted italic">💡 Insight: You can enable or disable agents anytime from your Agent Settings. No setup required—they work out of the box.</p>
+                        </div>
+
+                        <!-- 9. Your Agent Performance Score -->
+                        <div class="bg-spotify-dark-secondary border-2 border-spotify-green rounded-lg p-8 text-center">
+                            <div class="mb-4">
+                                <span class="text-4xl">⭐⭐⭐⭐⭐</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-spotify-text mb-2">Your Agent Performance Score</h3>
+                            <p class="text-5xl font-bold text-spotify-green mb-4">92/100</p>
+                            <p class="text-lg text-spotify-text-muted max-w-2xl mx-auto">Your enabled agents are performing at the top 8% of all creators using agents. They're working efficiently and generating clear ROI. Keep them enabled and consider adding more as your show scales.</p>
                         </div>
                     </div>
                 </div>
