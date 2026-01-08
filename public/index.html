@@ -52,7 +52,15 @@
             box-sizing: border-box;
         }
         
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        
         body {
+            margin: 0;
+            padding: 0;
             background: var(--spotify-dark);
             background-image: 
                 radial-gradient(circle at 20% 50%, rgba(29, 185, 84, 0.03) 0%, transparent 50%),
@@ -67,7 +75,12 @@
             -moz-osx-font-smoothing: grayscale;
             letter-spacing: -0.01em;
             overflow-x: hidden;
-            padding-top: 45px; /* Account for fixed navigation bar */
+        }
+        
+        #main-nav {
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+            top: 0 !important;
         }
         
         /* Modern Typography with Advanced Styling */
