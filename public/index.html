@@ -2310,6 +2310,11 @@
                                 <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Monthly revenue of $3,290 comes from ads ($2,400) and subscriptions ($890). Your RPM of $3.10 is above the $2.80 genre benchmark. Opportunity: add ad markers at high-retention timestamps (2:00, 5:00, 12:00) to capture an additional $180-240/month.</p>
                             </div>
                         </div>
+                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Listener Trend (28 days)</h3>
+                            <canvas id="listenerTrendChart" height="100"></canvas>
+                            <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: Your listener trend shows steady growth over the past 28 days, with a 21.6% increase from Nov 4 to Dec 9. The upward trajectory indicates healthy audience expansion. Continue optimizing publish timing and content quality to maintain this growth momentum.</p>
+                        </div>
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
                             <h3 class="text-xl font-semibold text-spotify-text mb-4">Top Episodes (30d)</h3>
                             <div class="overflow-x-auto">
@@ -3874,15 +3879,14 @@
         Chart.defaults.backgroundColor = '#212121';
 
         // Mock Data
-        // listenerTrendData mock data preserved for future reference:
-        // const listenerTrendData = [
-        //     { date: 'Nov 4', listeners: 10200 },
-        //     { date: 'Nov 11', listeners: 10800 },
-        //     { date: 'Nov 18', listeners: 11200 },
-        //     { date: 'Nov 25', listeners: 11800 },
-        //     { date: 'Dec 2', listeners: 12200 },
-        //     { date: 'Dec 9', listeners: 12400 },
-        // ];
+        const listenerTrendData = [
+            { date: 'Nov 4', listeners: 10200 },
+            { date: 'Nov 11', listeners: 10800 },
+            { date: 'Nov 18', listeners: 11200 },
+            { date: 'Nov 25', listeners: 11800 },
+            { date: 'Dec 2', listeners: 12200 },
+            { date: 'Dec 9', listeners: 12400 },
+        ];
 
         const impressionsCTRFunnelData = [
             { name: 'Impressions', value: 238000 },
@@ -4116,7 +4120,7 @@
         // Initialize charts based on active tab
         function initializeChartsForTab(tabId) {
             if (tabId === 'overview') {
-                // Listener trend chart removed
+                initListenerTrendChart();
             } else if (tabId === 'reach') {
                 initTrafficSourceWaterfallChart();
                 initNewVsReturningAreaChart();
@@ -4369,15 +4373,56 @@
         }
 
         // Chart Initialization Functions
-        // Note: Listener Trend chart removed - mock data preserved for future use:
-        // listenerTrendData = [
-        //     { date: 'Nov 4', listeners: 10200 },
-        //     { date: 'Nov 11', listeners: 10800 },
-        //     { date: 'Nov 18', listeners: 11200 },
-        //     { date: 'Nov 25', listeners: 11800 },
-        //     { date: 'Dec 2', listeners: 12200 },
-        //     { date: 'Dec 9', listeners: 12400 },
-        // ]
+        function initListenerTrendChart() {
+            const ctx = document.getElementById('listenerTrendChart');
+            if (!ctx) return;
+            if (charts.listenerTrend) charts.listenerTrend.destroy();
+            
+            charts.listenerTrend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: listenerTrendData.map(d => d.date),
+                    datasets: [{
+                        label: 'Listeners',
+                        data: listenerTrendData.map(d => d.listeners),
+                        borderColor: '#1DB954',
+                        backgroundColor: 'rgba(29, 185, 84, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Listeners: ${context.parsed.y.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: { color: '#535353' },
+                            ticks: { 
+                                color: '#B3B3B3',
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            grid: { color: '#535353' },
+                            ticks: { color: '#B3B3B3' }
+                        }
+                    }
+                }
+            });
+        }
 
         function initImpressionsFunnelChart() {
             const ctx = document.getElementById('impressionsFunnelChart');
