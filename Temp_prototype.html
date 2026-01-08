@@ -1255,8 +1255,18 @@
         function switchTab(tabId, element) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            if (element) element.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
+            
+            // Find the tab button for this tab
+            const tabButton = element || document.querySelector(`.tab[data-tab="${tabId}"]`);
+            if (tabButton) tabButton.classList.add('active');
+            
+            const tabContent = document.getElementById(tabId);
+            if (tabContent) {
+                tabContent.classList.add('active');
+                // Smooth scroll to top of page
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
             // Reinitialize charts when tab becomes visible
             setTimeout(() => initializeCharts(), 100);
         }
@@ -1266,8 +1276,25 @@
             tab.addEventListener('click', function() {
                 const tabId = this.getAttribute('data-tab');
                 switchTab(tabId, this);
+                // Update hash without triggering scroll
+                window.history.replaceState(null, null, `#${tabId}`);
             });
         });
+
+        // Handle hash changes (e.g., from navigation buttons or direct URL)
+        function handleHashChange() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                const tabContent = document.getElementById(hash);
+                const tabButton = document.querySelector(`.tab[data-tab="${hash}"]`);
+                if (tabContent && tabButton) {
+                    switchTab(hash, tabButton);
+                }
+            }
+        }
+
+        // Listen for hash changes
+        window.addEventListener('hashchange', handleHashChange);
 
         // Chart instances
         let charts = {};
