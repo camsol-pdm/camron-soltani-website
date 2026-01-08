@@ -4120,10 +4120,8 @@
         // Initialize charts based on active tab
         function initializeChartsForTab(tabId) {
             if (tabId === 'overview') {
-                // Use a longer delay for initial load to ensure canvas is ready
-                setTimeout(() => {
-                    initListenerTrendChart();
-                }, 300);
+                // Use IntersectionObserver approach for listener trend chart
+                setupListenerTrendChartObserver();
             } else if (tabId === 'reach') {
                 initTrafficSourceWaterfallChart();
                 initNewVsReturningAreaChart();
@@ -4376,28 +4374,18 @@
         }
 
         // Chart Initialization Functions
+        // SIMPLIFIED: Clean rewrite of listener trend chart initialization
         function initListenerTrendChart() {
-            // CRITICAL: Ensure Chart.js is fully loaded
+            // Basic checks
             if (typeof Chart === 'undefined') {
-                console.warn('Chart.js not loaded yet, retrying...');
-                setTimeout(initListenerTrendChart, 200);
+                console.error('Chart.js is not loaded');
                 return;
             }
             
             const canvas = document.getElementById('listenerTrendChart');
             if (!canvas) {
-                console.warn('Canvas element not found, retrying...');
-                setTimeout(initListenerTrendChart, 200);
+                console.error('Canvas element not found');
                 return;
-            }
-            
-            // Ensure tab is visible first
-            const tabContent = canvas.closest('.tab-content');
-            if (tabContent) {
-                tabContent.classList.remove('hidden');
-                tabContent.style.display = 'block';
-                // Force layout recalculation
-                tabContent.offsetHeight;
             }
             
             // Destroy existing chart if it exists
@@ -4406,118 +4394,104 @@
                 charts.listenerTrend = null;
             }
             
-            // Check container dimensions
-            const container = canvas.parentElement;
-            if (!container) {
-                setTimeout(initListenerTrendChart, 100);
+            // Ensure tab is visible
+            const tabContent = canvas.closest('.tab-content');
+            if (tabContent && tabContent.classList.contains('hidden')) {
+                tabContent.classList.remove('hidden');
+                tabContent.style.display = 'block';
+            }
+            
+            // Simple initialization - Chart.js handles responsive sizing
+            try {
+                charts.listenerTrend = new Chart(canvas, {
+                    type: 'line',
+                    data: {
+                        labels: listenerTrendData.map(d => d.date),
+                        datasets: [{
+                            label: 'Listeners',
+                            data: listenerTrendData.map(d => d.listeners),
+                            borderColor: '#1DB954',
+                            backgroundColor: 'rgba(29, 185, 84, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: false,
+                        layout: {
+                            padding: {
+                                top: 10,
+                                bottom: 10
+                            }
+                        },
+                        plugins: {
+                            legend: { 
+                                display: false 
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                grid: { 
+                                    color: '#535353' 
+                                },
+                                ticks: { 
+                                    color: '#B3B3B3' 
+                                }
+                            },
+                            x: {
+                                grid: { 
+                                    color: '#535353' 
+                                },
+                                ticks: { 
+                                    color: '#B3B3B3' 
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Listener trend chart initialized successfully');
+            } catch (error) {
+                console.error('Error creating listener trend chart:', error);
+            }
+        }
+        
+        // Use IntersectionObserver to initialize when canvas becomes visible
+        function setupListenerTrendChartObserver() {
+            const canvas = document.getElementById('listenerTrendChart');
+            if (!canvas) {
+                setTimeout(setupListenerTrendChartObserver, 100);
                 return;
             }
             
-            // Use requestAnimationFrame to ensure DOM is fully rendered
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    const canvasEl = document.getElementById('listenerTrendChart');
-                    if (!canvasEl) return;
-                    
-                    // Force layout check
-                    const containerRect = container.getBoundingClientRect();
-                    const rect = canvasEl.getBoundingClientRect();
-                    
-                    // Ensure canvas respects container dimensions
-                    if (containerRect.width > 0 && containerRect.height > 0) {
-                        // Force canvas to match container size
-                        canvasEl.style.width = '100%';
-                        canvasEl.style.height = '100%';
-                        canvasEl.style.maxHeight = containerRect.height + 'px';
-                        // Force reflow
-                        canvasEl.offsetHeight;
-                    }
-                    
-                    // Check dimensions - use container dimensions if canvas rect is unreliable (off-screen)
-                    const effectiveWidth = rect.width > 0 ? rect.width : containerRect.width;
-                    const effectiveHeight = rect.height > 0 ? rect.height : containerRect.height;
-                    
-                    if (effectiveWidth === 0 || effectiveHeight === 0) {
-                        // Retry if not ready
-                        setTimeout(initListenerTrendChart, 100);
-                        return;
-                    }
-                    
-                    // Ensure canvas has CSS dimensions set (Chart.js will handle width/height attributes)
-                    canvasEl.style.width = effectiveWidth + 'px';
-                    canvasEl.style.height = effectiveHeight + 'px';
-                    
-                    // Verify Chart.js is available
-                    if (typeof Chart === 'undefined') {
-                        console.error('Chart.js is not loaded!');
-                        setTimeout(initListenerTrendChart, 100);
-                        return;
-                    }
-                    
-                    console.log('Initializing chart with dimensions:', effectiveWidth, 'x', effectiveHeight);
-                    console.log('Canvas element:', canvasEl);
-                    console.log('Chart.js available:', typeof Chart);
-                    
-                    try {
-                        charts.listenerTrend = new Chart(canvasEl, {
-                            type: 'line',
-                            data: {
-                                labels: listenerTrendData.map(d => d.date),
-                                datasets: [{
-                                    label: 'Listeners',
-                                    data: listenerTrendData.map(d => d.listeners),
-                                    borderColor: '#1DB954',
-                                    backgroundColor: 'rgba(29, 185, 84, 0.1)',
-                                    tension: 0.4,
-                                    fill: true
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                animation: false,
-                                plugins: {
-                                    legend: { display: false }
-                                },
-                                scales: {
-                                    y: {
-                                        beginAtZero: false,
-                                        grid: { color: '#535353' },
-                                        ticks: { color: '#B3B3B3' }
-                                    },
-                                    x: {
-                                        grid: { color: '#535353' },
-                                        ticks: { color: '#B3B3B3' }
-                                    }
-                                },
-                                onResize: function(chart, size) {
-                                    console.log('Chart resized to:', size);
-                                }
-                            }
-                        });
-                        
-                        console.log('Chart instance created:', charts.listenerTrend);
-                        console.log('Chart data:', charts.listenerTrend.data);
-                        console.log('Chart options:', charts.listenerTrend.options);
-                        
-                        // Force immediate update and render
-                        requestAnimationFrame(() => {
-                            if (charts.listenerTrend) {
-                                charts.listenerTrend.update('none');
-                                // Check if chart actually drew
-                                const ctx = canvasEl.getContext('2d');
-                                const imageData = ctx.getImageData(0, 0, Math.min(canvasEl.width, 10), Math.min(canvasEl.height, 10));
-                                const hasContent = imageData.data.some(pixel => pixel !== 0);
-                                console.log('Chart update called. Canvas has content:', hasContent);
-                                console.log('Canvas actual dimensions:', canvasEl.width, 'x', canvasEl.height);
-                            }
-                        });
-                    } catch (error) {
-                        console.error('Error initializing listener trend chart:', error);
-                        console.error('Error stack:', error.stack);
+            // If Chart.js isn't loaded yet, wait
+            if (typeof Chart === 'undefined') {
+                setTimeout(setupListenerTrendChartObserver, 100);
+                return;
+            }
+            
+            // Create observer to initialize when canvas becomes visible
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !charts.listenerTrend) {
+                        initListenerTrendChart();
+                        observer.unobserve(canvas); // Only initialize once
                     }
                 });
+            }, { 
+                threshold: 0.1 // Initialize when 10% visible
             });
+            
+            observer.observe(canvas);
+            
+            // Also try immediate initialization if already visible
+            const rect = canvas.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+                initListenerTrendChart();
+            }
         }
 
         function initImpressionsFunnelChart() {
