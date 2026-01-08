@@ -4376,20 +4376,18 @@
         function initListenerTrendChart() {
             // Ensure Chart.js is loaded
             if (typeof Chart === 'undefined') {
-                console.warn('Chart.js not loaded yet, retrying...');
                 setTimeout(initListenerTrendChart, 100);
                 return;
             }
             
-            const ctx = document.getElementById('listenerTrendChart');
-            if (!ctx) {
-                console.warn('Canvas element not found');
+            const canvas = document.getElementById('listenerTrendChart');
+            if (!canvas) {
                 return;
             }
             
-            // Ensure canvas is visible
-            const tabContent = ctx.closest('.tab-content');
-            if (tabContent && tabContent.classList.contains('hidden')) {
+            // Ensure tab is visible first
+            const tabContent = canvas.closest('.tab-content');
+            if (tabContent) {
                 tabContent.classList.remove('hidden');
                 tabContent.style.display = 'block';
             }
@@ -4400,76 +4398,55 @@
                 charts.listenerTrend = null;
             }
             
-            // Wait for canvas to be fully rendered with proper dimensions
-            setTimeout(() => {
-                const canvas = document.getElementById('listenerTrendChart');
-                if (!canvas) {
-                    console.warn('Canvas element not found for listener trend chart');
-                    return;
-                }
-                
-                // Check if canvas container has dimensions
-                const container = canvas.parentElement;
-                if (container) {
-                    const rect = container.getBoundingClientRect();
+            // Use requestAnimationFrame to ensure DOM is fully rendered
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    const canvasEl = document.getElementById('listenerTrendChart');
+                    if (!canvasEl) return;
+                    
+                    // Verify element is visible and has dimensions
+                    const rect = canvasEl.getBoundingClientRect();
                     if (rect.width === 0 || rect.height === 0) {
-                        // Container not sized yet, retry after a longer delay
-                        console.warn('Canvas container has zero dimensions, retrying...');
-                        setTimeout(initListenerTrendChart, 200);
+                        // Retry if not ready
+                        setTimeout(initListenerTrendChart, 100);
                         return;
                     }
-                }
-                
-                // Ensure canvas has explicit dimensions
-                if (canvas.width === 0 || canvas.height === 0) {
-                    canvas.style.width = '100%';
-                    canvas.style.height = '100%';
-                }
-                
-                charts.listenerTrend = new Chart(canvas, {
-                    type: 'line',
-                    data: {
-                        labels: listenerTrendData.map(d => d.date),
-                        datasets: [{
-                            label: 'Listeners',
-                            data: listenerTrendData.map(d => d.listeners),
-                            borderColor: '#1DB954',
-                            backgroundColor: 'rgba(29, 185, 84, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        animation: {
-                            duration: 0 // Disable animation for immediate rendering
+                    
+                    charts.listenerTrend = new Chart(canvasEl, {
+                        type: 'line',
+                        data: {
+                            labels: listenerTrendData.map(d => d.date),
+                            datasets: [{
+                                label: 'Listeners',
+                                data: listenerTrendData.map(d => d.listeners),
+                                borderColor: '#1DB954',
+                                backgroundColor: 'rgba(29, 185, 84, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }]
                         },
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: false,
-                                grid: { color: '#535353' },
-                                ticks: { color: '#B3B3B3' }
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: false,
+                            plugins: {
+                                legend: { display: false }
                             },
-                            x: {
-                                grid: { color: '#535353' },
-                                ticks: { color: '#B3B3B3' }
+                            scales: {
+                                y: {
+                                    beginAtZero: false,
+                                    grid: { color: '#535353' },
+                                    ticks: { color: '#B3B3B3' }
+                                },
+                                x: {
+                                    grid: { color: '#535353' },
+                                    ticks: { color: '#B3B3B3' }
+                                }
                             }
                         }
-                    }
+                    });
                 });
-                
-                // Force chart update and resize after a brief delay
-                setTimeout(() => {
-                    if (charts.listenerTrend) {
-                        charts.listenerTrend.update('none');
-                        charts.listenerTrend.resize();
-                    }
-                }, 50);
-            }, 250);
+            });
         }
 
         function initImpressionsFunnelChart() {
