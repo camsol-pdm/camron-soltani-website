@@ -4165,40 +4165,37 @@
         }
         
         // Navigation scroll hide/show functionality
-        (function() {
+        function initNavScroll() {
             let lastScrollTop = 0;
-            let isScrolling = false;
             const nav = document.getElementById('main-nav');
             const homeSection = document.getElementById('home');
             
-            if (!nav || !homeSection) return;
+            if (!nav || !homeSection) {
+                // Retry if elements aren't ready yet
+                setTimeout(initNavScroll, 100);
+                return;
+            }
             
             function handleScroll() {
-                if (isScrolling) return;
-                isScrolling = true;
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const homeSectionBottom = homeSection.offsetTop + homeSection.offsetHeight;
+                const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
                 
-                requestAnimationFrame(function() {
-                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    const homeSectionBottom = homeSection.offsetTop + homeSection.offsetHeight;
-                    const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
-                    
-                    // Check if we've scrolled past the home section
-                    const pastHomeSection = scrollTop > homeSectionBottom;
-                    
-                    if (scrollDirection === 'down' && pastHomeSection) {
-                        // Hide nav when scrolling down past home section
-                        nav.classList.add('nav-hidden');
-                    } else if (scrollDirection === 'up') {
-                        // Show nav immediately on any upward scroll
-                        nav.classList.remove('nav-hidden');
-                    } else if (scrollTop <= homeSectionBottom) {
-                        // Always show nav when within or above home section
-                        nav.classList.remove('nav-hidden');
-                    }
-                    
-                    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-                    isScrolling = false;
-                });
+                // Check if we've scrolled past the home section
+                const pastHomeSection = scrollTop > homeSectionBottom;
+                
+                if (scrollDirection === 'down' && pastHomeSection) {
+                    // Hide nav when scrolling down past home section
+                    nav.classList.add('nav-hidden');
+                } else if (scrollDirection === 'up') {
+                    // Show nav immediately on any upward scroll
+                    nav.classList.remove('nav-hidden');
+                } else if (scrollTop <= homeSectionBottom) {
+                    // Always show nav when within or above home section
+                    nav.classList.remove('nav-hidden');
+                }
+                
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
             }
             
             // Throttle scroll events
@@ -4211,11 +4208,19 @@
                     });
                     ticking = true;
                 }
-            });
+            }, { passive: true });
             
             // Initialize nav state on page load
             handleScroll();
-        })();
+        }
+        
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initNavScroll);
+        } else {
+            // DOM already loaded, but wait a bit for Next.js to finish rendering
+            setTimeout(initNavScroll, 200);
+        }
         
         // Initialize on page load - wait for all resources including Chart.js
         function initializeDashboard() {
