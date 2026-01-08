@@ -1489,19 +1489,14 @@
             width: 100% !important;
         }
         
-        #main-nav a {
+        /* Base link styles - applied to logo/branding link */
+        #main-nav > div > div > a:not(#main-nav > div > div > div > a) {
             width: 100% !important;
             padding: 0.75rem 1rem !important;
             border-radius: 0.375rem !important;
             display: block !important;
             transition: all 0.2s ease !important;
             text-align: left !important;
-        }
-        
-        #main-nav a:hover {
-            background-color: rgba(29, 185, 84, 0.1) !important;
-            color: var(--spotify-green, #1DB954) !important;
-            transform: translateX(4px) !important;
         }
         
         /* Logo/branding at top */
@@ -1512,24 +1507,57 @@
             border-bottom: 1px solid rgba(83, 83, 83, 0.5) !important;
             padding-left: 1rem !important;
             padding-right: 1rem !important;
+            color: #FFFFFF !important; /* Improved contrast for logo */
+            font-weight: 600 !important;
         }
         
         #main-nav > div > div > a:first-child:hover {
             transform: none !important;
             background-color: transparent !important;
+            color: #1DB954 !important;
         }
         
         /* Navigation links */
         #main-nav > div > div > div {
             display: flex !important;
             flex-direction: column !important;
-            gap: 0.25rem !important;
+            gap: 0.5rem !important;
             width: 100% !important;
+            margin-top: 0.5rem !important;
         }
         
         #main-nav > div > div > div > a {
-            font-size: 0.875rem !important;
+            font-size: 0.9375rem !important; /* 15px - improved readability */
             width: 100% !important;
+            padding: 1rem 1.25rem !important; /* Increased to 40px vertical padding for better touch targets */
+            color: #B3B3B3 !important; /* Improved contrast */
+            font-weight: 400 !important;
+            line-height: 1.5 !important;
+            position: relative !important;
+        }
+        
+        /* Active state styling */
+        #main-nav > div > div > div > a.text-spotify-green {
+            color: #1DB954 !important;
+            font-weight: 600 !important;
+            background-color: rgba(29, 185, 84, 0.15) !important;
+            border-left: 3px solid #1DB954 !important;
+            padding-left: calc(1.25rem - 3px) !important; /* Adjust for border */
+        }
+        
+        /* Hover state - enhanced */
+        #main-nav > div > div > div > a:hover {
+            background-color: rgba(29, 185, 84, 0.12) !important;
+            color: #1DB954 !important;
+            transform: translateX(4px) !important;
+            border-left: 3px solid rgba(29, 185, 84, 0.5) !important;
+            padding-left: calc(1.25rem - 3px) !important;
+        }
+        
+        /* Active state hover */
+        #main-nav > div > div > div > a.text-spotify-green:hover {
+            background-color: rgba(29, 185, 84, 0.2) !important;
+            border-left-color: #1DB954 !important;
         }
         
         /* Main content wrapper adjustment */
