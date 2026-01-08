@@ -177,6 +177,12 @@ export default function AnalyticsDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [excludeExternal, setExcludeExternal] = useState(false);
   const [selectedEpisode, setSelectedEpisode] = useState('Ep 124');
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure charts only render on client-side after hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const tabs = [
     { id: 'overview', label: 'Overview' },
