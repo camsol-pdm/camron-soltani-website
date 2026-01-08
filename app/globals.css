@@ -4,5 +4,6 @@
 
 body {
   @apply bg-spotify-dark text-spotify-text;
+  padding-top: 45px;
 }
 

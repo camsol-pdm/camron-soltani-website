@@ -13,27 +13,21 @@ export default function Navigation() {
       if (!ticking.current) {
         window.requestAnimationFrame(() => {
           const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const homeSection = document.getElementById('home');
-          
-          if (!homeSection) {
-            ticking.current = false;
-            return;
-          }
-
-          const homeSectionBottom = homeSection.offsetTop + homeSection.offsetHeight;
+          // ADJUST HEIGHT THRESHOLD: Change viewportHeight multiplier (e.g., viewportHeight * 1.5 for 1.5x viewport)
+          const viewportHeight = window.innerHeight;
           const scrollDirection = scrollTop > lastScrollTop.current ? 'down' : 'up';
-          const pastHomeSection = scrollTop > homeSectionBottom;
+          const pastFirstScreen = scrollTop > viewportHeight;
 
-          // Always show nav when within or above home section
-          if (scrollTop <= homeSectionBottom) {
+          // Always show nav when at or above the first screen (viewport height threshold)
+          if (scrollTop <= viewportHeight) {
             setIsVisible(true);
-          } 
-          // Hide nav when scrolling down past home section
-          else if (scrollDirection === 'down' && pastHomeSection) {
+          }
+          // Hide nav when scrolling down past the first screen
+          else if (scrollDirection === 'down' && pastFirstScreen) {
             setIsVisible(false);
-          } 
-          // Show nav immediately on any upward scroll
-          else if (scrollDirection === 'up') {
+          }
+          // Show nav immediately on any upward scroll after threshold
+          else if (scrollDirection === 'up' && pastFirstScreen) {
             setIsVisible(true);
           }
 
@@ -55,8 +49,9 @@ export default function Navigation() {
   }, []);
 
   return (
+    // ADJUST ANIMATION DURATION: Change duration-300 to duration-200 (faster) or duration-500 (slower)
     <nav 
-      className={`bg-spotify-dark-secondary border-b border-spotify-neutral sticky top-0 z-50 transition-transform duration-300 ease-out ${
+      className={`bg-spotify-dark-secondary border-b border-spotify-neutral fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-out ${
         isVisible ? 'translate-y-0' : '-translate-y-full'
       }`}
       style={{ height: '45px' }}
