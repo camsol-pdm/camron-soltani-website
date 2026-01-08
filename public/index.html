@@ -4216,13 +4216,31 @@
             handleScroll();
         }
         
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initNavScroll);
-        } else {
-            // DOM already loaded, but wait a bit for Next.js to finish rendering
-            setTimeout(initNavScroll, 200);
+        // Initialize when DOM is ready - multiple attempts for Next.js HTMLRenderer
+        function tryInitNavScroll() {
+            const nav = document.getElementById('main-nav');
+            const homeSection = document.getElementById('home');
+            
+            if (!nav || !homeSection) {
+                // Retry if elements aren't ready yet
+                setTimeout(tryInitNavScroll, 100);
+                return;
+            }
+            
+            // Elements found, initialize scroll behavior
+            initNavScroll();
         }
+        
+        // Try immediately
+        tryInitNavScroll();
+        
+        // Also try on DOMContentLoaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', tryInitNavScroll);
+        }
+        
+        // Also try after a delay for Next.js HTMLRenderer
+        setTimeout(tryInitNavScroll, 500);
         
         // Initialize on page load - wait for all resources including Chart.js
         function initializeDashboard() {
