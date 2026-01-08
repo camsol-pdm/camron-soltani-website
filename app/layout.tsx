@@ -2,7 +2,6 @@
 
 import React, { useEffect } from 'react';
 import { Analytics } from '@vercel/analytics/next';
-import Navigation from '@/components/Navigation';
 
 export default function RootLayout({
   children,
@@ -24,7 +23,6 @@ export default function RootLayout({
         <title>Camron Soltani - Product Manager | Spotify Podcast Creator Tools</title>
       </head>
       <body>
-        <Navigation />
         {children}
         <Analytics />
       </body>
