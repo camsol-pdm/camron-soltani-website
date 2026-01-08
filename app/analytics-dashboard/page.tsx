@@ -19,6 +19,7 @@ import {
   Area,
   ComposedChart,
 } from 'recharts';
+import { EpisodeCompletionDashboard } from '@/components/EpisodeCompletionDashboard';
 
 const COLORS = ['#1DB954', '#B3B3B3', '#535353', '#212121', '#FFFFFF', '#8B5CF6'];
 
@@ -266,29 +267,8 @@ export default function AnalyticsDashboard() {
               </div>
             </div>
 
-            {/* Trend Chart */}
-            <div className="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-spotify-text mb-4">Listener Trend (28 days)</h3>
-              {mounted ? (
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={listenerTrendData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#535353" />
-                    <XAxis dataKey="date" stroke="#B3B3B3" />
-                    <YAxis stroke="#B3B3B3" />
-                    <Tooltip
-                      contentStyle={{ backgroundColor: '#212121', border: '1px solid #535353', borderRadius: '8px' }}
-                      labelStyle={{ color: '#FFFFFF' }}
-                    />
-                    <Line type="monotone" dataKey="listeners" stroke="#1DB954" strokeWidth={2} dot={{ fill: '#1DB954' }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="w-full h-[300px] flex items-center justify-center text-spotify-text-muted">
-                  Loading chart...
-                </div>
-              )}
-              <p className="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: Your listener trend shows steady growth over the past 28 days, with a 21.6% increase from Nov 4 to Dec 9. The upward trajectory indicates healthy audience expansion. Continue optimizing publish timing and content quality to maintain this growth momentum.</p>
-            </div>
+            {/* Episode Completion Rate Analysis Dashboard */}
+            <EpisodeCompletionDashboard />
 
             {/* Top Episodes */}
             <div className="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
