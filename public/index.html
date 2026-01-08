@@ -4396,8 +4396,15 @@
         }
 
         // Chart Initialization Functions
-        // SIMPLIFIED: Clean rewrite of listener trend chart initialization
+        // FIXED: Use ResizeObserver to ensure canvas has dimensions before initializing
+        let listenerChartInitialized = false;
+        
         function initListenerTrendChart() {
+            // Prevent duplicate initialization
+            if (listenerChartInitialized && charts.listenerTrend) {
+                return;
+            }
+            
             // Basic checks
             if (typeof Chart === 'undefined') {
                 console.error('Chart.js is not loaded');
@@ -4423,7 +4430,51 @@
                 tabContent.style.display = 'block';
             }
             
-            // Simple initialization - Chart.js handles responsive sizing
+            // Wait for container to have actual dimensions
+            const container = canvas.parentElement;
+            if (!container) {
+                console.error('Canvas container not found');
+                return;
+            }
+            
+            // Check if container has dimensions - if not, wait
+            const containerRect = container.getBoundingClientRect();
+            if (containerRect.width === 0 || containerRect.height === 0) {
+                console.log('Container has no dimensions yet, using ResizeObserver...');
+                
+                // Use ResizeObserver to wait for container to be sized
+                const resizeObserver = new ResizeObserver((entries) => {
+                    for (let entry of entries) {
+                        const rect = entry.contentRect;
+                        if (rect.width > 0 && rect.height > 0) {
+                            resizeObserver.disconnect();
+                            createListenerChart(canvas);
+                            listenerChartInitialized = true;
+                        }
+                    }
+                });
+                
+                resizeObserver.observe(container);
+                
+                // Timeout fallback after 2 seconds
+                setTimeout(() => {
+                    resizeObserver.disconnect();
+                    if (!charts.listenerTrend) {
+                        console.log('ResizeObserver timeout, attempting chart creation anyway...');
+                        createListenerChart(canvas);
+                        listenerChartInitialized = true;
+                    }
+                }, 2000);
+                
+                return;
+            }
+            
+            // Container has dimensions, create chart immediately
+            createListenerChart(canvas);
+            listenerChartInitialized = true;
+        }
+        
+        function createListenerChart(canvas) {
             try {
                 charts.listenerTrend = new Chart(canvas, {
                     type: 'line',
@@ -4475,9 +4526,18 @@
                     }
                 });
                 
-                console.log('Listener trend chart initialized successfully');
+                // Force immediate render
+                setTimeout(() => {
+                    if (charts.listenerTrend) {
+                        charts.listenerTrend.resize();
+                        charts.listenerTrend.update('none');
+                    }
+                }, 50);
+                
+                console.log('Listener trend chart created successfully');
             } catch (error) {
                 console.error('Error creating listener trend chart:', error);
+                listenerChartInitialized = false; // Allow retry
             }
         }
         
