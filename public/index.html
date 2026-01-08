@@ -150,9 +150,9 @@
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        /* Navigation scroll hide/show */
+        /* Mobile navigation toggle */
         nav.nav-hidden {
-            transform: translateY(-100%);
+            transform: translateX(-100%);
         }
         
         nav::before {
@@ -1457,54 +1457,167 @@
             max-height: 100%;
         }
         
-        /* Fix navigation link styling to prevent conflicts */
+        /* Left Sidebar Navigation */
+        #main-nav {
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 260px !important;
+            height: 100vh !important;
+            background-color: rgba(26, 26, 26, 0.95) !important;
+            border-right: 1px solid var(--spotify-border, #535353) !important;
+            z-index: 40 !important;
+            overflow-y: auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            padding: 1.5rem 0 !important;
+        }
+        
+        #main-nav > div {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 1.25rem !important;
+            display: flex !important;
+            flex-direction: column !important;
+            height: auto !important;
+        }
+        
+        #main-nav > div > div {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 0.5rem !important;
+            width: 100% !important;
+        }
+        
         #main-nav a {
-            padding: 0 !important;
-            border-radius: 0 !important;
-            transform: none !important;
+            width: 100% !important;
+            padding: 0.75rem 1rem !important;
+            border-radius: 0.375rem !important;
+            display: block !important;
+            transition: all 0.2s ease !important;
+            text-align: left !important;
         }
         
         #main-nav a:hover {
-            background: transparent !important;
+            background-color: rgba(29, 185, 84, 0.1) !important;
+            color: var(--spotify-green, #1DB954) !important;
+            transform: translateX(4px) !important;
+        }
+        
+        /* Logo/branding at top */
+        #main-nav > div > div > a:first-child {
+            font-size: 1.125rem !important;
+            margin-bottom: 2rem !important;
+            padding-bottom: 1.5rem !important;
+            border-bottom: 1px solid rgba(83, 83, 83, 0.5) !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+        
+        #main-nav > div > div > a:first-child:hover {
             transform: none !important;
+            background-color: transparent !important;
         }
         
-        #main-nav a::before {
-            display: none !important;
+        /* Navigation links */
+        #main-nav > div > div > div {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 0.25rem !important;
+            width: 100% !important;
         }
         
-        /* Ensure navigation container doesn't overflow */
-        #main-nav > div > div {
-            min-width: 0;
+        #main-nav > div > div > div > a {
+            font-size: 0.875rem !important;
+            width: 100% !important;
         }
         
-        /* Hide scrollbar but allow scrolling on mobile */
-        #main-nav .overflow-x-auto::-webkit-scrollbar {
-            display: none;
+        /* Main content wrapper adjustment */
+        main {
+            margin-left: 260px !important;
         }
         
-        #main-nav .overflow-x-auto {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        /* Responsive: hide sidebar on mobile, show hamburger */
+        @media (max-width: 1024px) {
+            #main-nav {
+                transform: translateX(-100%) !important;
+                transition: transform 0.3s ease !important;
+            }
+            
+            #main-nav.nav-open {
+                transform: translateX(0) !important;
+            }
+            
+            main {
+                margin-left: 0 !important;
+            }
+            
+            /* Hamburger menu button */
+            .mobile-nav-toggle {
+                position: fixed !important;
+                top: 1rem !important;
+                left: 1rem !important;
+                z-index: 50 !important;
+                background-color: rgba(26, 26, 26, 0.9) !important;
+                border: 1px solid var(--spotify-border, #535353) !important;
+                color: var(--spotify-text, #FFFFFF) !important;
+                padding: 0.5rem !important;
+                border-radius: 0.375rem !important;
+                cursor: pointer !important;
+                display: block !important;
+            }
+        }
+        
+        @media (min-width: 1025px) {
+            .mobile-nav-toggle {
+                display: none !important;
+            }
+        }
+        
+        /* Hide scrollbar but allow scrolling on sidebar */
+        #main-nav::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        #main-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        #main-nav::-webkit-scrollbar-thumb {
+            background: rgba(83, 83, 83, 0.5);
+            border-radius: 3px;
+        }
+        
+        #main-nav::-webkit-scrollbar-thumb:hover {
+            background: rgba(83, 83, 83, 0.7);
         }
     </style>
 </head>
 <body class="antialiased">
-    <!-- Navigation -->
-    <nav id="main-nav" class="bg-spotify-dark-secondary border-b border-spotify-neutral sticky top-0 z-50" style="height: 45px;">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-            <div class="flex justify-between items-center h-full">
+    <!-- Mobile Navigation Toggle Button -->
+    <button class="mobile-nav-toggle" onclick="toggleMobileNav()" aria-label="Toggle navigation menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <!-- Left Sidebar Navigation -->
+    <nav id="main-nav" class="bg-spotify-dark-secondary border-r border-spotify-neutral">
+        <div>
+            <div class="flex flex-col">
                 <a href="#home" class="text-lg font-semibold text-spotify-text hover:text-spotify-green transition-colors">
                     Camron Soltani - A Spotify Case Study
                 </a>
-                <div class="flex flex-nowrap gap-3 md:gap-6 items-center overflow-x-auto">
-                    <a href="#home" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">Home</a>
-                    <a href="#opportunity" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">The Opportunity</a>
-                    <a href="#solution" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">The Solution</a>
-                    <a href="#roadmap" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">Roadmap</a>
-                    <a href="#analytics" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">Analytics</a>
-                    <a href="#case-studies" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">Case Studies</a>
-                    <a href="#about" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base whitespace-nowrap">About</a>
+                <div class="flex flex-col gap-1 mt-2">
+                    <a href="#home" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm">Home</a>
+                    <a href="#opportunity" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm">The Opportunity</a>
+                    <a href="#solution" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm">The Solution</a>
+                    <a href="#roadmap" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm">Roadmap</a>
+                    <a href="#analytics" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm">Analytics</a>
+                    <a href="#case-studies" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm">Case Studies</a>
+                    <a href="#about" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm">About</a>
                 </div>
             </div>
         </div>
@@ -4970,80 +5083,37 @@
             tryNext();
         }
         
-        // Navigation scroll hide/show functionality
-        function initNavScroll() {
-            let lastScrollTop = 0;
+        // Mobile navigation toggle functionality
+        function toggleMobileNav() {
             const nav = document.getElementById('main-nav');
-            const homeSection = document.getElementById('home');
-            
-            if (!nav || !homeSection) {
-                // Retry if elements aren't ready yet
-                setTimeout(initNavScroll, 100);
-                return;
+            if (nav) {
+                nav.classList.toggle('nav-open');
             }
-            
-            function handleScroll() {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const homeSectionBottom = homeSection.offsetTop + homeSection.offsetHeight;
-                const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
-                
-                // Check if we've scrolled past the home section
-                const pastHomeSection = scrollTop > homeSectionBottom;
-                
-                // Priority 1: Always show nav when within or above home section
-                if (scrollTop <= homeSectionBottom) {
-                    nav.classList.remove('nav-hidden');
-                }
-                // Priority 2: Show nav immediately on any upward scroll (anywhere on page)
-                else if (scrollDirection === 'up') {
-                    nav.classList.remove('nav-hidden');
-                }
-                // Priority 3: Hide nav when scrolling down past home section
-                else if (scrollDirection === 'down' && pastHomeSection) {
-                    nav.classList.add('nav-hidden');
-                }
-                
-                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-            }
-            
-            // Throttle scroll events
-            let ticking = false;
-            window.addEventListener('scroll', function() {
-                if (!ticking) {
-                    window.requestAnimationFrame(function() {
-                        handleScroll();
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            }, { passive: true });
-            
-            // Initialize nav state on page load
-            handleScroll();
         }
         
-        // Initialize when DOM is ready - multiple attempts for Next.js HTMLRenderer
-        function tryInitNavScroll() {
+        // Close mobile nav when clicking outside or on a link
+        document.addEventListener('click', function(event) {
             const nav = document.getElementById('main-nav');
-            const homeSection = document.getElementById('home');
+            const toggle = document.querySelector('.mobile-nav-toggle');
+            const isClickInsideNav = nav && nav.contains(event.target);
+            const isClickOnToggle = toggle && toggle.contains(event.target);
             
-            if (!nav || !homeSection) {
-                // Retry if elements aren't ready yet
-                setTimeout(tryInitNavScroll, 100);
-                return;
+            // If clicking outside nav and toggle on mobile, close nav
+            if (!isClickInsideNav && !isClickOnToggle && window.innerWidth <= 1024) {
+                if (nav) {
+                    nav.classList.remove('nav-open');
+                }
             }
             
-            // Elements found, initialize scroll behavior
-            initNavScroll();
-        }
-        
-        // Try immediately
-        tryInitNavScroll();
-        
-        // Also try on DOMContentLoaded
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', tryInitNavScroll);
-        }
+            // Close nav when clicking a nav link on mobile
+            if (isClickInsideNav && event.target.tagName === 'A' && window.innerWidth <= 1024) {
+                setTimeout(() => {
+                    if (nav) {
+                        nav.classList.remove('nav-open');
+                    }
+                }, 300);
+            }
+        });
         
         // Also try after a delay for Next.js HTMLRenderer
         setTimeout(tryInitNavScroll, 500);
