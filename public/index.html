@@ -2312,7 +2312,9 @@
                         </div>
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
                             <h3 class="text-xl font-semibold text-spotify-text mb-4">Listener Trend (28 days)</h3>
-                            <canvas id="listenerTrendChart" height="80"></canvas>
+                            <div style="position: relative; height: 300px; width: 100%;">
+                                <canvas id="listenerTrendChart"></canvas>
+                            </div>
                         </div>
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
                             <h3 class="text-xl font-semibold text-spotify-text mb-4">Top Episodes (30d)</h3>
@@ -4398,10 +4400,31 @@
                 charts.listenerTrend = null;
             }
             
-            // Small delay to ensure canvas is fully rendered and visible
+            // Wait for canvas to be fully rendered with proper dimensions
             setTimeout(() => {
                 const canvas = document.getElementById('listenerTrendChart');
-                if (!canvas) return;
+                if (!canvas) {
+                    console.warn('Canvas element not found for listener trend chart');
+                    return;
+                }
+                
+                // Check if canvas container has dimensions
+                const container = canvas.parentElement;
+                if (container) {
+                    const rect = container.getBoundingClientRect();
+                    if (rect.width === 0 || rect.height === 0) {
+                        // Container not sized yet, retry after a longer delay
+                        console.warn('Canvas container has zero dimensions, retrying...');
+                        setTimeout(initListenerTrendChart, 200);
+                        return;
+                    }
+                }
+                
+                // Ensure canvas has explicit dimensions
+                if (canvas.width === 0 || canvas.height === 0) {
+                    canvas.style.width = '100%';
+                    canvas.style.height = '100%';
+                }
                 
                 charts.listenerTrend = new Chart(canvas, {
                     type: 'line',
@@ -4419,6 +4442,9 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        animation: {
+                            duration: 0 // Disable animation for immediate rendering
+                        },
                         plugins: {
                             legend: { display: false }
                         },
@@ -4436,11 +4462,14 @@
                     }
                 });
                 
-                // Force chart resize to ensure proper rendering
-                if (charts.listenerTrend) {
-                    charts.listenerTrend.resize();
-                }
-            }, 150);
+                // Force chart update and resize after a brief delay
+                setTimeout(() => {
+                    if (charts.listenerTrend) {
+                        charts.listenerTrend.update('none');
+                        charts.listenerTrend.resize();
+                    }
+                }, 50);
+            }, 250);
         }
 
         function initImpressionsFunnelChart() {
