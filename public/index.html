@@ -4392,40 +4392,55 @@
                 tabContent.style.display = 'block';
             }
             
-            if (charts.listenerTrend) charts.listenerTrend.destroy();
+            // Destroy existing chart if it exists
+            if (charts.listenerTrend) {
+                charts.listenerTrend.destroy();
+                charts.listenerTrend = null;
+            }
             
-            charts.listenerTrend = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: listenerTrendData.map(d => d.date),
-                    datasets: [{
-                        label: 'Listeners',
-                        data: listenerTrendData.map(d => d.listeners),
-                        borderColor: '#1DB954',
-                        backgroundColor: 'rgba(29, 185, 84, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
+            // Small delay to ensure canvas is fully rendered and visible
+            setTimeout(() => {
+                const canvas = document.getElementById('listenerTrendChart');
+                if (!canvas) return;
+                
+                charts.listenerTrend = new Chart(canvas, {
+                    type: 'line',
+                    data: {
+                        labels: listenerTrendData.map(d => d.date),
+                        datasets: [{
+                            label: 'Listeners',
+                            data: listenerTrendData.map(d => d.listeners),
+                            borderColor: '#1DB954',
+                            backgroundColor: 'rgba(29, 185, 84, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            grid: { color: '#535353' },
-                            ticks: { color: '#B3B3B3' }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
                         },
-                        x: {
-                            grid: { color: '#535353' },
-                            ticks: { color: '#B3B3B3' }
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                grid: { color: '#535353' },
+                                ticks: { color: '#B3B3B3' }
+                            },
+                            x: {
+                                grid: { color: '#535353' },
+                                ticks: { color: '#B3B3B3' }
+                            }
                         }
                     }
+                });
+                
+                // Force chart resize to ensure proper rendering
+                if (charts.listenerTrend) {
+                    charts.listenerTrend.resize();
                 }
-            });
+            }, 150);
         }
 
         function initImpressionsFunnelChart() {
