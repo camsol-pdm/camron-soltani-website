@@ -4441,55 +4441,81 @@
                         return;
                     }
                     
+                    // CRITICAL: Set canvas width and height attributes to match CSS dimensions
+                    // Chart.js requires the canvas element's width/height attributes (not just CSS)
+                    // to match the display size for proper rendering
+                    const devicePixelRatio = window.devicePixelRatio || 1;
+                    canvasEl.width = effectiveWidth * devicePixelRatio;
+                    canvasEl.height = effectiveHeight * devicePixelRatio;
+                    canvasEl.style.width = effectiveWidth + 'px';
+                    canvasEl.style.height = effectiveHeight + 'px';
+                    
+                    // Get the context and scale it for high DPI displays
+                    const ctx = canvasEl.getContext('2d');
+                    if (ctx) {
+                        ctx.scale(devicePixelRatio, devicePixelRatio);
+                    }
+                    
                     // If canvas is off-screen but has dimensions, use container dimensions for Chart.js
                     // This ensures chart renders even when not in viewport initially
                     
-                    charts.listenerTrend = new Chart(canvasEl, {
-                        type: 'line',
-                        data: {
-                            labels: listenerTrendData.map(d => d.date),
-                            datasets: [{
-                                label: 'Listeners',
-                                data: listenerTrendData.map(d => d.listeners),
-                                borderColor: '#1DB954',
-                                backgroundColor: 'rgba(29, 185, 84, 0.1)',
-                                tension: 0.4,
-                                fill: true
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            animation: false,
-                            plugins: {
-                                legend: { display: false }
+                    try {
+                        charts.listenerTrend = new Chart(canvasEl, {
+                            type: 'line',
+                            data: {
+                                labels: listenerTrendData.map(d => d.date),
+                                datasets: [{
+                                    label: 'Listeners',
+                                    data: listenerTrendData.map(d => d.listeners),
+                                    borderColor: '#1DB954',
+                                    backgroundColor: 'rgba(29, 185, 84, 0.1)',
+                                    tension: 0.4,
+                                    fill: true
+                                }]
                             },
-                            scales: {
-                                y: {
-                                    beginAtZero: false,
-                                    grid: { color: '#535353' },
-                                    ticks: { color: '#B3B3B3' }
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                animation: false,
+                                devicePixelRatio: devicePixelRatio,
+                                plugins: {
+                                    legend: { display: false }
                                 },
-                                x: {
-                                    grid: { color: '#535353' },
-                                    ticks: { color: '#B3B3B3' }
+                                scales: {
+                                    y: {
+                                        beginAtZero: false,
+                                        grid: { color: '#535353' },
+                                        ticks: { color: '#B3B3B3' }
+                                    },
+                                    x: {
+                                        grid: { color: '#535353' },
+                                        ticks: { color: '#B3B3B3' }
+                                    }
                                 }
                             }
-                        }
-                    });
-                    
-                    // Force immediate update and resize
-                    setTimeout(() => {
-                        if (charts.listenerTrend) {
-                            charts.listenerTrend.update('none');
-                            charts.listenerTrend.resize();
-                            // Force a repaint
-                            canvasEl.style.display = 'none';
-                            canvasEl.offsetHeight; // Trigger reflow
-                            canvasEl.style.display = '';
-                            charts.listenerTrend.resize();
-                        }
-                    }, 100);
+                        });
+                        
+                        // Force immediate update to ensure chart is drawn
+                        charts.listenerTrend.update('none');
+                        
+                        console.log('Listener trend chart initialized successfully');
+                        
+                        // Force immediate render - don't wait for timeout
+                        // Use requestAnimationFrame to ensure DOM is painted
+                        requestAnimationFrame(() => {
+                            if (charts.listenerTrend) {
+                                charts.listenerTrend.update('none');
+                                charts.listenerTrend.resize();
+                                // Verify chart actually rendered
+                                const ctx = canvasEl.getContext('2d');
+                                if (ctx) {
+                                    console.log('Canvas context verified, chart should be visible');
+                                }
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Error initializing listener trend chart:', error);
+                    }
                 });
             });
         }
