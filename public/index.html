@@ -5322,26 +5322,6 @@
             
             // Switch to overview tab to trigger button styling
             switchTab('overview');
-            
-            // Explicitly initialize chart on initial page load
-            // ResizeObserver will wait for container dimensions if needed
-            setTimeout(() => {
-                initListenerTrendChart();
-                
-                // Force chart render after a delay to ensure everything is ready
-                setTimeout(() => {
-                    const canvas = document.getElementById('listenerTrendChart');
-                    if (canvas && charts.listenerTrend) {
-                        charts.listenerTrend.resize();
-                        charts.listenerTrend.update('none');
-                        console.log('Chart force-updated on initial load');
-                    } else if (canvas && !charts.listenerTrend) {
-                        // Retry initialization if chart wasn't created
-                        console.log('Retrying chart initialization on initial load');
-                        initListenerTrendChart();
-                    }
-                }, 500);
-            }, 500);
         }
         
         // Use window.onload to ensure all scripts are loaded
