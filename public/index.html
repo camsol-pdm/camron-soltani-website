@@ -4429,17 +4429,20 @@
                         canvasEl.style.maxHeight = containerRect.height + 'px';
                         // Force reflow
                         canvasEl.offsetHeight;
-                        // Re-check dimensions after setting styles
-                        const newRect = canvasEl.getBoundingClientRect();
-                        if (newRect.width === 0 || newRect.height === 0) {
-                            setTimeout(initListenerTrendChart, 100);
-                            return;
-                        }
-                    } else if (rect.width === 0 || rect.height === 0) {
+                    }
+                    
+                    // Check dimensions - use container dimensions if canvas rect is unreliable (off-screen)
+                    const effectiveWidth = rect.width > 0 ? rect.width : containerRect.width;
+                    const effectiveHeight = rect.height > 0 ? rect.height : containerRect.height;
+                    
+                    if (effectiveWidth === 0 || effectiveHeight === 0) {
                         // Retry if not ready
                         setTimeout(initListenerTrendChart, 100);
                         return;
                     }
+                    
+                    // If canvas is off-screen but has dimensions, use container dimensions for Chart.js
+                    // This ensures chart renders even when not in viewport initially
                     
                     charts.listenerTrend = new Chart(canvasEl, {
                         type: 'line',
