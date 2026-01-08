@@ -4385,6 +4385,7 @@
             
             const canvas = document.getElementById('listenerTrendChart');
             if (!canvas) {
+                setTimeout(initListenerTrendChart, 100);
                 return;
             }
             
@@ -4393,6 +4394,8 @@
             if (tabContent) {
                 tabContent.classList.remove('hidden');
                 tabContent.style.display = 'block';
+                // Force layout recalculation
+                tabContent.offsetHeight;
             }
             
             // Destroy existing chart if it exists
@@ -4401,15 +4404,33 @@
                 charts.listenerTrend = null;
             }
             
+            // Check container dimensions
+            const container = canvas.parentElement;
+            if (!container) {
+                setTimeout(initListenerTrendChart, 100);
+                return;
+            }
+            
             // Use requestAnimationFrame to ensure DOM is fully rendered
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     const canvasEl = document.getElementById('listenerTrendChart');
                     if (!canvasEl) return;
                     
-                    // Verify element is visible and has dimensions
+                    // Force layout check
+                    const containerRect = container.getBoundingClientRect();
                     const rect = canvasEl.getBoundingClientRect();
-                    if (rect.width === 0 || rect.height === 0) {
+                    
+                    // If container has dimensions but canvas doesn't, explicitly set them
+                    if (containerRect.width > 0 && containerRect.height > 0) {
+                        if (rect.width === 0 || rect.height === 0) {
+                            // Canvas not sized yet, force it
+                            canvasEl.style.width = '100%';
+                            canvasEl.style.height = '300px';
+                            // Force reflow
+                            canvasEl.offsetHeight;
+                        }
+                    } else if (rect.width === 0 || rect.height === 0) {
                         // Retry if not ready
                         setTimeout(initListenerTrendChart, 100);
                         return;
@@ -5377,8 +5398,21 @@
             checkImages();
             loadCamronPhoto();
             
-            // Initialize overview tab with charts
-            switchTab('overview');
+            // Ensure overview tab is visible
+            const overviewTab = document.getElementById('tab-overview');
+            if (overviewTab) {
+                overviewTab.classList.remove('hidden');
+                overviewTab.style.display = 'block';
+            }
+            
+            // Initialize overview tab with charts - use longer delay for initial load
+            setTimeout(() => {
+                switchTab('overview');
+                // Also directly initialize the chart after switchTab completes
+                setTimeout(() => {
+                    initListenerTrendChart();
+                }, 500);
+            }, 100);
         }
         
         // Use window.onload to ensure all scripts are loaded
