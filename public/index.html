@@ -52,15 +52,7 @@
             box-sizing: border-box;
         }
         
-        html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-        }
-        
         body {
-            margin: 0;
-            padding: 0;
             background: var(--spotify-dark);
             background-image: 
                 radial-gradient(circle at 20% 50%, rgba(29, 185, 84, 0.03) 0%, transparent 50%),
@@ -75,30 +67,6 @@
             -moz-osx-font-smoothing: grayscale;
             letter-spacing: -0.01em;
             overflow-x: hidden;
-        }
-        
-        #main-nav {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-            top: 0 !important;
-            position: relative;
-        }
-        
-        /* Apply equal top and bottom padding to match natural bottom spacing */
-        #main-nav > div.max-w-7xl {
-            padding-top: 13px !important;
-            padding-bottom: 13px !important;
-        }
-        
-        #main-nav::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(29, 185, 84, 0.3), transparent);
-            pointer-events: none;
         }
         
         /* Modern Typography with Advanced Styling */
@@ -1492,19 +1460,18 @@
 </head>
 <body class="antialiased">
     <!-- Navigation -->
-    <!-- ADJUST ANIMATION DURATION: Change duration-300 to duration-200 (faster) or duration-500 (slower) in class below -->
-    <nav id="main-nav" class="bg-spotify-dark border-b border-spotify-neutral fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-out" style="height: 45px;">
+    <nav id="main-nav" class="bg-spotify-dark-secondary border-b border-spotify-neutral sticky top-0 z-50" style="height: 45px;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
             <div class="flex justify-between items-center h-full">
                 <a href="#home" class="text-lg font-semibold text-spotify-text hover:text-spotify-green transition-colors">
                     Camron Soltani – Product Manager
                 </a>
                 <div class="flex flex-wrap gap-4 md:gap-8">
-                    <a href="#home" class="text-spotify-text-muted hover:text-spotify-text transition-colors text-sm md:text-base">Home</a>
-                    <a href="#strategy" class="text-spotify-text-muted hover:text-spotify-text transition-colors text-sm md:text-base">Strategy</a>
-                    <a href="#analytics" class="text-spotify-text-muted hover:text-spotify-text transition-colors text-sm md:text-base">Analytics Dashboard</a>
-                    <a href="#case-study" class="text-spotify-text-muted hover:text-spotify-text transition-colors text-sm md:text-base">Case Study</a>
-                    <a href="#about" class="text-spotify-text-muted hover:text-spotify-text transition-colors text-sm md:text-base">About</a>
+                    <a href="#home" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base">Home</a>
+                    <a href="#strategy" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base">Strategy</a>
+                    <a href="#analytics" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base">Analytics Dashboard</a>
+                    <a href="#case-study" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base">Case Study</a>
+                    <a href="#about" class="text-spotify-text-muted hover:text-spotify-green transition-colors text-sm md:text-base">About</a>
                 </div>
             </div>
         </div>
@@ -1743,7 +1710,7 @@
                 <div class="mt-12 bg-spotify-green text-white p-8 rounded-lg text-center">
                     <h2 class="text-2xl font-bold mb-4">24-Month Success Metrics</h2>
                     <div class="grid md:grid-cols-2 gap-6 text-left">
-                        <div style="padding-left: 80px;">
+                        <div>
                             <h3 class="font-semibold mb-2">Creator Metrics</h3>
                             <ul class="text-green-50 text-sm space-y-1">
                                 <li>• Monetized creators: 10x growth</li>
@@ -4304,52 +4271,6 @@
             // Small delay to ensure Chart.js CDN script has loaded
             setTimeout(initializeDashboard, 200);
         });
-    </script>
-    
-    <!-- Auto-hiding Navigation Script -->
-    <script>
-        (function() {
-            const nav = document.getElementById('main-nav');
-            if (!nav) return;
-            
-            let lastScrollTop = 0;
-            let ticking = false;
-            
-            // ADJUST HEIGHT THRESHOLD: Change viewportHeight multiplier if needed (e.g., viewportHeight * 1.5 for 1.5x viewport)
-            function handleScroll() {
-                if (!ticking) {
-                    window.requestAnimationFrame(function() {
-                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                        const viewportHeight = window.innerHeight;
-                        const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
-                        const pastFirstScreen = scrollTop > viewportHeight;
-                        
-                        // Always show nav when at or above the first screen (viewport height threshold)
-                        if (scrollTop <= viewportHeight) {
-                            nav.style.transform = 'translateY(0)';
-                        }
-                        // Hide nav when scrolling down past the first screen
-                        else if (scrollDirection === 'down' && pastFirstScreen) {
-                            nav.style.transform = 'translateY(-100%)';
-                        }
-                        // Show nav immediately on any upward scroll after threshold
-                        else if (scrollDirection === 'up' && pastFirstScreen) {
-                            nav.style.transform = 'translateY(0)';
-                        }
-                        
-                        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            }
-            
-            // Initial check
-            handleScroll();
-            
-            // Add scroll event listener
-            window.addEventListener('scroll', handleScroll, { passive: true });
-        })();
     </script>
 </body>
 </html>
