@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camron Soltani - Product Manager | Spotify Podcast Creator Tools</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" onload="window.chartJsLoaded = true;"></script>
     <style>
         :root {
             --spotify-green: #1DB954;
@@ -4377,15 +4377,17 @@
 
         // Chart Initialization Functions
         function initListenerTrendChart() {
-            // Ensure Chart.js is loaded
+            // CRITICAL: Ensure Chart.js is fully loaded
             if (typeof Chart === 'undefined') {
-                setTimeout(initListenerTrendChart, 100);
+                console.warn('Chart.js not loaded yet, retrying...');
+                setTimeout(initListenerTrendChart, 200);
                 return;
             }
             
             const canvas = document.getElementById('listenerTrendChart');
             if (!canvas) {
-                setTimeout(initListenerTrendChart, 100);
+                console.warn('Canvas element not found, retrying...');
+                setTimeout(initListenerTrendChart, 200);
                 return;
             }
             
@@ -5418,13 +5420,35 @@
         // Also try after a delay for Next.js HTMLRenderer
         setTimeout(tryInitNavScroll, 500);
         
+        // Function to wait for Chart.js to be fully loaded
+        function waitForChartJS(callback, maxAttempts = 100) {
+            let attempts = 0;
+            const checkChart = setInterval(() => {
+                attempts++;
+                // Check if Chart.js is loaded (could be Chart or window.Chart)
+                const chartAvailable = typeof Chart !== 'undefined' || typeof window.Chart !== 'undefined' || window.chartJsLoaded;
+                if (chartAvailable) {
+                    clearInterval(checkChart);
+                    console.log('Chart.js loaded after', attempts * 100, 'ms');
+                    if (callback) callback();
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(checkChart);
+                    console.error('Chart.js failed to load after', maxAttempts * 100, 'ms - attempting anyway');
+                    if (callback) callback(); // Still try to initialize
+                }
+            }, 100);
+        }
+        
         // Initialize on page load - wait for all resources including Chart.js
         function initializeDashboard() {
-            // Wait for Chart.js to be available
-            if (typeof Chart === 'undefined') {
-                setTimeout(initializeDashboard, 50);
+            // Double-check Chart.js is available
+            if (typeof Chart === 'undefined' && typeof window.Chart === 'undefined') {
+                console.warn('Chart.js still not available, waiting...');
+                waitForChartJS(initializeDashboard);
                 return;
             }
+            
+            console.log('Initializing dashboard, Chart.js is:', typeof Chart !== 'undefined' ? 'available' : 'missing');
             
             // Initialize images first
             checkImages();
@@ -5449,16 +5473,17 @@
         
         // Use window.onload to ensure all scripts are loaded
         if (document.readyState === 'loading') {
-            window.addEventListener('load', initializeDashboard);
+            window.addEventListener('load', function() {
+                waitForChartJS(initializeDashboard);
+            });
         } else {
-            // DOM already loaded, but ensure Chart.js is available
-            initializeDashboard();
+            // DOM already loaded, wait for Chart.js
+            waitForChartJS(initializeDashboard);
         }
         
         // Also listen to DOMContentLoaded as fallback
         document.addEventListener('DOMContentLoaded', function() {
-            // Small delay to ensure Chart.js CDN script has loaded
-            setTimeout(initializeDashboard, 200);
+            waitForChartJS(initializeDashboard);
         });
     </script>
 </body>
