@@ -4401,6 +4401,23 @@
                 return;
             }
             
+            // CRITICAL: Ensure tab is visible before initializing
+            const tabContent = ctx.closest('.tab-content');
+            if (tabContent) {
+                tabContent.classList.remove('hidden');
+                tabContent.style.display = 'block';
+                // Force layout recalculation
+                void tabContent.offsetHeight;
+            }
+            
+            // Verify canvas is actually visible and has dimensions
+            const rect = ctx.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) {
+                console.warn('Canvas has no dimensions, retrying in 200ms...');
+                setTimeout(initListenerTrendChart, 200);
+                return;
+            }
+            
             if (charts.listenerTrend) charts.listenerTrend.destroy();
             
             charts.listenerTrend = new Chart(ctx, {
