@@ -4388,9 +4388,24 @@
                 return;
             }
             
+            // Ensure the overview tab is visible (canvas needs to be in visible DOM)
+            const overviewTab = document.getElementById('tab-overview');
+            if (overviewTab) {
+                overviewTab.classList.remove('hidden');
+                overviewTab.style.display = 'block';
+            }
+            
             // Ensure data is available
             if (!listenerTrendData || listenerTrendData.length === 0) {
                 console.error('Listener trend data not available');
+                return;
+            }
+            
+            // Check if canvas has dimensions
+            const rect = ctx.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) {
+                console.warn('Listener trend canvas has no dimensions, retrying...');
+                setTimeout(initListenerTrendChart, 200);
                 return;
             }
             
