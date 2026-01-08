@@ -5456,14 +5456,35 @@
                 overviewTab.style.display = 'block';
             }
             
-            // Initialize overview tab with charts - use longer delay for initial load
+            // Initialize overview tab - ensure it's visible
+            const overviewTab = document.getElementById('tab-overview');
+            if (overviewTab) {
+                overviewTab.classList.remove('hidden');
+                overviewTab.style.display = 'block';
+            }
+            
+            // Switch to overview tab to trigger button styling
+            switchTab('overview');
+            
+            // Explicitly initialize chart on initial page load
+            // Use multiple attempts to ensure Chart.js and DOM are ready
             setTimeout(() => {
-                switchTab('overview');
-                // Also directly initialize the chart after switchTab completes
+                initListenerTrendChart();
+                
+                // Force chart render after a delay to ensure everything is ready
                 setTimeout(() => {
-                    initListenerTrendChart();
-                }, 500);
-            }, 100);
+                    const canvas = document.getElementById('listenerTrendChart');
+                    if (canvas && charts.listenerTrend) {
+                        charts.listenerTrend.resize();
+                        charts.listenerTrend.update('none');
+                        console.log('Chart force-updated on initial load');
+                    } else if (canvas && !charts.listenerTrend) {
+                        // Retry initialization if chart wasn't created
+                        console.log('Retrying chart initialization on initial load');
+                        initListenerTrendChart();
+                    }
+                }, 300);
+            }, 300);
         }
         
         // Use window.onload to ensure all scripts are loaded
