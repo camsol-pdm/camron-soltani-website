@@ -3237,8 +3237,26 @@
 
         // Chart Initialization Functions
         function initListenerTrendChart() {
+            // Ensure Chart.js is loaded
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js not loaded yet, retrying...');
+                setTimeout(initListenerTrendChart, 100);
+                return;
+            }
+            
             const ctx = document.getElementById('listenerTrendChart');
-            if (!ctx) return;
+            if (!ctx) {
+                console.warn('Canvas element not found');
+                return;
+            }
+            
+            // Ensure canvas is visible
+            const tabContent = ctx.closest('.tab-content');
+            if (tabContent && tabContent.classList.contains('hidden')) {
+                tabContent.classList.remove('hidden');
+                tabContent.style.display = 'block';
+            }
+            
             if (charts.listenerTrend) charts.listenerTrend.destroy();
             
             charts.listenerTrend = new Chart(ctx, {
@@ -4140,11 +4158,34 @@
             tryNext();
         }
         
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            switchTab('overview');
+        // Initialize on page load - wait for all resources including Chart.js
+        function initializeDashboard() {
+            // Wait for Chart.js to be available
+            if (typeof Chart === 'undefined') {
+                setTimeout(initializeDashboard, 50);
+                return;
+            }
+            
+            // Initialize images first
             checkImages();
             loadCamronPhoto();
+            
+            // Initialize overview tab with charts
+            switchTab('overview');
+        }
+        
+        // Use window.onload to ensure all scripts are loaded
+        if (document.readyState === 'loading') {
+            window.addEventListener('load', initializeDashboard);
+        } else {
+            // DOM already loaded, but ensure Chart.js is available
+            initializeDashboard();
+        }
+        
+        // Also listen to DOMContentLoaded as fallback
+        document.addEventListener('DOMContentLoaded', function() {
+            // Small delay to ensure Chart.js CDN script has loaded
+            setTimeout(initializeDashboard, 200);
         });
     </script>
 </body>
