@@ -4387,8 +4387,20 @@
         // Chart Initialization Functions
         // SIMPLIFIED: Match the exact pattern of working charts (no ResizeObserver, no flags)
         function initListenerTrendChart() {
+            // Ensure Chart.js is loaded first
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js not ready, retrying in 100ms...');
+                setTimeout(initListenerTrendChart, 100);
+                return;
+            }
+            
             const ctx = document.getElementById('listenerTrendChart');
-            if (!ctx) return;
+            if (!ctx) {
+                console.warn('Canvas not found, retrying in 100ms...');
+                setTimeout(initListenerTrendChart, 100);
+                return;
+            }
+            
             if (charts.listenerTrend) charts.listenerTrend.destroy();
             
             charts.listenerTrend = new Chart(ctx, {
