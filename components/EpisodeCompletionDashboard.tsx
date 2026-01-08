@@ -80,7 +80,7 @@ const mockEpisodes = [
       { demographic: 'Men (25-34)', totalListeners: 182, completionRate: 69, subscribersConverted: 10, dropOffPoints: [{ timestamp: 20, exitRate: 16 }, { timestamp: 34, exitRate: 14 }] },
       { demographic: 'Men (18-24)', totalListeners: 155, completionRate: 65, subscribersConverted: 8, dropOffPoints: [{ timestamp: 16, exitRate: 19 }, { timestamp: 30, exitRate: 17 }] },
       { demographic: 'Women (35-44)', totalListeners: 115, completionRate: 62, subscribersConverted: 4, dropOffPoints: [{ timestamp: 23, exitRate: 22 }, { timestamp: 37, exitRate: 18 }] },
-      { demographic: 'Men (35-35)', totalListeners: 98, completionRate: 65, subscribersConverted: 3, dropOffPoints: [{ timestamp: 19, exitRate: 20 }, { timestamp: 33, exitRate: 16 }] },
+      { demographic: 'Men (35-44)', totalListeners: 98, completionRate: 65, subscribersConverted: 3, dropOffPoints: [{ timestamp: 19, exitRate: 20 }, { timestamp: 33, exitRate: 16 }] },
       { demographic: 'Age 45+', totalListeners: 88, completionRate: 54, subscribersConverted: 1, dropOffPoints: [{ timestamp: 25, exitRate: 32 }, { timestamp: 39, exitRate: 26 }] },
     ],
   },

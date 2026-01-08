@@ -24,15 +24,6 @@ import { EpisodeCompletionDashboard } from '@/components/EpisodeCompletionDashbo
 const COLORS = ['#1DB954', '#B3B3B3', '#535353', '#212121', '#FFFFFF', '#8B5CF6'];
 
 // Mock data for Overview
-const listenerTrendData = [
-  { date: 'Nov 4', listeners: 10200 },
-  { date: 'Nov 11', listeners: 10800 },
-  { date: 'Nov 18', listeners: 11200 },
-  { date: 'Nov 25', listeners: 11800 },
-  { date: 'Dec 2', listeners: 12200 },
-  { date: 'Dec 9', listeners: 12400 },
-];
-
 const topEpisodesData = [
   { episode: 'Viral Moment ep124', listens: 2340, duration: '4:45', completion: 72 },
   { episode: 'Interview ep123', listens: 1890, duration: '4:20', completion: 68 },
