@@ -4120,7 +4120,10 @@
         // Initialize charts based on active tab
         function initializeChartsForTab(tabId) {
             if (tabId === 'overview') {
-                initListenerTrendChart();
+                // Use a longer delay for initial load to ensure canvas is ready
+                setTimeout(() => {
+                    initListenerTrendChart();
+                }, 300);
             } else if (tabId === 'reach') {
                 initTrafficSourceWaterfallChart();
                 initNewVsReturningAreaChart();
@@ -4445,6 +4448,19 @@
                             }
                         }
                     });
+                    
+                    // Force immediate update and resize
+                    setTimeout(() => {
+                        if (charts.listenerTrend) {
+                            charts.listenerTrend.update('none');
+                            charts.listenerTrend.resize();
+                            // Force a repaint
+                            canvasEl.style.display = 'none';
+                            canvasEl.offsetHeight; // Trigger reflow
+                            canvasEl.style.display = '';
+                            charts.listenerTrend.resize();
+                        }
+                    }, 100);
                 });
             });
         }
