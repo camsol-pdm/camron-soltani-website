@@ -498,9 +498,14 @@ export function EpisodeCompletionDashboard() {
   }));
 
   // Handle bar click
-  const handleBarClick = (data: any) => {
+  const handleBarClick = (data: any, index?: number) => {
     if (data && data.activePayload && data.activePayload[0]) {
       const episodeData = data.activePayload[0].payload.episodeData;
+      setSelectedEpisode(episodeData);
+      setViewState('demographic');
+    } else if (index !== undefined) {
+      // Fallback: use index if available
+      const episodeData = completionTrendData[index].episodeData;
       setSelectedEpisode(episodeData);
       setViewState('demographic');
     }
@@ -778,7 +783,6 @@ export function EpisodeCompletionDashboard() {
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={completionTrendData}
-            onClick={handleBarClick}
             style={{ cursor: 'pointer' }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#535353" />
@@ -811,9 +815,18 @@ export function EpisodeCompletionDashboard() {
               dataKey="completionRate" 
               name="Completion %"
               radius={[8, 8, 0, 0]}
+              onClick={handleBarClick}
             >
               {completionTrendData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={getBarColor(entry.completionRate)} />
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={getBarColor(entry.completionRate)}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    setSelectedEpisode(entry.episodeData);
+                    setViewState('demographic');
+                  }}
+                />
               ))}
             </Bar>
           </BarChart>
