@@ -438,8 +438,8 @@ const generateInsights = (episode: any, demographic: string, demographicData: an
   const avgRate = episode.completionByDemographic.reduce((sum: number, d: any) => sum + d.completionRate, 0) / episode.completionByDemographic.length;
   const isHighPerformer = demographicData.completionRate >= avgRate + 5;
   
-  const insights = [];
-  const mismatches = [];
+  const insights: string[] = [];
+  const mismatches: string[] = [];
   
   // Check each affinity dimension
   const dimensions = [
