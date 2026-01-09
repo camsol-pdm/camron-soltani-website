@@ -4754,18 +4754,6 @@
                     return '#EF4444';
                 });
                 
-                console.log('Demographic chart data:', {
-                    labels: demographicLabels,
-                    data: completionRates,
-                    count: demographicLabels.length,
-                    fullData: sortedDemographics
-                });
-                
-                // Verify data before creating chart
-                if (demographicLabels.length !== 7 || completionRates.length !== 7) {
-                    console.error('ERROR: Expected 7 demographics but got', demographicLabels.length, 'labels and', completionRates.length, 'data points');
-                }
-                
                 charts.episodeDemographic = new Chart(demoCtx, {
                     type: 'bar',
                     data: {
@@ -4843,23 +4831,9 @@
                             }
                         }
                     }
-                    });
-                    
-                    console.log('Chart created with', charts.episodeDemographic.data.labels.length, 'labels');
-                    
-                    // Force update and resize to ensure all bars render
-                    setTimeout(() => {
-                        if (charts.episodeDemographic) {
-                            charts.episodeDemographic.resize();
-                            charts.episodeDemographic.update('none');
-                            console.log('Chart updated, bars:', charts.episodeDemographic.data.datasets[0].data.length);
-                        }
-                    }, 200);
-                }, 50);
-            } else {
-                console.error('ERROR: Canvas element or demographics data not found');
-                console.error('demoCtx:', demoCtx);
-                console.error('sortedDemographics:', sortedDemographics);
+                });
+                
+                console.log('Demographic chart initialized successfully');
             }
 
             // Create insight cards
