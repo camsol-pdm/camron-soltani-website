@@ -497,32 +497,6 @@ export function EpisodeCompletionDashboard() {
     episodeData: ep,
   }));
 
-  // Handle bar click - Recharts passes (data, index, event)
-  const handleBarClick = (data: any, index?: number) => {
-    console.log('Bar clicked:', data, index);
-    // If data is the payload object directly
-    if (data && data.episodeData) {
-      setSelectedEpisode(data.episodeData);
-      setViewState('demographic');
-      return;
-    }
-    // If data has activePayload (from BarChart onClick)
-    if (data && data.activePayload && data.activePayload[0]) {
-      const episodeData = data.activePayload[0].payload?.episodeData;
-      if (episodeData) {
-        setSelectedEpisode(episodeData);
-        setViewState('demographic');
-        return;
-      }
-    }
-    // Fallback: use index if available
-    if (index !== undefined && completionTrendData[index]) {
-      const episodeData = completionTrendData[index].episodeData;
-      setSelectedEpisode(episodeData);
-      setViewState('demographic');
-    }
-  };
-
   // Prepare demographic data for selected episode
   const demographicData = selectedEpisode
     ? [...selectedEpisode.completionByDemographic].sort((a, b) => b.completionRate - a.completionRate)
