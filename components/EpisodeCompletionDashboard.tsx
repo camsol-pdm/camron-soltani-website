@@ -730,8 +730,10 @@ export function EpisodeCompletionDashboard() {
           <BarChart
             data={completionTrendData}
             onClick={(event: any) => {
+              console.log('BarChart clicked:', event);
               if (event && event.activePayload && event.activePayload.length > 0) {
                 const clickedData = event.activePayload[0].payload;
+                console.log('Clicked data:', clickedData);
                 if (clickedData && clickedData.episodeData) {
                   setSelectedEpisode(clickedData.episodeData);
                   setViewState('demographic');
@@ -770,11 +772,28 @@ export function EpisodeCompletionDashboard() {
               dataKey="completionRate" 
               name="Completion %"
               radius={[8, 8, 0, 0]}
+              onClick={(data: any, index: number, event: any) => {
+                console.log('Bar clicked:', data, index, event);
+                const entry = completionTrendData[index];
+                if (entry && entry.episodeData) {
+                  setSelectedEpisode(entry.episodeData);
+                  setViewState('demographic');
+                }
+              }}
             >
               {completionTrendData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
                   fill={getBarColor(entry.completionRate)}
+                  onClick={(e: any) => {
+                    e.stopPropagation();
+                    console.log('Cell clicked:', entry);
+                    if (entry && entry.episodeData) {
+                      setSelectedEpisode(entry.episodeData);
+                      setViewState('demographic');
+                    }
+                  }}
+                  style={{ cursor: 'pointer' }}
                 />
               ))}
             </Bar>
