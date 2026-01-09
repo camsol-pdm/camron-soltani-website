@@ -4547,6 +4547,298 @@
             });
         }
 
+        // Full episode data with demographic information
+        const fullEpisodeData = [
+            { episode: 'Ep 01', title: 'Welcome to the Dark Side: True Crime Intro', completionRate: 69, duration: 35,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 420, completionRate: 83, subscribersConverted: 42 },
+                    { demographic: 'Women (18-24)', totalListeners: 350, completionRate: 79, subscribersConverted: 24 },
+                    { demographic: 'Men (25-34)', totalListeners: 250, completionRate: 70, subscribersConverted: 13 },
+                    { demographic: 'Men (18-24)', totalListeners: 215, completionRate: 66, subscribersConverted: 11 },
+                    { demographic: 'Women (35-44)', totalListeners: 155, completionRate: 62, subscribersConverted: 6 },
+                    { demographic: 'Men (35-44)', totalListeners: 132, completionRate: 65, subscribersConverted: 5 },
+                    { demographic: 'Age 45+', totalListeners: 118, completionRate: 55, subscribersConverted: 2 },
+                ]
+            },
+            { episode: 'Ep 02', title: 'Patterns in Chaos: How Criminals Get Caught', completionRate: 72, duration: 40,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 340, completionRate: 86, subscribersConverted: 35 },
+                    { demographic: 'Women (18-24)', totalListeners: 272, completionRate: 81, subscribersConverted: 19 },
+                    { demographic: 'Men (25-34)', totalListeners: 200, completionRate: 71, subscribersConverted: 11 },
+                    { demographic: 'Men (18-24)', totalListeners: 170, completionRate: 67, subscribersConverted: 9 },
+                    { demographic: 'Women (35-44)', totalListeners: 125, completionRate: 64, subscribersConverted: 5 },
+                    { demographic: 'Men (35-44)', totalListeners: 105, completionRate: 67, subscribersConverted: 4 },
+                    { demographic: 'Age 45+', totalListeners: 95, completionRate: 57, subscribersConverted: 2 },
+                ]
+            },
+            { episode: 'Ep 03', title: 'Crime Scene Analysis: Reading the Evidence', completionRate: 68, duration: 46,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 295, completionRate: 80, subscribersConverted: 28 },
+                    { demographic: 'Women (18-24)', totalListeners: 238, completionRate: 75, subscribersConverted: 15 },
+                    { demographic: 'Men (25-34)', totalListeners: 172, completionRate: 64, subscribersConverted: 8 },
+                    { demographic: 'Men (18-24)', totalListeners: 148, completionRate: 60, subscribersConverted: 6 },
+                    { demographic: 'Women (35-44)', totalListeners: 108, completionRate: 56, subscribersConverted: 2 },
+                    { demographic: 'Men (35-44)', totalListeners: 92, completionRate: 59, subscribersConverted: 2 },
+                    { demographic: 'Age 45+', totalListeners: 82, completionRate: 48, subscribersConverted: 0 },
+                ]
+            },
+            { episode: 'Ep 04', title: 'Motive, Means, Opportunity: The Murder Triangle', completionRate: 71, duration: 43,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 310, completionRate: 85, subscribersConverted: 32 },
+                    { demographic: 'Women (18-24)', totalListeners: 248, completionRate: 79, subscribersConverted: 17 },
+                    { demographic: 'Men (25-34)', totalListeners: 182, completionRate: 69, subscribersConverted: 10 },
+                    { demographic: 'Men (18-24)', totalListeners: 155, completionRate: 65, subscribersConverted: 8 },
+                    { demographic: 'Women (35-44)', totalListeners: 115, completionRate: 62, subscribersConverted: 4 },
+                    { demographic: 'Men (35-44)', totalListeners: 98, completionRate: 65, subscribersConverted: 3 },
+                    { demographic: 'Age 45+', totalListeners: 88, completionRate: 54, subscribersConverted: 1 },
+                ]
+            },
+            { episode: 'Ep 05', title: 'The Investigation Begins: First 48 Hours', completionRate: 74, duration: 38,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 330, completionRate: 89, subscribersConverted: 36 },
+                    { demographic: 'Women (18-24)', totalListeners: 265, completionRate: 84, subscribersConverted: 19 },
+                    { demographic: 'Men (25-34)', totalListeners: 195, completionRate: 73, subscribersConverted: 11 },
+                    { demographic: 'Men (18-24)', totalListeners: 165, completionRate: 69, subscribersConverted: 9 },
+                    { demographic: 'Women (35-44)', totalListeners: 122, completionRate: 67, subscribersConverted: 5 },
+                    { demographic: 'Men (35-44)', totalListeners: 103, completionRate: 70, subscribersConverted: 4 },
+                    { demographic: 'Age 45+', totalListeners: 92, completionRate: 60, subscribersConverted: 2 },
+                ]
+            },
+            { episode: 'Ep 06', title: 'Victim Profile: Who Gets Targeted?', completionRate: 73, duration: 41,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 345, completionRate: 87, subscribersConverted: 37 },
+                    { demographic: 'Women (18-24)', totalListeners: 275, completionRate: 81, subscribersConverted: 20 },
+                    { demographic: 'Men (25-34)', totalListeners: 202, completionRate: 72, subscribersConverted: 12 },
+                    { demographic: 'Men (18-24)', totalListeners: 172, completionRate: 68, subscribersConverted: 9 },
+                    { demographic: 'Women (35-44)', totalListeners: 128, completionRate: 65, subscribersConverted: 5 },
+                    { demographic: 'Men (35-44)', totalListeners: 108, completionRate: 68, subscribersConverted: 4 },
+                    { demographic: 'Age 45+', totalListeners: 95, completionRate: 58, subscribersConverted: 2 },
+                ]
+            },
+            { episode: 'Ep 07', title: 'The Confession: Truth or Manipulation?', completionRate: 77, duration: 36,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 385, completionRate: 92, subscribersConverted: 43 },
+                    { demographic: 'Women (18-24)', totalListeners: 310, completionRate: 88, subscribersConverted: 26 },
+                    { demographic: 'Men (25-34)', totalListeners: 228, completionRate: 75, subscribersConverted: 13 },
+                    { demographic: 'Men (18-24)', totalListeners: 195, completionRate: 71, subscribersConverted: 11 },
+                    { demographic: 'Women (35-44)', totalListeners: 145, completionRate: 70, subscribersConverted: 8 },
+                    { demographic: 'Men (35-44)', totalListeners: 120, completionRate: 73, subscribersConverted: 7 },
+                    { demographic: 'Age 45+', totalListeners: 108, completionRate: 64, subscribersConverted: 4 },
+                ]
+            },
+            { episode: 'Ep 08', title: 'Mapping the Killer: Geographic Profiling 101', completionRate: 70, duration: 45,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 320, completionRate: 84, subscribersConverted: 35 },
+                    { demographic: 'Women (18-24)', totalListeners: 260, completionRate: 78, subscribersConverted: 18 },
+                    { demographic: 'Men (25-34)', totalListeners: 188, completionRate: 68, subscribersConverted: 10 },
+                    { demographic: 'Men (18-24)', totalListeners: 162, completionRate: 64, subscribersConverted: 7 },
+                    { demographic: 'Women (35-44)', totalListeners: 118, completionRate: 59, subscribersConverted: 3 },
+                    { demographic: 'Men (35-44)', totalListeners: 102, completionRate: 62, subscribersConverted: 3 },
+                    { demographic: 'Age 45+', totalListeners: 88, completionRate: 51, subscribersConverted: 1 },
+                ]
+            },
+            { episode: 'Ep 09', title: 'The Verdict: What Jurors Really Think', completionRate: 76, duration: 39,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 370, completionRate: 88, subscribersConverted: 39 },
+                    { demographic: 'Women (18-24)', totalListeners: 295, completionRate: 83, subscribersConverted: 21 },
+                    { demographic: 'Men (25-34)', totalListeners: 218, completionRate: 74, subscribersConverted: 13 },
+                    { demographic: 'Men (18-24)', totalListeners: 188, completionRate: 70, subscribersConverted: 10 },
+                    { demographic: 'Women (35-44)', totalListeners: 138, completionRate: 69, subscribersConverted: 7 },
+                    { demographic: 'Men (35-44)', totalListeners: 115, completionRate: 72, subscribersConverted: 6 },
+                    { demographic: 'Age 45+', totalListeners: 102, completionRate: 63, subscribersConverted: 3 },
+                ]
+            },
+            { episode: 'Ep 10', title: 'Behavioral Clues: Reading the Crime Scene', completionRate: 65, duration: 51,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 310, completionRate: 82, subscribersConverted: 31 },
+                    { demographic: 'Women (18-24)', totalListeners: 245, completionRate: 76, subscribersConverted: 16 },
+                    { demographic: 'Men (25-34)', totalListeners: 178, completionRate: 65, subscribersConverted: 8 },
+                    { demographic: 'Men (18-24)', totalListeners: 152, completionRate: 61, subscribersConverted: 6 },
+                    { demographic: 'Women (35-44)', totalListeners: 105, completionRate: 54, subscribersConverted: 2 },
+                    { demographic: 'Men (35-44)', totalListeners: 92, completionRate: 58, subscribersConverted: 2 },
+                    { demographic: 'Age 45+', totalListeners: 82, completionRate: 48, subscribersConverted: 1 },
+                ]
+            },
+            { episode: 'Ep 11', title: 'The Innocent Man: DNA Evidence Changes Everything', completionRate: 78, duration: 44,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 355, completionRate: 91, subscribersConverted: 41 },
+                    { demographic: 'Women (18-24)', totalListeners: 290, completionRate: 87, subscribersConverted: 25 },
+                    { demographic: 'Men (25-34)', totalListeners: 205, completionRate: 76, subscribersConverted: 12 },
+                    { demographic: 'Men (18-24)', totalListeners: 178, completionRate: 72, subscribersConverted: 10 },
+                    { demographic: 'Women (35-44)', totalListeners: 135, completionRate: 71, subscribersConverted: 7 },
+                    { demographic: 'Men (35-44)', totalListeners: 112, completionRate: 74, subscribersConverted: 6 },
+                    { demographic: 'Age 45+', totalListeners: 98, completionRate: 65, subscribersConverted: 3 },
+                ]
+            },
+            { episode: 'Ep 12', title: 'True Crime Deep Dive: Serial Killer Psychology', completionRate: 81, duration: 47,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 340, completionRate: 94, subscribersConverted: 38 },
+                    { demographic: 'Women (18-24)', totalListeners: 280, completionRate: 89, subscribersConverted: 23 },
+                    { demographic: 'Men (25-34)', totalListeners: 210, completionRate: 77, subscribersConverted: 12 },
+                    { demographic: 'Men (18-24)', totalListeners: 195, completionRate: 79, subscribersConverted: 11 },
+                    { demographic: 'Women (35-44)', totalListeners: 140, completionRate: 63, subscribersConverted: 6 },
+                    { demographic: 'Men (35-44)', totalListeners: 125, completionRate: 68, subscribersConverted: 7 },
+                    { demographic: 'Age 45+', totalListeners: 110, completionRate: 56, subscribersConverted: 3 },
+                ]
+            },
+            { episode: 'Ep 13', title: 'Justice Delayed: Cold Case Breakthroughs', completionRate: 75, duration: 38,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 365, completionRate: 89, subscribersConverted: 40 },
+                    { demographic: 'Women (18-24)', totalListeners: 285, completionRate: 84, subscribersConverted: 22 },
+                    { demographic: 'Men (25-34)', totalListeners: 198, completionRate: 75, subscribersConverted: 11 },
+                    { demographic: 'Men (18-24)', totalListeners: 162, completionRate: 71, subscribersConverted: 9 },
+                    { demographic: 'Women (35-44)', totalListeners: 128, completionRate: 68, subscribersConverted: 6 },
+                    { demographic: 'Men (35-44)', totalListeners: 105, completionRate: 72, subscribersConverted: 5 },
+                    { demographic: 'Age 45+', totalListeners: 92, completionRate: 62, subscribersConverted: 2 },
+                ]
+            },
+            { episode: 'Ep 14', title: 'The Unraveling: Inside a Serial Predator\'s Mind', completionRate: 69, duration: 54,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 420, completionRate: 91, subscribersConverted: 52 },
+                    { demographic: 'Women (18-24)', totalListeners: 310, completionRate: 85, subscribersConverted: 28 },
+                    { demographic: 'Men (25-34)', totalListeners: 225, completionRate: 72, subscribersConverted: 14 },
+                    { demographic: 'Men (18-24)', totalListeners: 188, completionRate: 68, subscribersConverted: 10 },
+                    { demographic: 'Women (35-44)', totalListeners: 142, completionRate: 58, subscribersConverted: 5 },
+                    { demographic: 'Men (35-44)', totalListeners: 118, completionRate: 61, subscribersConverted: 4 },
+                    { demographic: 'Age 45+', totalListeners: 95, completionRate: 48, subscribersConverted: 1 },
+                ]
+            },
+            { episode: 'Ep 15', title: 'The Psychology of Manipulation: Control Tactics Explained', completionRate: 72, duration: 42,
+                demographics: [
+                    { demographic: 'Women (25-34)', totalListeners: 285, completionRate: 88, subscribersConverted: 34 },
+                    { demographic: 'Women (18-24)', totalListeners: 240, completionRate: 82, subscribersConverted: 18 },
+                    { demographic: 'Men (25-34)', totalListeners: 165, completionRate: 71, subscribersConverted: 8 },
+                    { demographic: 'Men (18-24)', totalListeners: 142, completionRate: 68, subscribersConverted: 7 },
+                    { demographic: 'Women (35-44)', totalListeners: 98, completionRate: 61, subscribersConverted: 4 },
+                    { demographic: 'Men (35-44)', totalListeners: 87, completionRate: 64, subscribersConverted: 3 },
+                    { demographic: 'Age 45+', totalListeners: 78, completionRate: 52, subscribersConverted: 1 },
+                ]
+            },
+        ];
+
+        function showEpisodeDemographicBreakdown(index) {
+            const episode = fullEpisodeData[index];
+            if (!episode) return;
+
+            // Hide overview, show demographic view
+            document.getElementById('episodeCompletionOverview').classList.add('hidden');
+            document.getElementById('episodeCompletionDemographic').classList.remove('hidden');
+
+            // Update episode info
+            document.getElementById('demographicEpisodeTitle').textContent = episode.title;
+            document.getElementById('demographicEpisodeMeta').textContent = 
+                `Overall Completion: ${episode.completionRate}% • Duration: ${episode.duration} min`;
+
+            // Sort demographics by completion rate
+            const sortedDemographics = [...episode.demographics].sort((a, b) => b.completionRate - a.completionRate);
+            const avgCompletion = episode.demographics.reduce((sum, d) => sum + d.completionRate, 0) / episode.demographics.length;
+
+            // Create demographic chart
+            const demoCtx = document.getElementById('episodeDemographicChart');
+            if (demoCtx) {
+                if (charts.episodeDemographic) charts.episodeDemographic.destroy();
+                
+                charts.episodeDemographic = new Chart(demoCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedDemographics.map(d => d.demographic),
+                        datasets: [{
+                            label: 'Completion %',
+                            data: sortedDemographics.map(d => d.completionRate),
+                            backgroundColor: sortedDemographics.map(d => {
+                                if (d.completionRate >= 70) return '#1DB954';
+                                if (d.completionRate >= 50) return '#FFD700';
+                                return '#EF4444';
+                            }),
+                            borderColor: sortedDemographics.map(d => {
+                                if (d.completionRate >= 70) return '#1DB954';
+                                if (d.completionRate >= 50) return '#FFD700';
+                                return '#EF4444';
+                            }),
+                            borderWidth: 1,
+                            borderRadius: 8
+                        }]
+                    },
+                    indexAxis: 'y',
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const demo = sortedDemographics[context.dataIndex];
+                                        return `Completion: ${context.parsed.x}% | Listeners: ${demo.totalListeners.toLocaleString()} | Subscribers: ${demo.subscribersConverted}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: false,
+                                min: 40,
+                                max: 100,
+                                grid: { color: '#535353' },
+                                ticks: {
+                                    color: '#B3B3B3',
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            },
+                            y: {
+                                grid: { color: '#535353' },
+                                ticks: { color: '#B3B3B3' }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Create insight cards
+            const cardsContainer = document.getElementById('demographicInsightCards');
+            if (cardsContainer) {
+                cardsContainer.innerHTML = '<h4 class="text-lg font-semibold text-spotify-text mb-3">Demographic Insights</h4>' +
+                    sortedDemographics.map(demo => {
+                        const performance = demo.completionRate >= avgCompletion * 1.1 ? { icon: '⭐', label: 'High Performer', color: 'text-green-500' } :
+                                           demo.completionRate >= avgCompletion * 0.9 ? { icon: '◐', label: 'Average', color: 'text-yellow-500' } :
+                                           { icon: '⚠️', label: 'Low Performer', color: 'text-red-500' };
+                        
+                        return `
+                            <div class="bg-spotify-dark border border-spotify-neutral rounded-lg p-5">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h5 class="text-lg font-semibold text-spotify-text">${demo.demographic} • ${demo.completionRate}%</h5>
+                                        <p class="text-sm text-spotify-text-muted mt-1">${demo.totalListeners.toLocaleString()} listeners • ${demo.subscribersConverted} subscribers</p>
+                                    </div>
+                                    <div class="text-right ${performance.color}">
+                                        <div class="text-2xl">${performance.icon}</div>
+                                        <div class="text-xs font-semibold">${performance.label}</div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-3 bg-spotify-dark-secondary border border-spotify-green/30 rounded-lg">
+                                    <h6 class="text-sm font-semibold text-spotify-text mb-1">Recommendation</h6>
+                                    <p class="text-xs text-spotify-text-muted">
+                                        ${performance.icon === '⭐' ? 
+                                            `This demographic is performing exceptionally well. Consider creating more content that resonates with this audience segment.` :
+                                            performance.icon === '⚠️' ?
+                                            `Focus on optimizing content structure or creating variant content that better aligns with this demographic's preferences.` :
+                                            `This demographic shows average engagement. Consider targeted optimizations to improve completion rates.`
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+            }
+        }
+
+        function showEpisodeCompletionOverview() {
+            document.getElementById('episodeCompletionOverview').classList.remove('hidden');
+            document.getElementById('episodeCompletionDemographic').classList.add('hidden');
+        }
+
         function initTrafficSourceChart() {
             const ctx = document.getElementById('trafficSourceChart');
             if (!ctx) return;
