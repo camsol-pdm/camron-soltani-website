@@ -783,6 +783,7 @@ export function EpisodeCompletionDashboard() {
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={completionTrendData}
+            onClick={handleBarClick}
             style={{ cursor: 'pointer' }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#535353" />
@@ -821,11 +822,6 @@ export function EpisodeCompletionDashboard() {
                 <Cell 
                   key={`cell-${index}`} 
                   fill={getBarColor(entry.completionRate)}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    setSelectedEpisode(entry.episodeData);
-                    setViewState('demographic');
-                  }}
                 />
               ))}
             </Bar>
