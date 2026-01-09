@@ -4743,7 +4743,7 @@
                 if (demoCtx && sortedDemographics && sortedDemographics.length > 0) {
                 if (charts.episodeDemographic) charts.episodeDemographic.destroy();
                 
-                // Prepare data arrays - ensure we have exactly 7 items
+                // Prepare data arrays
                 const demographicLabels = sortedDemographics.map(d => d.demographic);
                 const completionRates = sortedDemographics.map(d => d.completionRate);
                 const backgroundColors = sortedDemographics.map(d => {
@@ -4757,28 +4757,17 @@
                     return '#EF4444';
                 });
                 
-                console.log('=== DEMOGRAPHIC CHART DEBUG ===');
-                console.log('sortedDemographics length:', sortedDemographics.length);
-                console.log('sortedDemographics:', sortedDemographics);
-                console.log('demographicLabels:', demographicLabels);
-                console.log('demographicLabels length:', demographicLabels.length);
-                console.log('completionRates:', completionRates);
-                console.log('completionRates length:', completionRates.length);
-                console.log('backgroundColors length:', backgroundColors.length);
-                console.log('borderColors length:', borderColors.length);
+                console.log('Demographic chart data:', {
+                    labels: demographicLabels,
+                    data: completionRates,
+                    count: demographicLabels.length,
+                    fullData: sortedDemographics
+                });
                 
                 // Verify data before creating chart
                 if (demographicLabels.length !== 7 || completionRates.length !== 7) {
-                    console.error('❌ ERROR: Expected 7 demographics but got', demographicLabels.length, 'labels and', completionRates.length, 'data points');
-                    return;
+                    console.error('ERROR: Expected 7 demographics but got', demographicLabels.length, 'labels and', completionRates.length, 'data points');
                 }
-                
-                if (demographicLabels.length !== completionRates.length) {
-                    console.error('❌ ERROR: Labels and data arrays have different lengths!');
-                    return;
-                }
-                
-                console.log('✅ All checks passed - creating chart with 7 bars');
                 
                 charts.episodeDemographic = new Chart(demoCtx, {
                     type: 'bar',
