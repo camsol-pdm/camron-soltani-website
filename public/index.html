@@ -2310,13 +2310,35 @@
                                 <p class="text-xs text-spotify-text-muted mt-2 italic">💡 Insight: Monthly revenue of $3,290 comes from ads ($2,400) and subscriptions ($890). Your RPM of $3.10 is above the $2.80 genre benchmark. Opportunity: add ad markers at high-retention timestamps (2:00, 5:00, 12:00) to capture an additional $180-240/month.</p>
                             </div>
                         </div>
-                        <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+                        <div id="episodeCompletionOverview" class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
                             <h3 class="text-xl font-semibold text-spotify-text mb-4">Episode Completion Rate Analysis</h3>
                             <p class="text-sm text-spotify-text-muted mb-2">Click any bar to view demographic breakdown</p>
                             <div class="mb-4">
                                 <canvas id="episodeCompletionBarChart" height="100"></canvas>
                             </div>
                             <p class="text-xs text-spotify-text-muted mt-4 italic">💡 Insight: Episodes with completion rates above 70% (Ep 05, Ep 07, Ep 11, Ep 12) generate 2.3x more engagement and 35% higher retention. The trending topic format (Ep 10, Ep 14) shows strong initial listens but lower completion due to longer duration. Consider optimizing episode length and pacing for episodes below 65% completion to improve overall engagement.</p>
+                        </div>
+                        
+                        <!-- Demographic Breakdown View (Hidden by default) -->
+                        <div id="episodeCompletionDemographic" class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8 hidden">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h3 id="demographicEpisodeTitle" class="text-xl font-semibold text-spotify-text mb-1"></h3>
+                                    <p id="demographicEpisodeMeta" class="text-sm text-spotify-text-muted"></p>
+                                </div>
+                                <button onclick="showEpisodeCompletionOverview()" class="px-4 py-2 bg-spotify-dark border border-spotify-neutral rounded-lg text-spotify-text hover:bg-spotify-neutral hover:border-spotify-green transition-colors">
+                                    ← Back to Overview
+                                </button>
+                            </div>
+                            
+                            <!-- Demographic Chart -->
+                            <div class="mb-6">
+                                <h4 class="text-lg font-semibold text-spotify-text mb-3">Completion by Demographic</h4>
+                                <canvas id="episodeDemographicChart" height="100"></canvas>
+                            </div>
+                            
+                            <!-- Demographic Insight Cards -->
+                            <div id="demographicInsightCards" class="space-y-4"></div>
                         </div>
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6">
                             <h3 class="text-xl font-semibold text-spotify-text mb-4">Top Episodes (30d)</h3>
