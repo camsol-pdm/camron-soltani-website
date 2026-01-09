@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import {
-  LineChart,
-  Line,
   BarChart,
   Bar,
   XAxis,
@@ -731,6 +729,15 @@ export function EpisodeCompletionDashboard() {
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={completionTrendData}
+            onClick={(event: any) => {
+              if (event && event.activePayload && event.activePayload.length > 0) {
+                const clickedData = event.activePayload[0].payload;
+                if (clickedData && clickedData.episodeData) {
+                  setSelectedEpisode(clickedData.episodeData);
+                  setViewState('demographic');
+                }
+              }
+            }}
             style={{ cursor: 'pointer' }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#535353" />
@@ -763,13 +770,6 @@ export function EpisodeCompletionDashboard() {
               dataKey="completionRate" 
               name="Completion %"
               radius={[8, 8, 0, 0]}
-              onClick={(data: any, index: number) => {
-                const entry = completionTrendData[index];
-                if (entry && entry.episodeData) {
-                  setSelectedEpisode(entry.episodeData);
-                  setViewState('demographic');
-                }
-              }}
             >
               {completionTrendData.map((entry, index) => (
                 <Cell 
