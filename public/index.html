@@ -5433,6 +5433,18 @@
             }
         });
         
+        // Try to initialize navigation scroll handlers (for Next.js HTMLRenderer compatibility)
+        function tryInitNavScroll() {
+            try {
+                // Update active nav state
+                if (typeof updateActiveNav === 'function') {
+                    updateActiveNav();
+                }
+            } catch (error) {
+                console.warn('Navigation scroll initialization failed:', error);
+            }
+        }
+        
         // Also try after a delay for Next.js HTMLRenderer
         setTimeout(tryInitNavScroll, 500);
         
