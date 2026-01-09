@@ -4848,25 +4848,14 @@
                     }
                     });
                     
-                    console.log('Chart created. Chart data structure:', {
-                        labelsCount: charts.episodeDemographic.data.labels.length,
-                        labels: charts.episodeDemographic.data.labels,
-                        dataCount: charts.episodeDemographic.data.datasets[0].data.length,
-                        data: charts.episodeDemographic.data.datasets[0].data,
-                        backgroundColorCount: charts.episodeDemographic.data.datasets[0].backgroundColor.length,
-                        chart: charts.episodeDemographic
-                    });
+                    console.log('Chart created with', charts.episodeDemographic.data.labels.length, 'labels');
                     
                     // Force update and resize to ensure all bars render
                     setTimeout(() => {
                         if (charts.episodeDemographic) {
                             charts.episodeDemographic.resize();
                             charts.episodeDemographic.update('none');
-                            console.log('After update - Chart data:', {
-                                labelsCount: charts.episodeDemographic.data.labels.length,
-                                dataCount: charts.episodeDemographic.data.datasets[0].data.length,
-                                meta: charts.episodeDemographic.data.datasets[0].meta
-                            });
+                            console.log('Chart updated, bars:', charts.episodeDemographic.data.datasets[0].data.length);
                         }
                     }, 200);
                 }, 50);
