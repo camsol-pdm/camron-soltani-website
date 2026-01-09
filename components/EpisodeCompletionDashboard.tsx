@@ -497,14 +497,26 @@ export function EpisodeCompletionDashboard() {
     episodeData: ep,
   }));
 
-  // Handle bar click
+  // Handle bar click - Recharts passes (data, index, event)
   const handleBarClick = (data: any, index?: number) => {
-    if (data && data.activePayload && data.activePayload[0]) {
-      const episodeData = data.activePayload[0].payload.episodeData;
-      setSelectedEpisode(episodeData);
+    console.log('Bar clicked:', data, index);
+    // If data is the payload object directly
+    if (data && data.episodeData) {
+      setSelectedEpisode(data.episodeData);
       setViewState('demographic');
-    } else if (index !== undefined) {
-      // Fallback: use index if available
+      return;
+    }
+    // If data has activePayload (from BarChart onClick)
+    if (data && data.activePayload && data.activePayload[0]) {
+      const episodeData = data.activePayload[0].payload?.episodeData;
+      if (episodeData) {
+        setSelectedEpisode(episodeData);
+        setViewState('demographic');
+        return;
+      }
+    }
+    // Fallback: use index if available
+    if (index !== undefined && completionTrendData[index]) {
       const episodeData = completionTrendData[index].episodeData;
       setSelectedEpisode(episodeData);
       setViewState('demographic');
@@ -739,51 +751,12 @@ export function EpisodeCompletionDashboard() {
     <div className="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
       <h3 className="text-xl font-semibold text-spotify-text mb-4">Episode Completion Rate Analysis</h3>
       
-      {/* Completion Rate Trend Chart */}
-      <div className="mb-6">
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={completionTrendData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#535353" />
-            <XAxis 
-              dataKey="episode" 
-              stroke="#B3B3B3"
-              tick={{ fill: '#B3B3B3' }}
-            />
-            <YAxis 
-              stroke="#B3B3B3"
-              tick={{ fill: '#B3B3B3' }}
-              domain={[0, 100]}
-              label={{ value: 'Completion %', angle: -90, position: 'insideLeft', fill: '#B3B3B3' }}
-            />
-            <Tooltip
-              contentStyle={{ 
-                backgroundColor: '#212121', 
-                border: '1px solid #535353', 
-                borderRadius: '8px',
-                color: '#FFFFFF'
-              }}
-              labelStyle={{ color: '#FFFFFF' }}
-              formatter={(value: number) => [`${value}%`, 'Completion Rate']}
-            />
-            <Line 
-              type="monotone" 
-              dataKey="completionRate" 
-              stroke="#1DB954" 
-              strokeWidth={2} 
-              dot={{ fill: '#1DB954', r: 4 }}
-              activeDot={{ r: 6 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
       {/* Interactive Bar Chart - Click to view demographics */}
       <div className="mb-4">
         <p className="text-sm text-spotify-text-muted mb-2">Click any bar to view demographic breakdown</p>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={completionTrendData}
-            onClick={handleBarClick}
             style={{ cursor: 'pointer' }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#535353" />
@@ -816,7 +789,13 @@ export function EpisodeCompletionDashboard() {
               dataKey="completionRate" 
               name="Completion %"
               radius={[8, 8, 0, 0]}
-              onClick={handleBarClick}
+              onClick={(data: any, index: number) => {
+                const entry = completionTrendData[index];
+                if (entry && entry.episodeData) {
+                  setSelectedEpisode(entry.episodeData);
+                  setViewState('demographic');
+                }
+              }}
             >
               {completionTrendData.map((entry, index) => (
                 <Cell 
