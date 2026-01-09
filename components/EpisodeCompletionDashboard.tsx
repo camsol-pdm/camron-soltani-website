@@ -772,28 +772,42 @@ export function EpisodeCompletionDashboard() {
               dataKey="completionRate" 
               name="Completion %"
               radius={[8, 8, 0, 0]}
-              onClick={(data: any, index: number, event: any) => {
-                console.log('Bar clicked:', data, index, event);
-                const entry = completionTrendData[index];
-                if (entry && entry.episodeData) {
-                  setSelectedEpisode(entry.episodeData);
-                  setViewState('demographic');
+              onClick={(data: any, index: number) => {
+                console.log('Bar clicked:', data, index);
+                if (index !== undefined && completionTrendData[index]) {
+                  const entry = completionTrendData[index];
+                  if (entry && entry.episodeData) {
+                    setSelectedEpisode(entry.episodeData);
+                    setViewState('demographic');
+                  }
                 }
+              }}
+              shape={(props: any) => {
+                const { fill, x, y, width, height, payload, index } = props;
+                return (
+                  <rect
+                    x={x}
+                    y={y}
+                    width={width}
+                    height={height}
+                    fill={fill}
+                    rx={8}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      console.log('Shape clicked:', payload, index);
+                      if (payload && payload.episodeData) {
+                        setSelectedEpisode(payload.episodeData);
+                        setViewState('demographic');
+                      }
+                    }}
+                  />
+                );
               }}
             >
               {completionTrendData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
                   fill={getBarColor(entry.completionRate)}
-                  onClick={(e: any) => {
-                    e.stopPropagation();
-                    console.log('Cell clicked:', entry);
-                    if (entry && entry.episodeData) {
-                      setSelectedEpisode(entry.episodeData);
-                      setViewState('demographic');
-                    }
-                  }}
-                  style={{ cursor: 'pointer' }}
                 />
               ))}
             </Bar>
