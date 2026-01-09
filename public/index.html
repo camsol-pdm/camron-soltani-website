@@ -4724,7 +4724,8 @@
 
             // Hide overview, show demographic view
             document.getElementById('episodeCompletionOverview').classList.add('hidden');
-            document.getElementById('episodeCompletionDemographic').classList.remove('hidden');
+            const demographicView = document.getElementById('episodeCompletionDemographic');
+            demographicView.classList.remove('hidden');
 
             // Update episode info
             document.getElementById('demographicEpisodeTitle').textContent = episode.title;
@@ -4735,9 +4736,11 @@
             const sortedDemographics = [...episode.demographics].sort((a, b) => b.completionRate - a.completionRate);
             const avgCompletion = episode.demographics.reduce((sum, d) => sum + d.completionRate, 0) / episode.demographics.length;
 
-            // Create demographic chart
-            const demoCtx = document.getElementById('episodeDemographicChart');
-            if (demoCtx && sortedDemographics && sortedDemographics.length > 0) {
+            // Wait for view to be visible, then create chart
+            setTimeout(() => {
+                // Create demographic chart
+                const demoCtx = document.getElementById('episodeDemographicChart');
+                if (demoCtx && sortedDemographics && sortedDemographics.length > 0) {
                 if (charts.episodeDemographic) charts.episodeDemographic.destroy();
                 
                 // Prepare data arrays
