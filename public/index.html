@@ -4766,13 +4766,6 @@
                     console.error('ERROR: Expected 7 demographics but got', demographicLabels.length, 'labels and', completionRates.length, 'data points');
                 }
                 
-                // Create individual data points with colors
-                const datasetData = completionRates.map((rate, idx) => ({
-                    x: rate,
-                    backgroundColor: backgroundColors[idx],
-                    borderColor: borderColors[idx]
-                }));
-                
                 charts.episodeDemographic = new Chart(demoCtx, {
                     type: 'bar',
                     data: {
@@ -4780,23 +4773,8 @@
                         datasets: [{
                             label: 'Completion %',
                             data: completionRates,
-                            backgroundColor: function(context) {
-                                if (!context.chart.chartArea) {
-                                    return backgroundColors;
-                                }
-                                const chart = context.chart;
-                                const { ctx, chartArea } = chart;
-                                if (!chartArea) {
-                                    return backgroundColors;
-                                }
-                                return backgroundColors[context.dataIndex];
-                            },
-                            borderColor: function(context) {
-                                if (!context.chart.chartArea) {
-                                    return borderColors;
-                                }
-                                return borderColors[context.dataIndex];
-                            },
+                            backgroundColor: backgroundColors,
+                            borderColor: borderColors,
                             borderWidth: 1,
                             borderRadius: 8
                         }]
