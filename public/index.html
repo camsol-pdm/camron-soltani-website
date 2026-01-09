@@ -4779,6 +4779,11 @@
                                 beginAtZero: false,
                                 min: 40,
                                 max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Completion %',
+                                    color: '#B3B3B3'
+                                },
                                 grid: { color: '#535353' },
                                 ticks: {
                                     color: '#B3B3B3',
@@ -4788,8 +4793,20 @@
                                 }
                             },
                             y: {
-                                grid: { color: '#535353' },
-                                ticks: { color: '#B3B3B3' }
+                                title: {
+                                    display: false
+                                },
+                                grid: { 
+                                    display: false,
+                                    color: '#535353' 
+                                },
+                                ticks: { 
+                                    color: '#B3B3B3',
+                                    autoSkip: false,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
                             }
                         }
                     }
