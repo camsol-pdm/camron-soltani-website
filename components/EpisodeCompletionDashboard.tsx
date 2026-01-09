@@ -12,9 +12,10 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Cell,
 } from 'recharts';
 
-// Mock data for episode completion rates
+// Complete mock data with all 15 episodes and demographic affinity preferences
 const mockEpisodes = [
   {
     episodeId: 'ep-01',
@@ -32,6 +33,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 132, completionRate: 65, subscribersConverted: 5, dropOffPoints: [{ timestamp: 13, exitRate: 21 }, { timestamp: 25, exitRate: 17 }] },
       { demographic: 'Age 45+', totalListeners: 118, completionRate: 55, subscribersConverted: 2, dropOffPoints: [{ timestamp: 19, exitRate: 30 }, { timestamp: 31, exitRate: 24 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-02',
@@ -49,6 +59,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 105, completionRate: 67, subscribersConverted: 4, dropOffPoints: [{ timestamp: 16, exitRate: 19 }, { timestamp: 28, exitRate: 15 }] },
       { demographic: 'Age 45+', totalListeners: 95, completionRate: 57, subscribersConverted: 2, dropOffPoints: [{ timestamp: 22, exitRate: 28 }, { timestamp: 34, exitRate: 22 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-03',
@@ -66,6 +85,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 92, completionRate: 59, subscribersConverted: 2, dropOffPoints: [{ timestamp: 22, exitRate: 24 }, { timestamp: 36, exitRate: 20 }] },
       { demographic: 'Age 45+', totalListeners: 82, completionRate: 48, subscribersConverted: 0, dropOffPoints: [{ timestamp: 28, exitRate: 36 }, { timestamp: 42, exitRate: 30 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-04',
@@ -83,6 +111,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 98, completionRate: 65, subscribersConverted: 3, dropOffPoints: [{ timestamp: 19, exitRate: 20 }, { timestamp: 33, exitRate: 16 }] },
       { demographic: 'Age 45+', totalListeners: 88, completionRate: 54, subscribersConverted: 1, dropOffPoints: [{ timestamp: 25, exitRate: 32 }, { timestamp: 39, exitRate: 26 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-05',
@@ -100,6 +137,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 103, completionRate: 70, subscribersConverted: 4, dropOffPoints: [{ timestamp: 15, exitRate: 16 }, { timestamp: 27, exitRate: 14 }] },
       { demographic: 'Age 45+', totalListeners: 92, completionRate: 60, subscribersConverted: 2, dropOffPoints: [{ timestamp: 21, exitRate: 24 }, { timestamp: 33, exitRate: 18 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-06',
@@ -117,6 +163,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 108, completionRate: 68, subscribersConverted: 4, dropOffPoints: [{ timestamp: 17, exitRate: 18 }, { timestamp: 29, exitRate: 15 }] },
       { demographic: 'Age 45+', totalListeners: 95, completionRate: 58, subscribersConverted: 2, dropOffPoints: [{ timestamp: 23, exitRate: 26 }, { timestamp: 35, exitRate: 20 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-07',
@@ -134,6 +189,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 120, completionRate: 73, subscribersConverted: 7, dropOffPoints: [{ timestamp: 12, exitRate: 15 }, { timestamp: 24, exitRate: 13 }] },
       { demographic: 'Age 45+', totalListeners: 108, completionRate: 64, subscribersConverted: 4, dropOffPoints: [{ timestamp: 18, exitRate: 20 }, { timestamp: 30, exitRate: 16 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-08',
@@ -151,6 +215,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 102, completionRate: 62, subscribersConverted: 3, dropOffPoints: [{ timestamp: 20, exitRate: 22 }, { timestamp: 34, exitRate: 18 }] },
       { demographic: 'Age 45+', totalListeners: 88, completionRate: 51, subscribersConverted: 1, dropOffPoints: [{ timestamp: 22, exitRate: 34 }, { timestamp: 36, exitRate: 28 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-09',
@@ -168,6 +241,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 115, completionRate: 72, subscribersConverted: 6, dropOffPoints: [{ timestamp: 14, exitRate: 14 }, { timestamp: 26, exitRate: 12 }] },
       { demographic: 'Age 45+', totalListeners: 102, completionRate: 63, subscribersConverted: 3, dropOffPoints: [{ timestamp: 20, exitRate: 22 }, { timestamp: 32, exitRate: 18 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-10',
@@ -185,6 +267,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 92, completionRate: 58, subscribersConverted: 2, dropOffPoints: [{ timestamp: 24, exitRate: 26 }, { timestamp: 38, exitRate: 22 }] },
       { demographic: 'Age 45+', totalListeners: 82, completionRate: 48, subscribersConverted: 1, dropOffPoints: [{ timestamp: 26, exitRate: 36 }, { timestamp: 40, exitRate: 30 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-11',
@@ -202,6 +293,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 112, completionRate: 74, subscribersConverted: 6, dropOffPoints: [{ timestamp: 18, exitRate: 14 }, { timestamp: 30, exitRate: 12 }] },
       { demographic: 'Age 45+', totalListeners: 98, completionRate: 65, subscribersConverted: 3, dropOffPoints: [{ timestamp: 24, exitRate: 20 }, { timestamp: 36, exitRate: 16 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-12',
@@ -219,6 +319,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 125, completionRate: 68, subscribersConverted: 7, dropOffPoints: [{ timestamp: 20, exitRate: 20 }, { timestamp: 32, exitRate: 16 }] },
       { demographic: 'Age 45+', totalListeners: 110, completionRate: 56, subscribersConverted: 3, dropOffPoints: [{ timestamp: 23, exitRate: 28 }, { timestamp: 35, exitRate: 22 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-13',
@@ -236,6 +345,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 105, completionRate: 72, subscribersConverted: 5, dropOffPoints: [{ timestamp: 14, exitRate: 16 }, { timestamp: 26, exitRate: 14 }] },
       { demographic: 'Age 45+', totalListeners: 92, completionRate: 62, subscribersConverted: 2, dropOffPoints: [{ timestamp: 20, exitRate: 22 }, { timestamp: 32, exitRate: 18 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-14',
@@ -253,6 +371,15 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 118, completionRate: 61, subscribersConverted: 4, dropOffPoints: [{ timestamp: 24, exitRate: 24 }, { timestamp: 40, exitRate: 20 }] },
       { demographic: 'Age 45+', totalListeners: 95, completionRate: 48, subscribersConverted: 1, dropOffPoints: [{ timestamp: 26, exitRate: 38 }, { timestamp: 42, exitRate: 32 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
   {
     episodeId: 'ep-15',
@@ -270,22 +397,123 @@ const mockEpisodes = [
       { demographic: 'Men (35-44)', totalListeners: 87, completionRate: 64, subscribersConverted: 3, dropOffPoints: [{ timestamp: 16, exitRate: 20 }, { timestamp: 28, exitRate: 18 }] },
       { demographic: 'Age 45+', totalListeners: 78, completionRate: 52, subscribersConverted: 1, dropOffPoints: [{ timestamp: 22, exitRate: 32 }, { timestamp: 34, exitRate: 26 }] },
     ],
+    demographicAffinityPreferences: {
+      'Women (25-34)': { narrativeDriven: 9, psychologicalDepth: 9, realWorldContext: 8, humor: 4, accessibility: 6, structuredFormat: 5, conversationalTone: 8 },
+      'Women (18-24)': { narrativeDriven: 9, psychologicalDepth: 8, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 5, conversationalTone: 8 },
+      'Men (25-34)': { narrativeDriven: 7, psychologicalDepth: 7, realWorldContext: 7, humor: 7, accessibility: 6, structuredFormat: 7, conversationalTone: 6 },
+      'Men (18-24)': { narrativeDriven: 7, psychologicalDepth: 6, realWorldContext: 6, humor: 8, accessibility: 7, structuredFormat: 6, conversationalTone: 6 },
+      'Women (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 5, accessibility: 8, structuredFormat: 8, conversationalTone: 6 },
+      'Men (35-44)': { narrativeDriven: 6, psychologicalDepth: 6, realWorldContext: 7, humor: 6, accessibility: 7, structuredFormat: 8, conversationalTone: 6 },
+      'Age 45+': { narrativeDriven: 5, psychologicalDepth: 5, realWorldContext: 7, humor: 5, accessibility: 9, structuredFormat: 9, conversationalTone: 5 },
+    },
   },
 ];
 
+// Helper function to get bar color based on completion rate
+const getBarColor = (rate: number) => {
+  if (rate >= 70) return '#1DB954'; // Green
+  if (rate >= 50) return '#FFD700'; // Yellow
+  return '#EF4444'; // Red
+};
+
+// Helper function to determine performance indicator
+const getPerformanceIndicator = (rate: number, avgRate: number) => {
+  if (rate >= avgRate + 5) return { icon: '⭐', label: 'High Performer', color: 'text-spotify-green' };
+  if (rate >= avgRate - 5) return { icon: '◐', label: 'Average', color: 'text-yellow-500' };
+  return { icon: '⚠️', label: 'Low Performer', color: 'text-red-500' };
+};
+
+// Helper function to get affinity match indicator
+const getAffinityMatch = (episode: number, preference: number) => {
+  const diff = Math.abs(episode - preference);
+  if (diff <= 1) return '✓';
+  if (diff <= 2) return '◐';
+  return '✗';
+};
+
+// Helper function to generate insights based on affinity profile
+const generateInsights = (episode: any, demographic: string, demographicData: any) => {
+  const preferences = episode.demographicAffinityPreferences[demographic];
+  const affinity = episode.affinityProfile;
+  const avgRate = episode.completionByDemographic.reduce((sum: number, d: any) => sum + d.completionRate, 0) / episode.completionByDemographic.length;
+  const isHighPerformer = demographicData.completionRate >= avgRate + 5;
+  
+  const insights = [];
+  const mismatches = [];
+  
+  // Check each affinity dimension
+  const dimensions = [
+    { key: 'narrativeDriven', label: 'Narrative-Driven' },
+    { key: 'psychologicalDepth', label: 'Psychological Depth' },
+    { key: 'realWorldContext', label: 'Real-World Context' },
+    { key: 'accessibility', label: 'Accessibility' },
+    { key: 'structuredFormat', label: 'Structured Format' },
+    { key: 'humor', label: 'Humor' },
+    { key: 'conversationalTone', label: 'Conversational Tone' },
+  ];
+  
+  dimensions.forEach(dim => {
+    const epValue = affinity[dim.key as keyof typeof affinity];
+    const prefValue = preferences[dim.key as keyof typeof preferences];
+    const diff = epValue - prefValue;
+    
+    if (Math.abs(diff) <= 1) {
+      if (isHighPerformer) {
+        insights.push(`${dim.label} (${epValue}/10) perfectly matches your preference (${prefValue}/10)`);
+      }
+    } else if (diff < -2) {
+      mismatches.push(`${dim.label}: Episode ${epValue}/10 but you prefer ${prefValue}/10 — major mismatch`);
+    } else if (diff > 2) {
+      if (!isHighPerformer) {
+        mismatches.push(`${dim.label}: Episode ${epValue}/10 exceeds your preference (${prefValue}/10) — potential disconnect`);
+      }
+    }
+  });
+  
+  // Add subscriber conversion insight
+  const conversionRate = (demographicData.subscribersConverted / (demographicData.totalListeners * demographicData.completionRate / 100)) * 100;
+  if (conversionRate > 10) {
+    insights.push(`Subscriber conversion: ${conversionRate.toFixed(1)}% of completers (${conversionRate > 5 ? '2x' : '1.5x'} platform average)`);
+  }
+  
+  return { insights, mismatches };
+};
+
 export function EpisodeCompletionDashboard() {
   const [mounted, setMounted] = useState(false);
+  const [viewState, setViewState] = useState<'overview' | 'demographic'>('overview');
+  const [selectedEpisode, setSelectedEpisode] = useState<any>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Prepare chart data - show overall completion rate trend over episodes
+  // Prepare chart data for overview
   const completionTrendData = mockEpisodes.map((ep, idx) => ({
     episode: `Ep ${String(idx + 1).padStart(2, '0')}`,
     completionRate: ep.overallCompletionRate,
-    title: ep.title.substring(0, 30) + '...',
+    title: ep.title,
+    episodeIndex: idx,
+    episodeData: ep,
   }));
+
+  // Handle bar click
+  const handleBarClick = (data: any) => {
+    if (data && data.activePayload && data.activePayload[0]) {
+      const episodeData = data.activePayload[0].payload.episodeData;
+      setSelectedEpisode(episodeData);
+      setViewState('demographic');
+    }
+  };
+
+  // Prepare demographic data for selected episode
+  const demographicData = selectedEpisode
+    ? [...selectedEpisode.completionByDemographic].sort((a, b) => b.completionRate - a.completionRate)
+    : [];
+
+  const avgCompletionRate = selectedEpisode
+    ? selectedEpisode.completionByDemographic.reduce((sum: number, d: any) => sum + d.completionRate, 0) / selectedEpisode.completionByDemographic.length
+    : 0;
 
   if (!mounted) {
     return (
@@ -298,6 +526,210 @@ export function EpisodeCompletionDashboard() {
     );
   }
 
+  // Demographic breakdown view
+  if (viewState === 'demographic' && selectedEpisode) {
+    return (
+      <div className="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-xl font-semibold text-spotify-text mb-1">
+              {selectedEpisode.title}
+            </h3>
+            <p className="text-sm text-spotify-text-muted">
+              Overall Completion: {selectedEpisode.overallCompletionRate}% • Duration: {selectedEpisode.duration} min
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              setViewState('overview');
+              setSelectedEpisode(null);
+            }}
+            className="px-4 py-2 bg-spotify-dark border border-spotify-neutral rounded-lg text-spotify-text hover:bg-spotify-neutral hover:border-spotify-green transition-colors"
+          >
+            ← Back to Overview
+          </button>
+        </div>
+
+        {/* Demographic Breakdown Chart */}
+        <div className="mb-6">
+          <h4 className="text-lg font-semibold text-spotify-text mb-3">Completion by Demographic</h4>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              data={demographicData}
+              layout="vertical"
+              margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#535353" />
+              <XAxis type="number" domain={[0, 100]} stroke="#B3B3B3" tick={{ fill: '#B3B3B3' }} />
+              <YAxis
+                type="category"
+                dataKey="demographic"
+                stroke="#B3B3B3"
+                tick={{ fill: '#B3B3B3' }}
+                width={90}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#212121',
+                  border: '1px solid #535353',
+                  borderRadius: '8px',
+                  color: '#FFFFFF',
+                }}
+                labelStyle={{ color: '#FFFFFF' }}
+                formatter={(value: number) => [`${value}%`, 'Completion Rate']}
+              />
+              <Bar dataKey="completionRate" radius={[0, 8, 8, 0]}>
+                {demographicData.map((entry: any, index: number) => (
+                  <Cell key={`cell-${index}`} fill={getBarColor(entry.completionRate)} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Insight Cards for Each Demographic */}
+        <div className="space-y-4">
+          <h4 className="text-lg font-semibold text-spotify-text mb-3">Demographic Insights</h4>
+          {demographicData.map((demo: any, index: number) => {
+            const performance = getPerformanceIndicator(demo.completionRate, avgCompletionRate);
+            const { insights, mismatches } = generateInsights(selectedEpisode, demo.demographic, demo);
+            const preferences = selectedEpisode.demographicAffinityPreferences[demo.demographic];
+            const affinity = selectedEpisode.affinityProfile;
+            
+            // Find peak drop-off point
+            const peakDropOff = demo.dropOffPoints.reduce((max: any, point: any) => 
+              point.exitRate > (max?.exitRate || 0) ? point : max, null
+            );
+            
+            // Find peak engagement (lowest drop-off near end)
+            const lateDropOffs = demo.dropOffPoints.filter((p: any) => p.timestamp > selectedEpisode.duration * 0.7);
+            const peakEngagement = lateDropOffs.length > 0 
+              ? lateDropOffs.reduce((min: any, point: any) => 
+                  point.exitRate < (min?.exitRate || 100) ? point : min, null)
+              : null;
+
+            return (
+              <div
+                key={index}
+                className="bg-spotify-dark border border-spotify-neutral rounded-lg p-5"
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h5 className="text-lg font-semibold text-spotify-text">
+                      {demo.demographic} • {demo.completionRate}%
+                    </h5>
+                    <p className="text-sm text-spotify-text-muted mt-1">
+                      {demo.totalListeners.toLocaleString()} listeners • {demo.subscribersConverted} subscribers
+                    </p>
+                  </div>
+                  <div className={`text-right ${performance.color}`}>
+                    <div className="text-2xl">{performance.icon}</div>
+                    <div className="text-xs font-semibold">{performance.label}</div>
+                  </div>
+                </div>
+
+                {/* Affinity Profile Section */}
+                <div className="mb-4 p-3 bg-spotify-dark-secondary rounded-lg">
+                  <h6 className="text-sm font-semibold text-spotify-text mb-2">Affinity Profile Match</h6>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    {Object.entries(affinity).map(([key, value]: [string, any]) => {
+                      const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase()).trim();
+                      const prefValue = preferences[key as keyof typeof preferences];
+                      const match = getAffinityMatch(value, prefValue);
+                      const matchColor = match === '✓' ? 'text-spotify-green' : match === '◐' ? 'text-yellow-500' : 'text-red-500';
+                      
+                      return (
+                        <div key={key} className="flex items-center justify-between">
+                          <span className={`${matchColor} font-semibold`}>{match}</span>
+                          <span className="text-spotify-text-muted">
+                            {label}: Episode {value}/10 | You prefer: {prefValue}/10
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Why They Resonated/Underperformed */}
+                <div className="mb-4">
+                  <h6 className="text-sm font-semibold text-spotify-text mb-2">
+                    {performance.icon === '⭐' ? 'Why They Resonated' : performance.icon === '⚠️' ? 'Why They Underperformed' : 'Performance Analysis'}
+                  </h6>
+                  <ul className="space-y-1 text-sm text-spotify-text-muted">
+                    {performance.icon === '⭐' && insights.slice(0, 4).map((insight: string, idx: number) => (
+                      <li key={idx} className="flex items-start">
+                        <span className="text-spotify-green mr-2">•</span>
+                        <span>{insight}</span>
+                      </li>
+                    ))}
+                    {performance.icon === '⚠️' && mismatches.slice(0, 3).map((mismatch: string, idx: number) => (
+                      <li key={idx} className="flex items-start">
+                        <span className="text-red-500 mr-2">•</span>
+                        <span>{mismatch}</span>
+                      </li>
+                    ))}
+                    {performance.icon === '◐' && (
+                      <>
+                        {insights.slice(0, 2).map((insight: string, idx: number) => (
+                          <li key={idx} className="flex items-start">
+                            <span className="text-yellow-500 mr-2">•</span>
+                            <span>{insight}</span>
+                          </li>
+                        ))}
+                        {mismatches.slice(0, 1).map((mismatch: string, idx: number) => (
+                          <li key={`m-${idx}`} className="flex items-start">
+                            <span className="text-yellow-500 mr-2">•</span>
+                            <span>{mismatch}</span>
+                          </li>
+                        ))}
+                      </>
+                    )}
+                    {performance.icon === '⭐' && demo.completionRate > 85 && (
+                      <li className="flex items-start">
+                        <span className="text-spotify-green mr-2">•</span>
+                        <span>
+                          Subscriber conversion: {((demo.subscribersConverted / (demo.totalListeners * demo.completionRate / 100)) * 100).toFixed(1)}% of completers ({((demo.subscribersConverted / (demo.totalListeners * demo.completionRate / 100)) * 100) > 10 ? '2x' : '1.5x'} platform average)
+                        </span>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+
+                {/* Drop-off Analysis */}
+                {peakDropOff && (
+                  <div className="mb-4 text-sm">
+                    <h6 className="font-semibold text-spotify-text mb-1">Drop-off Analysis</h6>
+                    <p className="text-spotify-text-muted">
+                      Most exits occurred at {peakDropOff.timestamp}-{peakDropOff.timestamp + 2} minute mark ({peakDropOff.exitRate}% exit rate).
+                      {peakEngagement && peakEngagement.exitRate < 5 && (
+                        <> Peak engagement at {peakEngagement.timestamp}-{peakEngagement.timestamp + 2} minute mark (resolution/conclusion).</>
+                      )}
+                    </p>
+                  </div>
+                )}
+
+                {/* Recommendation */}
+                <div className="mt-4 p-3 bg-spotify-dark-secondary border border-spotify-green/30 rounded-lg">
+                  <h6 className="text-sm font-semibold text-spotify-text mb-1">Recommendation</h6>
+                  <p className="text-xs text-spotify-text-muted">
+                    {performance.icon === '⭐' 
+                      ? `Replicate this formula: ${insights[0]?.split(':')[0] || 'high narrative-driven and psychological depth'} for this demographic. This group has highest subscriber conversion rate.`
+                      : performance.icon === '⚠️'
+                      ? `Focus content creation on higher-performing segments OR create structured variant with clearer chapter breaks for this demographic.`
+                      : `Consider optimizing ${mismatches[0]?.split(':')[0] || 'content structure'} to better align with this demographic's preferences.`
+                    }
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // Overview view
   return (
     <div className="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
       <h3 className="text-xl font-semibold text-spotify-text mb-4">Episode Completion Rate Analysis</h3>
@@ -340,10 +772,15 @@ export function EpisodeCompletionDashboard() {
         </ResponsiveContainer>
       </div>
 
-      {/* Completion vs Listens Comparison */}
+      {/* Interactive Bar Chart - Click to view demographics */}
       <div className="mb-4">
+        <p className="text-sm text-spotify-text-muted mb-2">Click any bar to view demographic breakdown</p>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={completionTrendData}>
+          <BarChart
+            data={completionTrendData}
+            onClick={handleBarClick}
+            style={{ cursor: 'pointer' }}
+          >
             <CartesianGrid strokeDasharray="3 3" stroke="#535353" />
             <XAxis 
               dataKey="episode" 
@@ -351,7 +788,6 @@ export function EpisodeCompletionDashboard() {
               tick={{ fill: '#B3B3B3' }}
             />
             <YAxis 
-              yAxisId="left"
               stroke="#B3B3B3"
               tick={{ fill: '#B3B3B3' }}
               domain={[0, 100]}
@@ -365,16 +801,21 @@ export function EpisodeCompletionDashboard() {
                 color: '#FFFFFF'
               }}
               labelStyle={{ color: '#FFFFFF' }}
-            />
-            <Legend 
-              wrapperStyle={{ color: '#B3B3B3' }}
+              formatter={(value: number, name: string, props: any) => [
+                `${value}%`,
+                'Completion Rate',
+                `\n${props.payload.title}`,
+              ]}
             />
             <Bar 
-              yAxisId="left"
               dataKey="completionRate" 
-              fill="#1DB954" 
               name="Completion %"
-            />
+              radius={[8, 8, 0, 0]}
+            >
+              {completionTrendData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={getBarColor(entry.completionRate)} />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
