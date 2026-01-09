@@ -4460,12 +4460,7 @@
                             onClick: (event, activeElements) => {
                                 if (activeElements.length > 0) {
                                     const clickedIndex = activeElements[0].index;
-                                    const clickedEpisode = episodeCompletionData[clickedIndex];
-                                    if (clickedEpisode) {
-                                        // Navigate to demographic breakdown view
-                                        // For now, we'll show an alert - you can replace this with actual navigation
-                                        alert(`Clicked: ${clickedEpisode.episode} - ${clickedEpisode.title}\nCompletion Rate: ${clickedEpisode.completionRate}%\n\nNote: Demographic breakdown view coming soon.`);
-                                    }
+                                    showEpisodeDemographicBreakdown(clickedIndex);
                                 }
                             },
                             plugins: {
