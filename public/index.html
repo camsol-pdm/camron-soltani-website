@@ -4735,26 +4735,38 @@
 
             // Create demographic chart
             const demoCtx = document.getElementById('episodeDemographicChart');
-            if (demoCtx) {
+            if (demoCtx && sortedDemographics && sortedDemographics.length > 0) {
                 if (charts.episodeDemographic) charts.episodeDemographic.destroy();
+                
+                // Prepare data arrays
+                const demographicLabels = sortedDemographics.map(d => d.demographic);
+                const completionRates = sortedDemographics.map(d => d.completionRate);
+                const backgroundColors = sortedDemographics.map(d => {
+                    if (d.completionRate >= 70) return '#1DB954';
+                    if (d.completionRate >= 50) return '#FFD700';
+                    return '#EF4444';
+                });
+                const borderColors = sortedDemographics.map(d => {
+                    if (d.completionRate >= 70) return '#1DB954';
+                    if (d.completionRate >= 50) return '#FFD700';
+                    return '#EF4444';
+                });
+                
+                console.log('Demographic chart data:', {
+                    labels: demographicLabels,
+                    data: completionRates,
+                    count: demographicLabels.length
+                });
                 
                 charts.episodeDemographic = new Chart(demoCtx, {
                     type: 'bar',
                     data: {
-                        labels: sortedDemographics.map(d => d.demographic),
+                        labels: demographicLabels,
                         datasets: [{
                             label: 'Completion %',
-                            data: sortedDemographics.map(d => d.completionRate),
-                            backgroundColor: sortedDemographics.map(d => {
-                                if (d.completionRate >= 70) return '#1DB954';
-                                if (d.completionRate >= 50) return '#FFD700';
-                                return '#EF4444';
-                            }),
-                            borderColor: sortedDemographics.map(d => {
-                                if (d.completionRate >= 70) return '#1DB954';
-                                if (d.completionRate >= 50) return '#FFD700';
-                                return '#EF4444';
-                            }),
+                            data: completionRates,
+                            backgroundColor: backgroundColors,
+                            borderColor: borderColors,
                             borderWidth: 1,
                             borderRadius: 8
                         }]
@@ -4763,13 +4775,19 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        animation: {
+                            duration: 750
+                        },
                         plugins: {
                             legend: { display: false },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
                                         const demo = sortedDemographics[context.dataIndex];
-                                        return `Completion: ${context.parsed.x}% | Listeners: ${demo.totalListeners.toLocaleString()} | Subscribers: ${demo.subscribersConverted}`;
+                                        if (demo) {
+                                            return `Completion: ${context.parsed.x}% | Listeners: ${demo.totalListeners.toLocaleString()} | Subscribers: ${demo.subscribersConverted}`;
+                                        }
+                                        return `Completion: ${context.parsed.x}%`;
                                     }
                                 }
                             }
@@ -4787,6 +4805,7 @@
                                 grid: { color: '#535353' },
                                 ticks: {
                                     color: '#B3B3B3',
+                                    stepSize: 10,
                                     callback: function(value) {
                                         return value + '%';
                                     }
@@ -4811,6 +4830,13 @@
                         }
                     }
                 });
+                
+                // Force update to ensure all bars render
+                setTimeout(() => {
+                    if (charts.episodeDemographic) {
+                        charts.episodeDemographic.update();
+                    }
+                }, 100);
             }
 
             // Create insight cards
