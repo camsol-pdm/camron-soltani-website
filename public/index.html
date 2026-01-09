@@ -2312,9 +2312,7 @@
                         </div>
                         <div class="bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-6 mb-8">
                             <h3 class="text-xl font-semibold text-spotify-text mb-4">Episode Completion Rate Analysis</h3>
-                            <div class="mb-6">
-                                <canvas id="episodeCompletionTrendChart" height="100"></canvas>
-                            </div>
+                            <p class="text-sm text-spotify-text-muted mb-2">Click any bar to view demographic breakdown</p>
                             <div class="mb-4">
                                 <canvas id="episodeCompletionBarChart" height="100"></canvas>
                             </div>
@@ -4412,72 +4410,6 @@
                 { episode: 'Ep 15', title: 'Psychology of Manipulation', completionRate: 72 },
             ];
 
-            // Initialize line chart
-            const lineCtx = document.getElementById('episodeCompletionTrendChart');
-            if (lineCtx) {
-                const rect = lineCtx.getBoundingClientRect();
-                if (rect.width === 0 || rect.height === 0) {
-                    setTimeout(initEpisodeCompletionCharts, 200);
-                    return;
-                }
-
-                if (charts.episodeCompletionTrend) charts.episodeCompletionTrend.destroy();
-
-                try {
-                    charts.episodeCompletionTrend = new Chart(lineCtx, {
-                        type: 'line',
-                        data: {
-                            labels: episodeCompletionData.map(d => d.episode),
-                            datasets: [{
-                                label: 'Completion %',
-                                data: episodeCompletionData.map(d => d.completionRate),
-                                borderColor: '#1DB954',
-                                backgroundColor: 'rgba(29, 185, 84, 0.1)',
-                                tension: 0.4,
-                                fill: true,
-                                pointRadius: 4,
-                                pointHoverRadius: 6
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { display: false },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(context) {
-                                            return `Completion: ${context.parsed.y}%`;
-                                        }
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: false,
-                                    min: 50,
-                                    max: 85,
-                                    grid: { color: '#535353' },
-                                    ticks: {
-                                        color: '#B3B3B3',
-                                        callback: function(value) {
-                                            return value + '%';
-                                        }
-                                    }
-                                },
-                                x: {
-                                    grid: { color: '#535353' },
-                                    ticks: { color: '#B3B3B3' }
-                                }
-                            }
-                        }
-                    });
-                    console.log('Episode completion trend chart initialized successfully');
-                } catch (error) {
-                    console.error('Error initializing episode completion trend chart:', error);
-                }
-            }
-
             // Initialize bar chart
             const barCtx = document.getElementById('episodeCompletionBarChart');
             if (barCtx) {
@@ -4493,18 +4425,34 @@
                                 data: episodeCompletionData.map(d => d.completionRate),
                                 backgroundColor: '#1DB954',
                                 borderColor: '#1DB954',
-                                borderWidth: 1
+                                borderWidth: 1,
+                                borderRadius: 8
                             }]
                         },
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
+                            onHover: (event, activeElements) => {
+                                event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
+                            },
+                            onClick: (event, activeElements) => {
+                                if (activeElements.length > 0) {
+                                    const clickedIndex = activeElements[0].index;
+                                    const clickedEpisode = episodeCompletionData[clickedIndex];
+                                    if (clickedEpisode) {
+                                        // Navigate to demographic breakdown view
+                                        // For now, we'll show an alert - you can replace this with actual navigation
+                                        alert(`Clicked: ${clickedEpisode.episode} - ${clickedEpisode.title}\nCompletion Rate: ${clickedEpisode.completionRate}%\n\nNote: Demographic breakdown view coming soon.`);
+                                    }
+                                }
+                            },
                             plugins: {
                                 legend: { display: false },
                                 tooltip: {
                                     callbacks: {
                                         label: function(context) {
-                                            return `Completion: ${context.parsed.y}%`;
+                                            const episode = episodeCompletionData[context.dataIndex];
+                                            return `Completion: ${context.parsed.y}%${episode ? ' - ' + episode.title : ''}`;
                                         }
                                     }
                                 }
