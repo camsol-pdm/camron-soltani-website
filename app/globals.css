@@ -2,7 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Reset top spacing - remove unwanted whitespace */
+html {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   @apply bg-spotify-dark text-spotify-text;
+  margin: 0;
+  padding: 0;
+}
+
+/* Reset margin on wrapper div from HTMLRenderer */
+body > div {
+  margin: 0;
+  padding: 0;
 }
 
