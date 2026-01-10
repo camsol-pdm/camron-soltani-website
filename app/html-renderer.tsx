@@ -62,6 +62,6 @@ export default function HTMLRenderer({ bodyContent, headScripts, bodyScripts }: 
     }, 100);
   }, []); // Empty dependency array - only run once on mount
   
-  return <div dangerouslySetInnerHTML={{ __html: bodyContent }} />;
+  return <div style={{ margin: 0, padding: 0 }} dangerouslySetInnerHTML={{ __html: bodyContent }} />;
 }
 

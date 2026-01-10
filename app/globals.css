@@ -4,19 +4,26 @@
 
 /* Reset top spacing - remove unwanted whitespace */
 html {
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 body {
   @apply bg-spotify-dark text-spotify-text;
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-/* Reset margin on wrapper div from HTMLRenderer */
+/* Reset margin on wrapper div from HTMLRenderer - override any defaults */
 body > div {
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Override Tailwind's min-h-screen and ensure main starts at top */
+main {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  min-height: auto !important;
 }
 

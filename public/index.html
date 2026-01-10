@@ -53,13 +53,13 @@
         }
         
         html {
-            margin: 0;
-            padding: 0;
+            margin: 0 !important;
+            padding: 0 !important;
         }
         
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0 !important;
+            padding: 0 !important;
             background: var(--spotify-dark);
             background-image: 
                 radial-gradient(circle at 20% 50%, rgba(29, 185, 84, 0.03) 0%, transparent 50%),
@@ -1572,6 +1572,18 @@
             margin-left: 260px !important;
             margin-top: 0 !important;
             padding-top: 0 !important;
+            min-height: auto !important;
+        }
+        
+        /* Override Tailwind min-h-screen on main and sections */
+        main.min-h-screen {
+            min-height: auto !important;
+        }
+        
+        /* Ensure wrapper div from React has no spacing */
+        body > div {
+            margin: 0 !important;
+            padding: 0 !important;
         }
         
         /* Responsive: hide sidebar on mobile, show hamburger */
@@ -1664,7 +1676,7 @@
     <main class="min-h-screen">
         <!-- HOME PAGE -->
         <section id="home">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8 lg:pt-24 lg:pb-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8 lg:pt-12 lg:pb-12">
                 <div class="grid lg:grid-cols-5 gap-12 items-start">
                     <div class="lg:col-span-3">
                         <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-spotify-text mb-6 leading-tight">
