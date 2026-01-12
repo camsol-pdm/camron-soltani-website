@@ -5378,10 +5378,11 @@
                 
                 // Special handling for About section photo
                 if (img.alt === 'Camron Soltani') {
-                    // Try the correct filename (Amy-and-Camron-136.png)
+                    // Try the new photo first
                     const fallbacks = [
-                        '/images/Amy-and-Camron-136.png',  // Correct filename with hyphen
-                        '/images/Amy&amp_Camron-136.png',  // Fallback to old filename if it exists
+                        '/images/11_11 Family Photo-59.jpg',  // New family photo
+                        '/images/Amy-and-Camron-136.png',  // Fallback to old filename if it exists
+                        '/images/Amy&amp_Camron-136.png',
                         '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
                         '/images/Amy&_Camron-136.png'  // Direct &
                     ];
@@ -5443,10 +5444,11 @@
             const photo = document.getElementById('camron-photo');
             if (!photo) return;
             
-            // Try the correct filename (Amy-and-Camron-136.png)
+            // Try the new photo first
             const attempts = [
-                '/images/Amy-and-Camron-136.png',  // Correct filename with hyphen
-                '/images/Amy&amp_Camron-136.png',  // Fallback to old filename if it exists
+                '/images/11_11 Family Photo-59.jpg',  // New family photo
+                '/images/Amy-and-Camron-136.png',  // Fallback to old filename if it exists
+                '/images/Amy&amp_Camron-136.png',
                 '/images/Amy%26amp_Camron-136.png',  // URL-encoded &amp;
                 '/images/Amy&_Camron-136.png'  // Direct &
             ];
