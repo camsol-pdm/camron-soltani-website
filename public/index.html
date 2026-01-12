@@ -1951,278 +1951,46 @@
         <!-- 24-MONTH ROADMAP SECTION -->
         <section id="roadmap" class="min-h-screen py-16 bg-spotify-dark-secondary">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl md:text-4xl font-bold text-spotify-text mb-8 text-center">24-Month Roadmap</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-spotify-text mb-8 text-center">Implementation Roadmap: 24 Months to Market Leadership</h2>
                 
-                <div class="grid md:grid-cols-2 gap-6" style="margin-left: -1rem; margin-right: -1rem; padding-left: 1rem; padding-right: 1rem;">
-                    <!-- LEFT ROADMAP: Affinity-Driven Discovery Engine -->
-                    <div class="space-y-12">
-                        <h3 class="text-2xl font-bold text-spotify-text mb-6 text-center border-b border-spotify-neutral pb-4">Affinity-Driven Discovery Engine</h3>
-                        
-                        <div class="border-l-4 border-spotify-green pl-4">
-                            <h4 class="text-xl font-bold text-spotify-text mb-2">Phase 1 (Months 0–6): Foundation & Data Infrastructure</h4>
-                            <p class="text-spotify-text-muted leading-relaxed mb-4">
-                                We're building the data foundation. This means ingesting podcast audio files and transcripts at scale, then analyzing content to extract affinity characteristics: host style and personality, narrative structure, thematic depth, sentiment arcs, recurring subjects, humor style, wisdom level, professional development focus, and values alignment. We're processing transcripts and audio to identify subject matter, host expertise, content tone, and audience values. By the end of this phase, we have a labeled dataset of affinity characteristics across thousands of podcasts. We know this worked when our internal team can look at a podcast and correctly predict its "affinity profile" based on the features we extracted.
-                            </p>
-                            <p class="text-lg text-spotify-text-muted mb-3"><strong class="text-spotify-text">Key Deliverables:</strong></p>
-                            <ul class="list-disc list-inside space-y-2 text-spotify-text-muted text-sm">
-                                <li>Audio feature extraction pipeline (operational for top 5,000 podcasts)</li>
-                                <li>Video content metadata ingestion: transcripts, visual elements, and engagement patterns from video episodes</li>
-                                <li>Transcript analysis module with thematic and sentiment classification (applied to both audio and video)</li>
-                                <li>Affinity feature database with labeled training data (mapping content characteristics: host style, subject matter, thematic depth, humor style, wisdom, irreverence, self-improvement, professional development, values alignment across audio and video)</li>
-                                <li>Optional video-first UX design specification: wireframes and interaction patterns for Shorts feed, full-video discovery, watch-next recommendations powered by affinity profiles</li>
-                            </ul>
-                </div>
-
-                        <div class="border-l-4 border-spotify-green pl-4">
-                            <h4 class="text-xl font-bold text-spotify-text mb-2">Phase 2 (Months 6–12): Affinity Modeling & Cross-Domain Learning</h4>
-                            <p class="text-spotify-text-muted leading-relaxed mb-4">
-                                We're training the core model. We take the affinity characteristics from Phase 1 (host style, subject matter, thematic depth, humor style, values alignment) and convert them into mathematical representations (embeddings) that the system can work with. Then comes the clever part: we leverage Spotify's existing music recommendation system. Music recommendation is already incredibly good at identifying listener preference patterns. We use that as a teacher—essentially saying "show us which music listening patterns correspond to which listener preferences and interests, then help us apply that same logic to podcasts." This transfer learning means we don't build from scratch; we build on top of infrastructure that's been refined over years. By the end of this phase, the system can take a new podcast episode (one we've never seen before) and accurately predict its affinity profile.
-                            </p>
-                            <p class="text-lg text-spotify-text-muted mb-3"><strong class="text-spotify-text">Key Deliverables:</strong></p>
-                            <ul class="list-disc list-inside space-y-2 text-spotify-text-muted text-sm">
-                                <li>Affinity similarity model (trained and validated on internal data)</li>
-                                <li>Cross-domain music-to-podcast transfer learning prototype</li>
-                                <li>User affinity profile generation system</li>
-                                <li>Cold-start recommendation system for new podcasts (using audio/transcript features without needing listener history)</li>
-                            </ul>
-                        </div>
-
-                        <div class="border-l-4 border-spotify-green pl-4">
-                            <h4 class="text-xl font-bold text-spotify-text mb-2">Phase 3 (Months 12–18): A/B Testing & Refinement</h4>
-                            <p class="text-spotify-text-muted leading-relaxed mb-4">
-                                We need to know if this actually works in the real world. We run a controlled experiment with 50,000 Spotify users. Half get affinity-based recommendations; half get traditional category-based recommendations. We measure: Do affinity recommendations keep people listening longer? Do they subscribe to more shows? Do they discover content they wouldn't have found otherwise? We also get feedback directly from creators using the analytics dashboard—they tell us what insights are actually useful versus what feels like noise. If the data shows real engagement lift, we expand. If not, we adjust the model and test again.
-                            </p>
-                            <p class="text-lg text-spotify-text-muted mb-3"><strong class="text-spotify-text">Key Deliverables:</strong></p>
-                            <ul class="list-disc list-inside space-y-2 text-spotify-text-muted text-sm">
-                                <li>A/B test results and insights (publish findings)</li>
-                                <li>Refined affinity model based on live user feedback</li>
-                                <li>Creator analytics dashboard showing affinity positioning and audience affinity profiles</li>
-                            </ul>
-                        </div>
-
-                        <div class="border-l-4 border-spotify-green pl-4">
-                            <h4 class="text-xl font-bold text-spotify-text mb-2">Phase 4 (Months 18–24): Full Rollout & Integration</h4>
-                            <p class="text-spotify-text-muted leading-relaxed mb-4">
-                                We integrate affinity signals into every surface where listeners discover podcasts—the homepage recommendations, the For You page, search results. Everywhere a listener sees "try this podcast," we're now using affinity instead of just categories. We also handle the real-time problem: when a creator publishes a new episode today, we need to generate its affinity profile instantly so it's discoverable the same day. No waiting for batch processing. And critically, we ensure affinity insights flow directly into the Creator Promotional Engine so that when creators see "affinity match" data, they understand exactly what types of listeners they're reaching.
-                            </p>
-                            <p class="text-lg text-spotify-text-muted mb-3"><strong class="text-spotify-text">Key Deliverables:</strong></p>
-                            <ul class="list-disc list-inside space-y-2 text-spotify-text-muted text-sm">
-                                <li>Full production deployment of affinity-driven recommendations across audio and video surfaces</li>
-                                <li>Optional video-first discovery experience fully launched (user toggle to select preference):
-                                    <ul class="list-disc list-inside ml-4 mt-1 space-y-1">
-                                        <li>Shorts feed with affinity-driven recommendations</li>
-                                        <li>Full-episode video feed with visual discovery optimization</li>
-                                        <li>Recommended "watch next" video sequences powered by affinity data</li>
-                                        <li>AI-powered intent-based search ("Find me outdoor content that inspires adventure")</li>
-                                        <li>Affinity-based filtering and browsing</li>
-                                    </ul>
-                                </li>
-                                <li>Audio-video continuity: seamless transitions between video, audio, and Shorts powered by unified affinity profiles</li>
-                                <li>Real-time episode analysis pipeline (audio and video)</li>
-                                <li>Hybrid music + podcast vibe playlists</li>
-                                <li>Integration APIs for Creator Promotional Engine to access affinity targeting data</li>
-                        </ul>
-                        </div>
+                <div class="space-y-8">
+                    <div class="border-l-4 border-spotify-green pl-4">
+                        <h3 class="text-2xl font-bold text-spotify-text mb-3">Phase 1 (Months 0–6): Foundation & Validation</h3>
+                        <p class="text-spotify-text-muted leading-relaxed mb-4">
+                            Build the data infrastructure and validate core assumptions. Ingest and analyze top 5,000 podcasts to extract affinity characteristics (host style, thematic depth, humor, values alignment). Launch video-first experience tool for viewers and validate creator demand for enhanced analytics.
+                        </p>
                     </div>
 
-                    <!-- RIGHT ROADMAP: Creator Promotional Engine -->
-                <div class="space-y-12">
-                        <h3 class="text-2xl font-bold text-spotify-text mb-6 text-center border-b border-spotify-neutral pb-4">Creator Promotional Engine</h3>
-                        
-                        <div class="border-l-4 border-spotify-green pl-4">
-                            <h4 class="text-xl font-bold text-spotify-text mb-2">Phase 1 (Months 0–6): Spotify for Creators Foundation & Sponsorship Integration</h4>
-                            <p class="text-spotify-text-muted leading-relaxed mb-4">
-                                We start with foundational infrastructure: building the creator analytics dashboard that surfaces actionable insights on listener behavior, retention patterns, and audience composition. We establish basic creator onboarding flows and integrate sponsorship data sources—creators can see how their audience aligns with potential sponsor profiles and explore sponsorship opportunities. This phase validates core assumptions: do creators want this? Will they use it? We also build the foundation for sponsorship tracking: how opportunities are surfaced, how matches are identified, and how creator-sponsor connections are facilitated.
-                            </p>
-                            <p class="text-lg text-spotify-text-muted mb-3"><strong class="text-spotify-text">Key Deliverables:</strong></p>
-                            <ul class="list-disc list-inside space-y-2 text-spotify-text-muted text-sm">
-                                <li>Spotify for Creators analytics UI (creator-facing platform)</li>
-                                <li>Creator onboarding flow and validation system</li>
-                                <li>Sponsorship data integration and tracking system</li>
-                        </ul>
+                    <div class="border-l-4 border-spotify-green pl-4">
+                        <h3 class="text-2xl font-bold text-spotify-text mb-3">Phase 2 (Months 6–12): Model Training & Creator Tools</h3>
+                        <p class="text-spotify-text-muted leading-relaxed mb-4">
+                            Train affinity similarity models using Spotify's music-to-podcast transfer learning. Launch Spotify for Creators Analytics Intelligence with AI-generated insights. Deploy initial Spotify Agents (Sponsorship, Boost Optimization, Content Optimization).
+                        </p>
                     </div>
 
-                        <div class="border-l-4 border-spotify-green pl-4">
-                            <h4 class="text-xl font-bold text-spotify-text mb-2">Phase 2 (Months 6–12): Advanced Targeting & AI Campaign Tools</h4>
-                            <p class="text-spotify-text-muted leading-relaxed mb-4">
-                                Now we're adding intelligence. We integrate Spotify's first-party data—demographics, listening habits, geography—so creators can target audiences with precision. Instead of "show this to people aged 25-34," they can say "show this to people who listen to narrative-driven content on weeknights." We also build the AI campaign ideation tool: it analyzes a creator's existing content and suggests optimization angles. "Your interview episodes have 35% higher completion rates—consider doing more of those, and here's why." The AI identifies high-potential sponsorship opportunities based on affinity data—matching creators with brands whose target audiences align with listener values and interests (professional development seekers, personal growth enthusiasts, outdoor adventurers, philosophy lovers). The dashboard shifts from metrics to insights: not just "you have 10,000 listeners," but "68% of your listeners align with these three brand categories, and here's what that means for sponsorship opportunities."
-                            </p>
-                            <p class="text-lg text-spotify-text-muted mb-3"><strong class="text-spotify-text">Key Deliverables:</strong></p>
-                            <ul class="list-disc list-inside space-y-2 text-spotify-text-muted text-sm">
-                                <li>Advanced audience targeting module</li>
-                                <li>AI campaign ideation and optimization engine</li>
-                                <li>Sponsorship opportunity recommendation engine (affinity-based matching)</li>
-                                <li>Enhanced creator dashboard with actionable insights</li>
-                        </ul>
+                    <div class="border-l-4 border-spotify-green pl-4">
+                        <h3 class="text-2xl font-bold text-spotify-text mb-3">Phase 3 (Months 12–18): Integration & Testing</h3>
+                        <p class="text-spotify-text-muted leading-relaxed mb-4">
+                            Integrate affinity signals into all recommendation surfaces. Run A/B test with 50,000 users measuring cross-genre discovery rate, completion rates, and creator adoption. Refine models based on live feedback.
+                        </p>
                     </div>
 
-                        <div class="border-l-4 border-spotify-green pl-4">
-                            <h4 class="text-xl font-bold text-spotify-text mb-2">Phase 2B (Months 10–12): Spotify Agents Foundation</h4>
-                            <p class="text-lg text-spotify-text-muted mb-3"><strong class="text-spotify-text">Objectives:</strong></p>
-                            <ul class="list-disc list-inside space-y-2 text-spotify-text-muted text-sm mb-3">
-                                <li>Build agent execution framework: infrastructure to deploy autonomous agents that execute creator-approved actions</li>
-                                <li>Develop initial agent suite: Sponsorship Opportunity Agent (identifies and surfaces sponsorship matches), Boost Optimization Agent (automated budget allocation), Content Optimization Agent (automated content suggestions)</li>
-                                <li>Create creator consent and budget controls: allow creators to set budgets, approval workflows, and automation parameters</li>
-                                <li>Build agent billing and pricing engine: implement dynamic pricing based on podcast tier and agent action complexity</li>
-                                <li>Develop agent activity logging and transparency: creators can see what agents did, when, and cost</li>
-                            </ul>
-                            <p class="text-lg text-spotify-text-muted mb-2"><strong class="text-spotify-text">Key Deliverables:</strong></p>
-                            <ul class="list-disc list-inside space-y-2 text-spotify-text-muted text-sm">
-                                <li>Agent execution and orchestration platform</li>
-                                <li>Initial agent implementations (3-5 core agents)</li>
-                                <li>Creator control dashboard for agent settings and approvals</li>
-                                <li>Agent billing system with dynamic pricing based on podcast scale</li>
-                                <li>Agent activity audit log and creator transparency dashboard</li>
-                        </ul>
-                    </div>
-
-                        <div class="border-l-4 border-spotify-green pl-4">
-                            <h4 class="text-xl font-bold text-spotify-text mb-2">Phase 3 (Months 12–18): Affinity Integration & Smart Targeting</h4>
-                            <p class="text-spotify-text-muted leading-relaxed mb-4">
-                                This is where discovery and promotion connect. We integrate affinity signals from the Discovery Engine into the Promotional Engine. Now creators can target listeners based on affinity profiles, not just demographics. "Reach listeners who value professional development, personal growth, and actionable insights" finds audiences across crime, business, and self-help genres. The Sponsorship Agent uses affinity data to surface high-potential brand partnership opportunities, recommending sponsors whose target audiences align with listener values and interests (professional development seekers, personal growth enthusiasts, outdoor adventurers, philosophy lovers). We also build ROI confidence metrics: before a creator spends $200 on a campaign, they see predicted audience growth and engagement lift. This reduces guesswork and builds creator confidence in promotional investments.
-                            </p>
-                            <p class="text-lg text-spotify-text-muted mb-3"><strong class="text-spotify-text">Key Deliverables:</strong></p>
-                            <ul class="list-disc list-inside space-y-2 text-spotify-text-muted text-sm">
-                                <li>Affinity integration layer</li>
-                                <li>Affinity-based audience targeting and smart partnership recommendations</li>
-                                <li>Predictive ROI analytics for promotional campaigns</li>
-                        </ul>
-                    </div>
-
-                        <div class="border-l-4 border-spotify-green pl-4">
-                            <h4 class="text-xl font-bold text-spotify-text mb-2">Phase 4 (Months 18–24): Automation & Scale</h4>
-                            <p class="text-spotify-text-muted leading-relaxed mb-4">
-                                We're moving from tools to automation. High-confidence campaigns run end-to-end: agents identify sponsorship opportunities, suggest negotiation terms, schedule campaigns, and measure results. The agent suite expands to include Scheduling Agents, Audience Intelligence Agents, and Sponsorship Matching Agents. Agents start collaborating—the Boost Optimization Agent and Sponsorship Agent work together: "This sponsorship opportunity aligns with high-performing content, so let's boost the episode to maximize impact." We refine pricing based on actual usage patterns: creators tell us what's worth paying for, and we adjust. The multi-show bundling feature lets creators package campaigns across complementary shows, unlocking network-level growth strategies. By the end of this phase, creators who started with basic promotional needs have a complete automation platform that scales with their growth.
-                            </p>
-                            <p class="text-lg text-spotify-text-muted mb-3"><strong class="text-spotify-text">Key Deliverables:</strong></p>
-                            <ul class="list-disc list-inside space-y-2 text-spotify-text-muted text-sm">
-                                <li>Automated campaign recommendation and execution engine</li>
-                                <li>Expanded agent suite (8+ agent types)</li>
-                                <li>Agent management UI for creator agent control and settings</li>
-                                <li>Agent-to-agent communication framework</li>
-                                <li>Agent performance analytics (ROI by agent type, creator adoption rates, etc.)</li>
-                                <li>Refined monetization model with tiered agent pricing</li>
-                                <li>Multi-show promotion bundles</li>
-                                <li>Predictive creator growth/churn analytics</li>
-                                <li>Long-term creator success measurement framework</li>
-                        </ul>
-                        </div>
+                    <div class="border-l-4 border-spotify-green pl-4">
+                        <h3 class="text-2xl font-bold text-spotify-text mb-3">Phase 4 (Months 18–24): Full Rollout & Scale</h3>
+                        <p class="text-spotify-text-muted leading-relaxed mb-4">
+                            Deploy affinity-driven recommendations across homepage, For You, and search. Launch Creator Economic Ecosystems (Sponsorship Marketplace, Production Services Marketplace). Scale to 20,000+ podcasts with affinity profiles.
+                        </p>
                     </div>
                 </div>
 
-                <div class="mt-12 bg-spotify-dark-secondary border border-spotify-neutral rounded-lg p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-spotify-text mb-6">Phase-Based Checkpoint Metrics</h2>
-                    <p class="text-spotify-text-muted mb-6">
-                        These checkpoints ensure we're on track at each phase transition. They're not aspirational—they're the concrete signals we use to decide whether to proceed or iterate.
-                    </p>
-                    
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <!-- Affinity-Driven Discovery Engine Checkpoints -->
-                        <div>
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Affinity-Driven Discovery Engine</h3>
-                            <div class="space-y-6">
-                                <div class="border-l-4 border-spotify-green pl-4">
-                                    <h4 class="font-semibold text-spotify-text mb-2">After Phase 1 (Month 6) — Foundation & Data Infrastructure</h4>
-                                    <ul class="text-sm text-spotify-text-muted space-y-2">
-                                        <li>✓ Audio feature extraction pipeline operational for top 5,000 podcasts</li>
-                                        <li>✓ NLP transcript analysis module validated on 2,000+ labeled episodes (internal quality review confirming accuracy)</li>
-                                        <li>✓ Data consistency score: 85%+ agreement on affinity characteristic labeling</li>
-                                        <li>✓ ML/data team readiness: Technical framework validated; team confirms ready for Phase 2</li>
-                                    </ul>
-                                </div>
-                                <div class="border-l-4 border-spotify-green pl-4">
-                                    <h4 class="font-semibold text-spotify-text mb-2">After Phase 2 (Month 12) — Affinity Modeling & Cross-Domain Learning</h4>
-                                    <ul class="text-sm text-spotify-text-muted space-y-2">
-                                        <li>✓ Affinity similarity model trained; 60%+ pattern recognition consistency on cross-domain transfer</li>
-                                        <li>✓ User affinity profiles generated for 1,000 internal test users</li>
-                                        <li>✓ Early validation: affinity-recommended episodes show 15%+ higher completion rate vs. random recommendations</li>
-                                    </ul>
-                                </div>
-                                <div class="border-l-4 border-spotify-green pl-4">
-                                    <h4 class="font-semibold text-spotify-text mb-2">After Phase 3 (Month 18) — A/B Testing & Refinement</h4>
-                                    <ul class="text-sm text-spotify-text-muted space-y-2">
-                                        <li>✓ Live A/B test with 50,000 users shows: 25%+ increase in cross-genre listening sessions</li>
-                                        <li>✓ 10-15% increase in new podcast discovery rate</li>
-                                        <li>✓ Affinity-recommended episodes 5-8% higher completion rate vs. control</li>
-                                        <li>✓ Creator adoption: 40%+ of tested creators using affinity insights</li>
-                                        <li>✓ Coverage: 20,000+ podcasts have affinity profiles</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Creator Promotional Engine Checkpoints -->
-                        <div>
-                            <h3 class="text-xl font-semibold text-spotify-text mb-4">Creator Promotional Engine</h3>
-                            <div class="space-y-6">
-                                <div class="border-l-4 border-spotify-green pl-4">
-                                    <h4 class="font-semibold text-spotify-text mb-2">After Phase 1 (Month 6) — Spotify for Creators Foundation & Sponsorship Integration</h4>
-                                    <ul class="text-sm text-spotify-text-muted space-y-2">
-                                        <li>✓ Spotify for Creators analytics interface launched with 500+ active creators</li>
-                                        <li>✓ Creator onboarding flow validated with 500+ creators; analytics functionality tested</li>
-                                        <li>✓ Campaign tracking system validated: 85%+ accurate impression/listen tracking</li>
-                                        <li>✓ Creator satisfaction: 70%+ positive feedback on dashboard usability</li>
-                                    </ul>
-                                </div>
-                                <div class="border-l-4 border-spotify-green pl-4">
-                                    <h4 class="font-semibold text-spotify-text mb-2">After Phase 2 (Month 12) — Advanced Targeting & AI Campaign Tools</h4>
-                                    <ul class="text-sm text-spotify-text-muted space-y-2">
-                                        <li>✓ Advanced audience targeting module integrated: 2,000+ creators using demographic/behavioral targeting</li>
-                                        <li>✓ AI campaign ideation tool launched: 50%+ of users report finding actionable insights</li>
-                                        <li>✓ Sponsorship opportunity recommendations: 300+ sponsorship matches surfaced to creators</li>
-                                        <li>✓ Creator dashboard engagement: 60%+ of active creators using audience intelligence features weekly</li>
-                                        <li>✓ Agent Foundation (Phase 2B): 3-5 core agents operational including Sponsorship Opportunity Agent, with 1,000+ creators enabled</li>
-                                    </ul>
-                                </div>
-                                <div class="border-l-4 border-spotify-green pl-4">
-                                    <h4 class="font-semibold text-spotify-text mb-2">After Phase 3 (Month 18) — Affinity Integration & Smart Targeting</h4>
-                                    <ul class="text-sm text-spotify-text-muted space-y-2">
-                                        <li>✓ Affinity integration layer operational: affinity-based targeting used in 40%+ of campaigns</li>
-                                        <li>✓ Affinity-matched sponsorships: 500+ sponsorship opportunities recommended using affinity data</li>
-                                        <li>✓ ROI confidence metrics: 80%+ accuracy in predicted vs. actual campaign performance</li>
-                                        <li>✓ Creator confidence: 65%+ report increased confidence in promotional spend decisions</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-12 bg-spotify-green text-white p-8 rounded-lg text-center">
-                    <h2 class="text-2xl font-bold mb-4">24-Month Success Metrics</h2>
-                    <p class="text-green-50 mb-6 text-sm max-w-3xl mx-auto">
-                        These metrics tell us whether creators are actually getting discovered faster (new podcast discovery rate), whether audiences are deeper and more engaged (completion rates), and whether the business model works (subscriber conversion). Each metric answers a specific question about whether we're solving the problems we set out to solve.
-                    </p>
-                    <div class="grid md:grid-cols-2 gap-6 text-left">
-                        <div>
-                            <h3 class="font-semibold mb-3 text-lg">Affinity-Driven Discovery Engine</h3>
-                            <ul class="text-green-50 text-sm space-y-2">
-                                <li>• Increase in % of new podcasts discovered via affinity-driven recommendations (vs direct search or category browsing)</li>
-                                <li>• Reduction in time-to-meaningful-listenership for new podcasts (cold-start solve: how quickly does a new show reach 10K listeners?)</li>
-                                <li>• Increase in cross-genre listening sessions initiated from affinity-based recommendation surfaces</li>
-                                <li>• Lift in completion rate for affinity-recommended episodes vs topic-based recommendations</li>
-                                <li>• Listener satisfaction with affinity recommendations (measured via survey or proxy engagement metrics)</li>
-                                <li>• Expansion of affinity-eligible podcast library (from 5K to 20K+ shows by month 24)</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-3 text-lg">Creator Promotional Engine + Spotify Agents</h3>
-                            <ul class="text-green-50 text-sm space-y-2">
-                                <li>• Increase in average creator audience growth rate over 24 months</li>
-                                <li>• Improvement in sponsorship match quality for creators using Podcast Sponsorship Marketplace</li>
-                                <li>• % of sponsorship recommendations that convert to deals, based on affinity matching accuracy</li>
-                                <li>• Adoption rate of promotional tools among active podcast creators</li>
-                                <li>• Creator satisfaction and confidence in audience targeting accuracy</li>
-                                <li>• Total sponsorship revenue attributed to affinity-based sponsorship matching</li>
-                                <li>• Adoption rate of AI agents among active creators (% of creators enabling one or more agents by month 24)</li>
-                                <li>• Total automations executed by agents (sponsorship opportunity identification, boost optimizations, content updates, etc.)</li>
-                                <li>• Agent monetization revenue: total fees collected from agent usage across all tiers by month 24</li>
-                                <li>• Average automation value per creator (incremental listeners gained, revenue impact, time saved per agent-executed action)</li>
-                                <li>• Agent success rate: % of agent-executed actions that result in positive creator outcomes (higher engagement, listener growth, etc.)</li>
-                                <li>• Creator satisfaction with agent autonomy and transparency (NPS for agent features)</li>
-                            </ul>
-                        </div>
-                    </div>
+                <div class="mt-12 bg-spotify-green text-white p-8 rounded-lg">
+                    <h2 class="text-2xl font-bold mb-6 text-center">Success Metrics</h2>
+                    <ul class="text-green-50 space-y-3 max-w-3xl mx-auto">
+                        <li>• Increase cross-genre listening sessions by 25%+</li>
+                        <li>• Reduce time-to-meaningful-listenership for new podcasts by 40%</li>
+                        <li>• 40%+ creator adoption of promotional tools</li>
+                        <li>• $50M+ in marketplace transaction value by month 24</li>
+                    </ul>
                 </div>
             </div>
         </section>
